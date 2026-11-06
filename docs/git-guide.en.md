@@ -35,6 +35,8 @@ git config --local user.email "Your email address"
 
 ## Install
 
+To have an AI agent handle installation, use the [installation prompt in the README](../README.en.md#install-with-an-ai-agent). The steps below explain cloning and installation with Git.
+
 ### Clone with VS Code
 
 1. Open the Command Palette and choose **Git: Clone**.

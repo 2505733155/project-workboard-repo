@@ -35,6 +35,8 @@ git config --local user.email "你的邮箱"
 
 ## 安装
 
+如果希望让智能体协助安装，可以直接使用 [README 中的安装提示词](../README.md#通过智能体安装)。下面介绍使用 Git 克隆和安装的具体步骤。
+
 ### 用 VS Code 克隆
 
 1. 打开命令面板，选择 **Git: Clone（克隆）**。

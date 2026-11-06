@@ -27,6 +27,18 @@ This is a file-maintenance workflow carried out by the AI. Refresh the board in 
 
 You need an AI tool that can load the skill and read and edit project files, and a modern browser to view the HTML. The skill requires no additional Python, Node.js, server, or package manager installation.
 
+### Install with an AI agent
+
+If your AI agent can access the network and manage local skills, send it this prompt:
+
+```text
+https://github.com/2505733155/project-workboard-repo
+Please install the project-workboard/ skill from this repository, including SKILL.md and assets/, in the user-level skill directory recognized by the current AI tool, so I can use it across my projects.
+Verify that the installed files are complete, and tell me the actual installation path and how to enable the skill. If an installation already exists, preserve my custom examples and edits.
+```
+
+### Install manually
+
 1. On this repository's GitHub page, select **Code → Download ZIP** and extract the archive.
 2. Find the `project-workboard/` subdirectory in the extracted repository root. Install this complete subdirectory, including `SKILL.md` and `assets/`, in your tool's skill directory, or package it as required by your tool and import it through the skills panel.
 3. Select `project-workboard` through that tool's skill list or invocation interface. If it does not appear, refresh or restart the session as required by the tool.
