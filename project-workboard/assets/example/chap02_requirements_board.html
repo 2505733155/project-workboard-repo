@@ -1,0 +1,805 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="第 2 章模式转换控制需求分析：方法核对、结果复现与论文重写任务看板。">
+  <title>模式转换控制需求分析 · 写作归档与全论文差异处理</title>
+  <style>
+    :root { --paper:#f5f4ef; --surface:#fffefb; --ink:#23352f; --muted:#65716a; --line:#dedfd6; --green:#285c47; --soft-green:#e5eee6; --amber:#795818; --soft-amber:#f4ead4; --blue:#3b5c78; --soft-blue:#e6edf4; --coral:#a24d3d; --soft-coral:#f5e7e1; --radius:14px; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:90px; }
+    body { margin:0; background:var(--paper); color:var(--ink); font:15px/1.75 "Segoe UI","Microsoft YaHei","PingFang SC",sans-serif; }
+    a { color:var(--green); text-underline-offset:3px; overflow-wrap:anywhere; }
+    a:hover { color:var(--coral); }
+    button,input,select,textarea { font:inherit; }
+    button { cursor:pointer; }
+    :focus-visible { outline:3px solid var(--blue); outline-offset:4px; }
+    h1,h2,h3,p { margin:0; }
+    h2 { font-size:24px; font-weight:650; letter-spacing:-.6px; }
+    code,.mono { font-family:Consolas,"Cascadia Code",monospace; font-size:.92em; overflow-wrap:anywhere; }
+    .wrap { width:min(1480px,100%); margin:auto; padding:0 36px; }
+    .skip { position:fixed; top:-100px; left:16px; padding:10px 16px; background:var(--ink); color:white; z-index:20; }
+    .skip:focus { top:10px; }
+    .topbar { position:sticky; top:0; z-index:10; background:rgba(245,244,239,.97); border-bottom:1px solid var(--line); }
+    .topbar .wrap { display:flex; gap:24px; align-items:center; justify-content:space-between; min-height:76px; }
+    .brand { display:flex; gap:12px; align-items:center; white-space:nowrap; }
+    .brand-mark { width:36px; height:36px; display:grid; place-items:center; background:var(--ink); color:white; border-radius:9px; font:600 14px Consolas,monospace; }
+    .brand strong { font-size:14px; display:block; }
+    .brand small { display:block; font-size:11px; color:var(--muted); letter-spacing:1px; }
+    nav { display:flex; gap:22px; }
+    nav a { font-size:13px; color:var(--muted); text-decoration:none; }
+    nav a:hover { color:var(--green); }
+    .button { border:1px solid var(--line); border-radius:8px; background:var(--surface); color:var(--ink); padding:8px 14px; white-space:nowrap; }
+    .button:hover { border-color:var(--green); background:var(--soft-green); }
+    main { padding-bottom:50px!important; }
+    .hero { padding:42px 0 26px; display:grid; grid-template-columns:1.55fr 1fr; gap:36px; align-items:start; }
+    .eyebrow { display:flex; align-items:center; gap:9px; font-size:12px; letter-spacing:1.4px; color:var(--green); font-weight:650; }
+    .eyebrow::before { content:""; width:22px; height:2px; background:var(--green); }
+    h1 { margin-top:13px; font-size:clamp(28px,3vw,43px); font-weight:650; letter-spacing:-1.5px; line-height:1.35; }
+    .hero-lead { margin-top:17px; max-width:720px; color:var(--muted); }
+    .badges { display:flex; flex-wrap:wrap; gap:8px; margin-top:20px; }
+    .badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:5px; font-size:12px; background:#ebece4; color:var(--muted); }
+    .badge.green { background:var(--soft-green); color:var(--green); }
+    .badge.coral { background:var(--soft-coral); color:var(--coral); }
+    .goal { background:var(--ink); color:#f6f5ed; border-radius:var(--radius); padding:26px; }
+    .goal .eyebrow { color:#bdd2ba; }
+    .goal .eyebrow::before { background:#bdd2ba; }
+    .goal h2 { font-size:21px; margin:12px 0; }
+    .goal p { color:#d6dfd4; font-size:14px; }
+    .goal .boundary { border-top:1px solid #506157; margin-top:18px; padding-top:13px; font-size:12px; }
+    .meta { color:var(--muted); font-size:12px; margin-top:17px; display:flex; flex-wrap:wrap; gap:5px 18px; }
+    .stats { display:grid; grid-template-columns:repeat(5,1fr); gap:1px; border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--line); }
+    .stat { background:var(--surface); padding:17px 22px; }
+    .stat-label { font-size:12px; color:var(--muted); }
+    .stat-value { font:500 30px/1.4 "Segoe UI",sans-serif; margin-top:4px; }
+    .stat-hint { font-size:11px; color:var(--muted); }
+    .stat.done .stat-value { color:var(--green); }
+    .section { margin-top:36px; }
+    .section-head { display:flex; justify-content:space-between; gap:18px; align-items:baseline; margin-bottom:16px; }
+    .section-title { display:flex; align-items:baseline; gap:13px; }
+    .section-number { font:12px Consolas,monospace; color:var(--muted); }
+    .hint { color:var(--muted); font-size:12px; }
+    .stage { display:flex; gap:17px; background:var(--soft-green); border-left:3px solid var(--green); padding:17px 20px; border-radius:0 10px 10px 0; margin-bottom:16px; }
+    .stage strong { white-space:nowrap; color:var(--green); }
+    .stage p { font-size:14px; }
+    .next-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:14px; }
+    .next-card { border:1px solid var(--line); background:var(--surface); border-radius:var(--radius); padding:20px; }
+    .next-card small { color:var(--green); font:12px Consolas,monospace; }
+    .next-card h3 { font-size:16px; margin:8px 0; }
+    .next-card p { font-size:13px; color:var(--muted); }
+    .scratchpad { border:1px solid var(--line); background:var(--surface); border-radius:var(--radius); padding:20px; }
+    .scratchpad-head,.scratchpad-foot { display:flex; flex-wrap:wrap; justify-content:space-between; gap:12px; align-items:center; }
+    .scratchpad-head { margin-bottom:12px; }
+    .scratchpad-head h2 { font-size:21px; }
+    .draft-actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .draft-actions .button { font-size:12px; padding:6px 11px; }
+    .draft-label { display:block; color:var(--muted); font-size:12px; margin-bottom:6px; }
+    #draft { display:block; width:100%; min-height:190px; resize:vertical; padding:14px 16px; border:1px solid #d7d9c8; border-radius:8px; background:#fcfcf5; color:var(--ink); line-height:1.8; }
+    #draft:focus { border-color:var(--green); }
+    .draft-status { font-size:12px; color:var(--green); }
+    .draft-status.warning { color:var(--coral); }
+    .scratchpad-foot { margin-top:10px; font-size:12px; color:var(--muted); }
+    .draft-note { margin-top:8px; font-size:12px; color:var(--muted); }
+    .refresh-controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; border-top:1px solid var(--line); padding-top:13px; margin-top:13px; }
+    .refresh-controls .button { padding:5px 11px; font-size:12px; }
+    .refresh-status { color:var(--muted); font-size:12px; flex:1; min-width:180px; }
+    .filters { display:grid; grid-template-columns:minmax(190px,1fr) 160px 170px auto; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:16px; align-items:end; }
+    .field { display:flex; flex-direction:column; gap:5px; min-width:0; }
+    .field label { font-size:12px; color:var(--muted); }
+    input,select { width:100%; background:white; border:1px solid var(--line); border-radius:7px; color:var(--ink); min-height:40px; padding:7px 10px; }
+    .filter-summary { margin:10px 0 16px; font-size:12px; color:var(--muted); }
+    .kanban { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; align-items:start; }
+    .column { min-width:0; background:#eeeee7; border-radius:var(--radius); padding:12px; }
+    .column-heading { display:flex; justify-content:space-between; align-items:center; margin:1px 2px 12px; gap:10px; }
+    .column-heading h3 { display:flex; gap:8px; align-items:center; font-size:14px; }
+    .dot { width:7px; height:7px; border-radius:50%; background:var(--muted); flex:none; }
+    .column[data-status="进行中"] .dot { background:var(--blue); }
+    .column[data-status="待确认"] .dot { background:var(--amber); }
+    .column[data-status="已完成"] .dot { background:var(--green); }
+    .count { background:var(--surface); border-radius:5px; padding:0 7px; color:var(--muted); font-size:12px; }
+    .task { padding:16px; background:var(--surface); border:1px solid #dddfd5; border-radius:10px; margin-bottom:10px; min-width:0; overflow-wrap:anywhere; }
+    .task:last-child { margin-bottom:0; }
+    .task-meta { display:flex; flex-wrap:wrap; gap:5px 8px; align-items:center; color:var(--muted); font-size:11px; }
+    .task-id { color:var(--green); font:600 12px Consolas,monospace; }
+    .priority { background:var(--soft-coral); color:var(--coral); padding:0 6px; border-radius:4px; }
+    .priority.normal { background:#eeeee7; color:var(--muted); }
+    .task h4 { margin:9px 0; font-size:15px; line-height:1.6; }
+    .task-summary { font-size:12px; color:var(--muted); }
+    .task-state { font-size:11px; margin-top:10px; }
+    .task details { margin-top:12px; border-top:1px solid var(--line); padding-top:9px; }
+    summary { color:var(--green); font-size:12px; cursor:pointer; }
+    .task dl { margin:12px 0 0; font-size:12px; }
+    .task dt { font-weight:650; margin-top:12px; }
+    .task dd { margin:4px 0 0; color:var(--muted); }
+    .task ul { margin:6px 0 0; padding-left:16px; }
+    .task li { margin-bottom:5px; }
+    .dependency { display:inline-block; color:var(--green); background:var(--soft-green); border-radius:4px; padding:0 5px; margin-right:4px; text-decoration:none; font:11px/1.8 Consolas,monospace; }
+    .empty { color:var(--muted); font-size:12px; padding:22px 6px; text-align:center; }
+    .board-empty { padding:26px; text-align:center; border:1px dashed var(--line); border-radius:var(--radius); background:var(--surface); }
+    .issues-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .issue { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px; }
+    .issue h3 { font-size:15px; margin:9px 0; }
+    .issue p { font-size:13px; color:var(--muted); }
+    .issue-foot { border-top:1px solid var(--line); padding-top:10px; margin-top:12px; font-size:12px; }
+    .decisions { margin-top:16px; border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); padding:20px; }
+    .decisions h3 { font-size:15px; margin-bottom:8px; }
+    .decisions ul { padding-left:18px; margin:0; font-size:13px; color:var(--muted); }
+    .decisions li { margin-top:6px; }
+    .log { border:1px solid var(--line); border-radius:var(--radius); background:var(--surface); padding:6px 22px; }
+    .log-entry { display:grid; grid-template-columns:150px minmax(0,1fr); gap:20px; padding:16px 0; border-bottom:1px solid var(--line); }
+    .log-entry:last-child { border-bottom:0; }
+    .log-date { color:var(--muted); font-size:12px; }
+    .log-entry h3 { font-size:14px; }
+    .log-entry p { font-size:13px; color:var(--muted); margin-top:3px; }
+    .source-notice { background:var(--soft-amber); color:var(--amber); padding:13px 17px; font-size:13px; border-radius:9px; margin-bottom:14px; }
+    .sources { border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; background:var(--surface); }
+    .source { display:grid; grid-template-columns:210px minmax(0,1fr); gap:22px; padding:16px 20px; border-bottom:1px solid var(--line); }
+    .source:last-child { border-bottom:0; }
+    .source-name { font-size:13px; font-weight:600; }
+    .source-note,.source-path { font-size:12px; color:var(--muted); }
+    .source-path { margin-top:4px; overflow-wrap:anywhere; }
+    footer { margin-top:36px; border-top:1px solid var(--line); padding-top:16px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:20px; }
+    [hidden] { display:none!important; }
+    @media (min-width:1200px) { .task:target { outline:3px solid var(--blue); outline-offset:2px; } }
+    @media (max-width:1100px) { .kanban { grid-template-columns:repeat(2,minmax(0,1fr)); } nav { gap:13px; } .hero { gap:22px; } }
+    @media (max-width:760px) {
+      .wrap { padding:0 18px; } .topbar .wrap { flex-wrap:wrap; padding-top:12px; padding-bottom:12px; gap:12px; } .brand small,.print-extra { display:none; } nav { order:3; width:100%; justify-content:space-between; gap:8px; } nav a { font-size:12px; }
+      .hero { grid-template-columns:1fr; padding-top:28px; gap:22px; } .goal { padding:22px; } .stats { grid-template-columns:repeat(2,minmax(0,1fr)); } .stat:first-child { grid-column:1/-1; }
+      .stat { padding:13px 18px; } .stat-value { font-size:25px; } .section-head { display:block; } .section-head .hint { margin-top:7px; } .section { margin-top:28px; }
+      .next-grid,.issues-grid { grid-template-columns:1fr; } .stage { display:block; } .stage strong { white-space:normal; overflow-wrap:anywhere; } .stage p { margin-top:5px; }
+      .filters { grid-template-columns:repeat(2,minmax(0,1fr)); } .field.search { grid-column:1/-1; } .filters .button { grid-column:1/-1; }
+      .kanban { grid-template-columns:1fr; } .source { grid-template-columns:1fr; gap:5px; } .log-entry { grid-template-columns:1fr; gap:4px; } footer { flex-direction:column; gap:5px; }
+      html { scroll-padding-top:132px; }
+    }
+    @media (prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print {
+      @page { size:A4; margin:13mm; }
+      body { background:white; color:#16251e; font-size:10pt; }
+      .wrap { width:100%; max-width:none; padding:0; } .topbar { position:static; background:white; } .topbar .wrap { min-height:45px; } nav,.no-print,.filters,.filter-summary { display:none!important; }
+      .hero { padding:20px 0 15px; gap:20px; grid-template-columns:1.3fr 1fr; } h1 { font-size:24pt; } h2 { font-size:15pt; }
+      .goal { background:white; color:var(--ink); border:1px solid var(--line); padding:15px; } .goal p,.goal .eyebrow { color:var(--ink); } .goal .boundary { border-color:var(--line); }
+      .stats { grid-template-columns:repeat(5,1fr); } .stat:first-child { grid-column:auto; } .stat { padding:8px 10px; } .stat-value { font-size:20px; }
+      .section { margin-top:20px; } .kanban { grid-template-columns:1fr; } .column { background:white; padding:0; margin-bottom:15px; } .column-heading { border-bottom:1px solid var(--line); padding-bottom:8px; }
+      .task { padding:12px; break-inside:avoid; } .task details { display:block; } .next-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } .issues-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .next-card,.issue,.log-entry,.source { break-inside:avoid; } .next-card,.issue { padding:12px; } .source { grid-template-columns:160px minmax(0,1fr); } .log-entry { grid-template-columns:115px minmax(0,1fr); }
+      a { color:inherit; } footer { margin-top:20px; } .badge { border:1px solid var(--line); } .stage { background:white; border:1px solid var(--line); }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#tasks">跳转到任务看板</a>
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brand"><span class="brand-mark" aria-hidden="true">02</span><div><strong>博士论文 · 专题工作台</strong><small>REQUIREMENTS / MODE TRANSITION</small></div></div>
+      <nav aria-label="页面导航"><a href="#overview">概况</a><a href="#scratchpad">草稿</a><a href="#tasks">任务</a><a href="#issues">问题</a><a href="#history">记录</a><a href="#materials">资料</a></nav>
+      <button class="button no-print" id="print-button" type="button" aria-label="打印完整看板">打印<span class="print-extra">完整看板</span></button>
+    </div>
+  </header>
+  <main class="wrap" id="overview">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">CHAPTER 02 / SECTION WORKBOARD</p>
+        <h1 id="page-title">模式转换控制需求分析</h1>
+        <p class="hero-lead">第二章及R09—R13既有工作已归档，R14两项确认后的本批正文修订与来源使用边界已落实；图2.5留完稿同步，历史算例版本未认证。R15现随第四章推进：来源与结构前置C01／C02已完成，C03已部分核对，Q1双积分器问题已在根目录详细解释、尚待讨论；ISA源码已补，Q2后续由助手查实现。来源登记不代表理论迁入、证明或研究结果已验收。</p>
+        <div class="badges"><span class="badge green">APP6 · 时间与热安全约束</span><span class="badge">APP4 · 仅保留历史记录</span><span class="badge coral">原实现已复现 · 工程适用性未验收</span></div>
+        <div class="meta" id="metadata"></div>
+      </div>
+      <aside class="goal" aria-labelledby="goal-title">
+        <p class="eyebrow">FINAL OBJECTIVE</p><h2 id="goal-title">让需求成为可验证的控制约束</h2>
+        <p>仅以 APP6 的核心方法为研究重点，围绕模式转换需求、时间与热安全约束、离合器参数可行域及代表性工况校核，形成物理含义明确、参数一致、结果可追溯的正文，为后续模式转换控制研究提供约束。</p>
+        <p class="boundary">APP4、AreaBPR 与引射器角度映射仅历史留档。R01—R08 已完成方法记录、原实现复现、正文／编译验收及本轮细修；8 s／10 MJ／7 MW 是算例假定需求上限，真实机构容量与可用功率未知。写作完成不等于工程或热安全认证。本节不写界面、打包或操作流程，不扩展到APP9。R10／R11查阅表已完成；R12—R15暂挂全论文差异处理，不重开第二章已完成写作，也不替代第四章专题核对。</p>
+      </aside>
+    </section>
+    <div class="stats" id="stats" aria-label="任务数量概览"></div>
+    <section class="section" aria-labelledby="next-title">
+      <div class="section-head"><div class="section-title"><span class="section-number">01</span><h2 id="next-title">当前阶段与下一步</h2></div><p class="hint">任务计数不代表论文完成度</p></div>
+      <div class="stage"><strong id="stage-title"></strong><p id="stage-description"></p></div>
+      <div class="next-grid" id="next-actions"></div>
+    </section>
+    <section class="section scratchpad no-print" id="scratchpad" aria-labelledby="draft-title">
+      <div class="scratchpad-head">
+        <div class="section-title"><span class="section-number">DRAFT</span><h2 id="draft-title">临时草稿本</h2></div>
+        <div class="draft-actions"><button class="button" id="copy-draft" type="button">复制草稿</button><button class="button" id="export-draft" type="button">导出 .txt</button></div>
+      </div>
+      <label class="draft-label" for="draft">临时想法、下一步提示词或待讨论的问题</label>
+      <textarea id="draft" placeholder="在这里随手记下想法，或准备下一步要发给我的提示词…" spellcheck="false" aria-describedby="draft-note draft-save-status"></textarea>
+      <div class="scratchpad-foot"><p class="draft-status" id="draft-save-status" role="status" aria-live="polite">正在检查草稿存储…</p><span id="draft-count">0 字符</span></div>
+      <p class="draft-note" id="draft-note">草稿自动保存在当前浏览器，不写入 HTML，也不会自动传给助手。清理浏览器数据、更换浏览器或移动看板文件可能无法找回，请导出备份。草稿默认不参与打印。</p>
+      <div class="refresh-controls">
+        <button class="button" id="refresh-now" type="button">立即刷新</button>
+        <p class="refresh-status" id="refresh-status">仅手动刷新看板；草稿仍自动保存。</p>
+      </div>
+    </section>
+    <section class="section" id="tasks" aria-labelledby="tasks-title">
+      <div class="section-head"><div class="section-title"><span class="section-number">02</span><h2 id="tasks-title">任务看板</h2></div><p class="hint">由助手维护文件 · 点击卡片查看判据与证据</p></div>
+      <div class="filters no-print" role="search" aria-label="筛选任务">
+        <div class="field search"><label for="search">关键词</label><input id="search" type="search" placeholder="搜索编号、方法、问题或证据…" autocomplete="off"></div>
+        <div class="field"><label for="status-filter">任务状态</label><select id="status-filter"><option value="">全部状态</option></select></div>
+        <div class="field"><label for="category-filter">任务类别</label><select id="category-filter"><option value="">全部类别</option></select></div>
+        <button id="reset-button" class="button" type="button">重置筛选</button>
+      </div>
+      <p class="filter-summary" id="filter-summary" role="status" aria-live="polite"></p>
+      <div class="kanban" id="kanban"></div>
+      <p class="board-empty" id="board-empty" hidden>没有匹配任务。请更换关键词或重置筛选。</p>
+    </section>
+    <section class="section" id="issues" aria-labelledby="issues-title">
+      <div class="section-head"><div class="section-title"><span class="section-number">03</span><h2 id="issues-title">关键问题与当前结论</h2></div><p class="hint">已识别问题 ≠ 已解决问题</p></div>
+      <div class="issues-grid" id="issue-list"></div>
+      <div class="decisions"><h3>已确定的写作边界</h3><ul id="decision-list"></ul></div>
+    </section>
+    <section class="section" id="history" aria-labelledby="history-title">
+      <div class="section-head"><div class="section-title"><span class="section-number">04</span><h2 id="history-title">工作日志</h2></div><p class="hint">保留决策变化，不虚构历史日期</p></div>
+      <div class="log" id="work-log"></div>
+    </section>
+    <section class="section" id="materials" aria-labelledby="materials-title">
+      <div class="section-head"><div class="section-title"><span class="section-number">05</span><h2 id="materials-title">资料与证据索引</h2></div><p class="hint">相对路径 · 本地查阅</p></div>
+      <div class="source-notice">Requirement 目录当前被 Git 整体忽略，项目源码与数据不保证随仓库同步。链接仅用于本地定位，打开方式由浏览器和文件关联决定；历史对话与截图以文字摘要记录，不伪造本地附件。</div>
+      <div class="sources" id="source-list"></div>
+    </section>
+    <footer><span>无服务器 · 任务记录来自 HTML · 草稿仅存当前浏览器</span><span>完成判据与证据优先，不以“代码存在”代替“研究已验证”。</span></footer>
+    <noscript><p class="source-notice">请启用 JavaScript 查看嵌入的任务数据。本文件离线运行，不需要联网；任务记录也可在源文件的 board-data 区块中阅读。</p></noscript>
+  </main>
+
+  <!-- MAINTENANCE:
+       - This file is the source of truth for this section's task history, evidence,
+         unresolved issues and next steps. Edit board-data directly, not browser-only state.
+       - Browser storage contains only the user's private scratchpad and temporary
+         view state, never task records. The scratchpad is not part of this
+         HTML file and is not automatically available to the assistant.
+       - After authorized section/method/verification work, update tasks, evidence,
+         issues, nextActions, history and meta.updated. Preserve stable task IDs.
+       - Read-only questions, reviews and planning do not authorize file updates.
+       - Distinguish identifying an issue from resolving it. Completion requires
+         acceptance evidence; code availability, static inspection and functional-test
+         passes do not prove reproduced or validated research results.
+       - Focus thesis work on APP6's time/thermal method. Retain APP4 evidence as history,
+         not active work; AreaBPR/angle mapping is out of scope, not resolved.
+       - R10/R11 registries are complete; R12-R15 are thesis-wide discrepancy tasks
+         hosted here temporarily; Chapter 2 remains complete. Do not execute repairs
+         when only registering plans. Reuse chapter-specific sources without replacing their
+         technical reviews; link planned outputs only after the files exist.
+       - Keep justified clutch capacity and available-power limits as baseline checks;
+         do not assume they are enforced by APP6. Reference B03/S06 without changing
+         the overall checklist automatically. -->
+  <script id="board-data" type="application/json">
+  {
+    "meta": {
+      "created": "2026-10-13",
+      "updated": "2026-10-18",
+      "owner": "助手维护 · 用户确认研究范围",
+      "stage": "C03静态核对完成 · R15继续随理论迁入",
+      "stageDescription": "第四章C03已明确术语／符号角色、维数、完整预测块及末点保持，Q1保留方案不变；ISA实现及评价指标差异已留证，具体配置／结果交后续验收。下一步第四章C04旧稿清理尚未执行，R15仍进行中，第二章写作不重开。本轮不改论文、原代码／模型／参数或结果，不运行研究。"
+    },
+    "statuses": ["待开始","进行中","待确认","已完成"],
+    "sources": [
+      {"id":"chapter","title":"本节 LaTeX 正文","path":"thesis_latex/data/chap02.tex","note":"第 2.4 节：模式转换控制需求分析，建板时约第 777 行；R06／R07 原验收为4小节、3表、4图。后续加入指标关系图，2026-10-17删除独立敏感性分析表及脱开时程图，当前为4小节、2表、4图；脱开热指标保留在结果表中，原验收历史不覆盖。"},
+      {"id":"checklist","title":"全论文待办清单","path":"博士论文待办清单.md","note":"2026-10-17按用户明确授权同步总清单：B03按现行离合器需求分解范围完成，S04／S06完成；B02可选独立验证与S05完稿图文复核保留。总清单下一阶段优先现第四章，待已有论文资料提供后核对，不自动启动B06；本看板继续归档，R09写作规则已另行完成，本次未改总清单。"},
+      {"id":"test-spec","title":"模块测试说明","path":"assets/my_arts/Requirement/7需求分解与管理模块测试说明.pdf","note":"已阅读功能与测试用例；APP4 / APP6 详见 4.2.4 / 4.2.6。详细章节止于 APP8，APP9 名称来自总览图。"},
+      {"id":"test-report","title":"模块测试报告","path":"assets/my_arts/Requirement/8需求分解与管理模块测试报告.pdf","note":"APP4 / APP6 结果见 4.5 / 4.7。软件功能测试通过，不等于已在论文参数下复现或独立验证。"},
+      {"id":"discussion","title":"选题讨论与用户截图","path":null,"note":"历史曾选 APP4＋APP6，现仅研究 APP6。2026-10-13 用户确认 mu_dyn 为等效系数；第一批选择现数据库为复现基线，三类限值为算例假定；N_disc=2 为公式盘数乘数，真实最大力／可用功率无数据。对话为定义与选择依据，不是试验验证。"},
+      {"id":"app4","title":"APP4 调用入口（历史）","path":"assets/my_arts/Requirement/Req_APP/app4.mlapp","note":"已直接读取 matlab/document.xml，识别需求分解、验证与模型／测试调用。现已移出论文范围，仅用于回溯 R01 与旧决策。"},
+      {"id":"app6","title":"APP6 调用入口","path":"assets/my_arts/Requirement/Req_APP/app6.mlapp","note":"已静态追踪回调、min_Ppeak 实参、参数快照、选点与结果写回；读取不等于运行，详见 R01 方法记录。"},
+      {"id":"core4","title":"APP4 能力分解（历史）","path":"assets/my_arts/Requirement/Req_APP/Analysis/Function4ComputeProgram.m","note":"保留有效半径、力矩／力／功率关系及 AreaBPR 角度映射的静态证据；不作为当前研究交付或已确认的物理依据。"},
+      {"id":"verify4","title":"APP4 反向计算（历史）","path":"assets/my_arts/Requirement/Req_APP/Analysis/Function4ComputeProgramVerify.m","note":"保留代数反算证据；APP4 与 AreaBPR 映射已移出范围，不再安排复现或物理验收。"},
+      {"id":"search6","title":"APP6 参数搜索","path":"assets/my_arts/Requirement/Req_APP/Analysis/search_feasible_params.m","note":"函数默认 first_feasible；APP6 实际显式选择 min_Ppeak，在接合可行的有限网格候选中按接合峰值热功率择优；不等于全局或双向最优。"},
+      {"id":"engage6","title":"离合器接合仿真","path":"assets/my_arts/Requirement/Req_APP/Analysis/simulate_clutch_engagement.m","note":"恒定低压轴转速、幂函数负载、线性加载；T_fric = mu_dyn × F，mu_dyn 注释单位为 m。"},
+      {"id":"disengage6","title":"离合器脱开仿真","path":"assets/my_arts/Requirement/Req_APP/Analysis/simulate_clutch_disengagement.m","note":"从同步状态开始，线性卸载；采用锁定 / 滑动判定并计算热指标。"},
+      {"id":"verify6","title":"APP6 需求校核","path":"assets/my_arts/Requirement/Req_APP/Analysis/modeconv_requirements_validate.m","note":"接合检查时间与热限制，脱开检查热限制。需核对双向指标与求解阶段的一致性。"},
+      {"id":"plot6","title":"APP6 可行域绘制","path":"assets/my_arts/Requirement/Req_APP/Analysis/plot_feasible_region.m","note":"通过验证函数判定网格；绘图与搜索的可行性口径需核对。"},
+      {"id":"defaults","title":"历史默认参数脚本","path":"assets/my_arts/Requirement/Req_APP/Data/dbSave.m","note":"APP4 示例值包括 5000 W、15000 r/min；APP6 示例值包括 6800 r/min、8 s、10 MJ、7 MW。这些不是已确认的论文参数；字段分组需与 APP 实际读取核对。"},
+      {"id":"data","title":"数据库与参数资料","path":"assets/my_arts/Requirement/Req_APP/Data/","note":"第一批已只读解析 10 个 db*.mat，区分 8 s／16 s、旧分组与 baseDB 顶层。冻结 stage1_demo35B 为原实现输入，不把历史成功标志当作本次运行证据。"},
+      {"id":"models","title":"APP4 模型目录（历史）","path":"assets/my_arts/Requirement/Req_APP/Models/","note":"APP4 六个模型已静态解析，尚未运行或编译。保留 R01 证据，不再作为 APP6 研究的模型验证前置要求。"},
+      {"id":"tests","title":"APP4 测试目录（历史）","path":"assets/my_arts/Requirement/Req_APP/Tests/","note":"已静态读取能力信号末值 > 0.5 的断言，不是独立整机动态验证。仅历史留档，不再安排本节运行 APP4 测试。"},
+      {"id":"debug-log","title":"工程调试历史","path":"assets/my_arts/Requirement/Req_APP/软件测试调试日志.md","note":"包含历史模式转换时长问题的修订记录；只能作为核对线索，不能据此确认当前版本已验收。"},
+      {"id":"methods-r01","title":"方法记录与当前研究范围","path":"docs/chap02_requirements/chap02_requirements_methods.md","note":"保留 R01 调用链、APP4 历史和 MAT 数据机制；入口同步 R01—R07 状态，历史静态结论与当前运行／写作证据分开，实际 APP 保存未运行。"},
+      {"id":"main-entry","title":"MAT 数据加载主入口","path":"assets/my_arts/Requirement/Req_APP/app_RCE.mlapp","note":"HTMLDataChanged 的 decomposition 分支将所选 MAT 的 S.DB 放入基础工作区；evaluation 分支可加载输出数据集。加载不即时改写原 MAT。"},
+      {"id":"input35b","title":"冻结的 APP6 原实现输入基线","path":"assets/my_arts/Requirement/Req_APP/Data/db_stage1_demo35B.mat","note":"R03 冻结输入；R05 已在 MATLAB 原生加载并复现，J=28.7、6800 rpm、k=.0415、b=1.833，8 s／10 MJ／7 MW 仅算例假定。输入指纹未变，不证明真实机构能力。"},
+      {"id":"audit-batch1","title":"R02—R04 第一批核对记录","path":"docs/chap02_requirements/chap02_requirements_audit.md","note":"符号／量纲、报告预览、10 个数据库、用户确认基线、时间／双向判据、问题边界及 R05 情景；16 个新增来源指纹。没有运行研究函数。"},
+      {"id":"thermal-report","title":"离合器热计算报告","path":"assets/my_arts/Requirement/离合器热计算报告.docx","note":"负载模型来源：rad/s、α=20°、Bline=0.407、拟合与末态校准。J=30 与当前基线不同，原控制律也不同；估算与历史结果不能当作 APP6 已验证结论。"},
+      {"id":"requirements6","title":"APP6 需求指标树","path":"assets/my_arts/Requirement/Req_APP/Requirements/Requirement6.slreqx","note":"slrequirements/data.xml，SID 4—6、8—11 只有指标名称和层级；未提供数值限值的工程／材料来源。"},
+      {"id":"results-r05","title":"R05 结果及 R06／R07 写作验收","path":"docs/chap02_requirements/chap02_requirements_results.md","note":"默认搜索、两个截面、18 典型／边界情景、27 敏感性配置；第 8 节记录正文、数据副本、绘图与 136 页全文验收。自动解敏感性未修复，写作完成不是工程认证。"},
+      {"id":"runner-r05","title":"R05 独立 MATLAB 复现脚本","path":"scripts/chap02_requirements_r05.m","note":"调用未修改原函数、原生读取冻结 MAT；验证函数使用数值 Value 适配，原绘图用普通 axes；不执行真实 APP 交互或保存回调。"},
+      {"id":"raw-r05","title":"R05 本机验收原始产物","path":"tmp/chap02_r05/r05_20261013_04/","note":"全候选 CSV、双向切片、案例／敏感性、MAT 时序与 6 幅 PNG；原资料与 tmp 均被 Git 忽略，不保证随仓库同步可用。"},
+      {"id":"publication-data","title":"论文化数据副本与再生成说明","path":"thesis_latex/figures/requirements/data/README.md","note":"8 个 CSV 与原运行 metadata.json 均与 R05 原文件逐字节一致，可随仓库保存；不替代完整原始验收目录。没有独立 manifest。"},
+      {"id":"figure-script","title":"论文矢量图绘制脚本","path":"scripts/chap02_requirements_figures.m","note":"只读论文化数据，绘制可行域截面与接合／脱开时程对照；可行域子图题置于横轴标签下、公共图例上，合并方案名称与加载时间；曲线图例统一为固定加载时间方案／联合搜索方案，转速轴标签统一为升力风扇转速，不运行原算法。脱开图当前仅留档，不用于正文。"},
+      {"id":"figure-padding","title":"论文 PDF 图留边脚本","path":"scripts/chap02_requirements_pad_figures.py","note":"为三张矢量图增加 6 pt 白边，用 metadata 避免重复留边；LaTeX 仍保留 trim=1pt 1pt 1pt 1pt,clip。"},
+      {"id":"final-pdf","title":"全文编译结果（本机）","path":"thesis_latex/main.pdf","note":"2026-10-18 R14确认后本机全文133页，latexmk退出0；印刷页24—25渲染检查通过，无未定义引用或LaTeX缺字。图2.5原图及其字体提示、原有非致命版式告警保留，图中判据／状态编号留完稿TODO；研究数值未改。"},
+      {"id":"section-2-4-review-pdf","title":"2.4节纸质审阅PDF（历史）","path":null,"note":"2026-10-15曾从当时main.pdf提取PDF页49—57，共9页A4供打印。2026-10-16检查时根目录文件已不存在；不擅自重建，移除失效链接。当前正文应以最新main.pdf为准。"},
+      {"id":"sections-2-4-2-5-review-pdf","title":"2.4与2.5节纸质审阅PDF（脱开图删除前）","path":null,"note":"2026-10-17曾提取的9页A4历史打印摘录；本次清理开始前文件已不在根目录，Git已显示删除，保留用户删除状态，不恢复或重新提取。历史记录保留，撤销失效链接。"},
+      {"id":"scope-diagrams","title":"此前导出的配图候选（已清理）","path":null,"note":"三幅候选已不用于正文，目录按用户要求移出活动工作区，备份位于忽略的tmp/removed_scope_revision_20261014_*。image15／image16保留media原图与完稿TODO，控制架构改用media/image26.pdf；本索引仅保留历史，不提供失效链接。"},
+      {"id":"scope-export","title":"历史配图导出脚本（已清理）","path":null,"note":"仅为此前scope_revision候选导出使用，随无用目录一起移至忽略的tmp备份，不再提供活动脚本或失效链接；原始Visio和media文件不改。"},
+      {"id":"indicator-mapping-image","title":"图2.7 当前指标关系图","path":"thesis_latex/figures/media/mode_transition_requirement_mapping.png","note":"与用户提供的根目录新版PNG逐字节相同；名义接合时长与两项热指标共同约束三个离合器候选参数，数学符号采用新版排版。"},
+      {"id":"indicator-mapping-user","title":"用户提供的图2.7新版原图","path":null,"note":"2026-10-15提供的根目录新版PNG在本次清理前已不在原位置，不提供失效链接。正文使用的media/mode_transition_requirement_mapping.png保留不动；此项保留历史来源记录。"},
+      {"id":"writing-rules-plan","title":"论文写作基础规则（R09交付）","path":"docs/thesis_writing_rules.md","note":"2026-10-17交付并按用户意见精简，当前12条规则，各含规则、理由、检查和实例，按高频且跨章节适用程度定性排序；附13项自查清单及E1—E12依据。排版不单列，只保留最终PDF可读性自查；不将算例取舍写成通用禁令。"},
+      {"id":"thesis-terminology-plan","title":"全论文概念与术语表（R10交付）","path":"docs/thesis_terminology.md","note":"89项核心术语、5项旧范围及10项差异；R12已同步Q04／Q09名称及Q10试验事实，综合图旧字样另留完稿TODO，其他定义与理论差异未视为解决。保留第四章用户意见入口。"},
+      {"id":"thesis-symbols-plan","title":"全论文符号定义表（R11交付）","path":"docs/thesis_symbols.md","note":"101项符号／符号族及16项差异；R13追加正文／英文稿依据和气动公式量纲核对，修正D01／D02、补第2章D03及D09。D03第4章部分及其余技术差异保留待核，不等于全部正文统一或理论验证。"},
+      {"id":"chapter4-terms","title":"第四章专题术语初稿（既有来源）","path":"docs/chap04_ampc/terminology.md","note":"已存在专题术语初稿及符号核对事项；保留用户意见与专业解释，供R10／R11核对共同约定，不将初稿视为已确认标准或全章核对完成。"},
+      {"id":"chapter4-board","title":"第四章看板（专题核对边界）","path":"docs/chap04_ampc/chap04_ampc_board.html","note":"C03静态术语／符号及方法对象核对已完成，下一步C04；R15继续随正文迁移与后续验收，不取代专题任务。"},
+      {"id":"latex-denotation","title":"论文LaTeX符号表（空占位）","path":"thesis_latex/data/denotation.tex","note":"当前仅有符号表占位注释，main.tex中的输入尚被注释。R11先建立Markdown工作表，不填充本文件或启用印刷版符号表。"},
+      {"id":"corridor-original","title":"最新版走廊论文英文稿（R14核对）","path":"assets/my_arts/AST_Corridor_Revised/elsarticle-template-num.tex","note":"被Git忽略，原稿只读；eq:tilde-h／eq:F-tilde、eq:23／eq:24及eq:29／eq:29-weights提供维数、距离和分段计划依据。当前已查到定义与现稿差异，不据此声明已复现算法或核实历史算例使用的版本。"},
+      {"id":"engine-wrapper","title":"原整机封装接口（历史线索）","path":"assets/my_arts/Requirement/Req_APP/Models/fnc1_Basic_SS_STOVL_engine_test.slx","note":"原初核仅在此SLX发现sfun_enginecore，RCE_P1接口调用sfun_modelcore，故曾缺少可读核心依据；用户现已补充AST_Corridor_Revised/Code，相关实现转查engine-code及R14审查记录。APP6简化函数仍不代表整机实现。"},
+      {"id":"engine-code","title":"用户补充的可读整机工程","path":"assets/my_arts/AST_Corridor_Revised/Code/","note":"原件被Git忽略、只读；包括两个Tt4／BPR版本及RobustTest2。用户已确认仅作定义／实现核对依据，不认定为旧论文算例的重现版本，不据其替换论文限值或结果。"},
+      {"id":"r14-audit","title":"R14源码初核与分段计划修订记录","path":"docs/chap02_requirements/chap02_requirements_r14_audit.md","note":"§6保留发现与原待确认问题，§8记录用户确认后的正文判据、理想式与数值偏移区分、Code仅用于定义／实现及限值保留、编译与图2.5完稿TODO。历史配置未认证，不改模型或研究结果。"},
+      {"id":"chapter4-mapping","title":"第四章来源版本与迁入对应表（C01）","path":"docs/chap04_ampc/source_mapping.md","note":"全文来源、公式／证明、旧稿处置、12图7表和结果／引用入口已登记；M01—M08留后续核对。R15仅完成此前置，未改论文或研究结果。"},
+      {"id":"chapter4-structure","title":"第四章结构与应用内容分工（C02）","path":"docs/chap04_ampc/chapter_structure.md","note":"4.1—4.7工作结构、输入输出与来源、图表及拟应用／平台章节归属；当前源文件与拟章号分开。R15只完成来源和结构前置，C03未验收，正文与总清单未改。"},
+      {"id":"chapter4-audit","title":"第四章C03方法对象与符号核对","path":"docs/chap04_ampc/model_symbol_audit.md","note":"§11完成静态前置，记录完整预测块、末点保持、实现及评价指标差异与来源指纹；Q1决定保留，正文与研究验收分交后续任务，R15未完成。"},
+      {"id":"integrator-explanation","title":"双积分器临时说明（历史，已清理）","path":null,"note":"本轮前已不在根目录，不恢复或提供失效链接；技术事实及用户决定保留在第四章正式方法记录第4／10节。"},
+      {"id":"isa-code","title":"用户补充的ISA相关代码","path":"assets/my_arts/AMPC_ISA_Latex_ori/Code/","note":"目录可读，已初步登记DSS／DMS等入口及代表函数；写作遵循ISA论文假设，后续由助手查实现，不把版本差异视作无条件等价，不运行研究。"}
+    ],
+    "tasks": [
+      {"id":"H01","title":"阅读本节并识别正文问题","category":"前期调研","priority":"普通","status":"已完成","dependsOn":[],"summary":"重复步骤、三步 / 两步表述与完成状态需要统一。","action":"阅读现有需求分析节及其上下文，记录旧飞行包线内容与现有证据的对应问题。","acceptance":"能定位重复段落、证据不足的表述和后续重写范围；此项不包含修订正文。","evidence":[{"source":"chapter","note":"已读取本节：相邻两段分别写三步与两步，存在重复；旧图 2-8 包含飞行包线能力分解。"}],"completed":"建板前已完成"},
+      {"id":"H02","title":"阅读项目资料并比较候选 APP","category":"前期调研","priority":"普通","status":"已完成","dependsOn":[],"summary":"已梳理功能与测试证据，明确 APP9 资料缺口。","action":"阅读测试说明、测试报告和总览截图，对各 APP 与论文主线的关联进行筛选。","acceptance":"有候选比较及证据边界；不将软件通过记录认定为论文方法验收。","evidence":[{"source":"test-spec","note":"已阅读 APP1—APP8 的详细说明，并从总览图确认 APP9 名称。"},{"source":"test-report","note":"已阅读 APP4 / APP6 测试条目及结果；记录方法与参数仍需核验。"}],"completed":"建板前已完成"},
+      {"id":"H03","title":"历史选题决策：APP4＋APP6","category":"选题决策","priority":"普通","status":"已完成","dependsOn":["H01","H02"],"summary":"原定位已完成记录；2026-10-13 被仅采用 APP6 的新范围取代，APP9 仍不纳入。","action":"依据用户对模式转换主线的要求，明确纳入内容和不纳入内容。","acceptance":"保留选择理由与决策变化，不因 APP 数量而强行构造两个同等创新点。","evidence":[{"source":"discussion","note":"原决策从 APP9 改为 APP4＋APP6；本次用户确认进一步去掉 APP4。保留历史完成记录，新范围见当前目标、决策及日志。"}],"completed":"建板前已完成"},
+      {"id":"H04","title":"确认源码可读并定位调用入口","category":"源码定位","priority":"普通","status":"已完成","dependsOn":["H03"],"summary":"已提取 .mlapp 内嵌源码，无需手动导出。","action":"只读检查文件内部结构、需求分解与验证回调，定位核心函数、模型和参数目录。","acceptance":"两份 APP 源码可直接读取，相关核心文件确实存在；不包含运行测试。","evidence":[{"source":"app4","note":"已读取 classdef 与 Function4ComputeProgram / Verify 回调。"},{"source":"app6","note":"已读取 search_feasible_params / modeconv_requirements_validate 调用。"},{"source":"data","note":"数据目录存在。"},{"source":"models","note":"模型目录存在。"}],"completed":"建板前已完成"},
+      {"id":"H05","title":"静态初读核心方法并登记问题","category":"方法核对","priority":"普通","status":"已完成","dependsOn":["H04"],"summary":"已识别关键口径问题；算法与结果尚未运行核验。","action":"初读能力计算、网格搜索、接合 / 脱开仿真、验证与默认参数。","acceptance":"登记量纲、参数尺度、简化假设和搜索 / 验证差异；明确发现不等于解决。","evidence":[{"source":"core4","note":"确认代数能力映射与预设线性角度关系。"},{"source":"search6","note":"确认网格搜索及默认首个可行解策略。"},{"source":"engage6","note":"确认 mu_dyn 的使用方式与简化假设。"},{"source":"verify6","note":"确认接合搜索与双向验证口径需要核对。"},{"source":"defaults","note":"发现示例参数尺度、字段位置与实际 APP 读取需要统一。"}],"completed":"建板前已完成"},
+      {"id":"R01","title":"记录方法与实际调用链","category":"方法核对","priority":"高","status":"已完成","dependsOn":["H05"],"summary":"已完成静态方法记录、模型判据与 DB 数据链核对；研究结果仍未运行核验。","action":"分别记录 APP4、APP6 的输入 / 输出、公式、模型假设、算法策略、依赖及模型判据；检查两者是否有实际参数传递。","acceptance":"形成有源码位置依据的方法记录；区分代数映射、可行性搜索和模型校核，不声称默认全局最优或已构成统一计算链。","evidence":[{"source":"methods-r01","note":"六部分方法记录及源版本指纹已交付：输入／输出、公式、假设、实际策略、模型／测试判据、数据传递和后续问题。"},{"source":"app6","note":"matlab/document.xml L277 明确传 min_Ppeak；函数默认 first_feasible 不能代表实际 APP 策略。"},{"source":"models","note":"已解析 APP4 六个模型：常量输入、代数反算、三个阈值与顶层信号连接；外部和内嵌 interp1 的外推选项不同。"},{"source":"tests","note":"读取末值断言，不运行测试；未称独立整机动态验证。"},{"source":"main-entry","note":"补充 HOME.HTMLDataChanged L38–60 的 MAT→工作区 DB 加载，与 P2 关闭保存路径共同形成数据交换链；不等于 APP4 结果直接成为 APP6 搜索输入。"}],"completed":"2026-10-13 · 静态记录完成"},
+      {"id":"R02","title":"统一 APP6 物理定义与量纲","category":"物理口径","priority":"高","status":"已完成","dependsOn":["R01"],"summary":"等效系数、盘数乘数、负载量纲与符号已核清；材料范围与真实锁定适用性未验证。","action":"核对 mu_dyn 与实际无量纲动摩擦系数、有效摩擦面数、半径及传动侧的对应条件；区分静摩擦容量、滑动摩擦与当前锁定判据。检查 T_load = k × omega_f^b 中的转速定义／归一化及 k、b 单位，统一力、力矩、功率、转速和惯量的符号与量纲。APP4 与角度映射只留历史。","acceptance":"形成带公式、单位和来源的符号表；等效系数的几何／传动映射须注明假设，不自动当作已成立。负载模型量纲和静／动摩擦边界有记录；依据不足明确待确认，不把范围缩减当作物理问题解决。","evidence":[{"source":"audit-batch1","note":"第 2 节交付符号／单位表、均匀压力半径推导、静／动摩擦边界、负载来源及 cF 乘积耦合；不把定义核清当作材料／机构验收。"},{"source":"discussion","note":"用户确认 mu_dyn=N R_eff μ_k，N_disc=2 为现公式盘数乘数，不自行翻倍。"},{"source":"thermal-report","note":"原嵌入公式确认 rad/s 自变量、拟合及末态校准关系；报告的估算假设明确保留。"}],"completed":"2026-10-13 · 物理定义与量纲核对"},
+      {"id":"R03","title":"确定 APP6 参数基线与限制依据","category":"参数依据","priority":"高","status":"已完成","dependsOn":["R01","R02"],"summary":"用户确认采用现有 APP6 原实现基线；限值为算例假定，实际力／功率上限明确未知。","action":"确定 APP6 数据库版本，统一轴速／传动侧、惯量、等效系数／几何和负载参数；追踪时间、总热量与峰值热功率限制来源。核查最大压紧力、力矩容量与可用功率等基础条件，区分有依据的机构边界与当前代码搜索范围，不要求 APP4 输出或两 APP 自动映射。文件无法确认的来源再向用户询问。","acceptance":"形成参数与限制来源表，记录版本、单位及假设；示例值与论文值分开。基础容量边界是否实际进入搜索／校核须明确，缺失依据不猜测；本任务不自动修改算法或新增约束。","evidence":[{"source":"audit-batch1","note":"第 3 节比较 10 个数据库并交付冻结参数表，区分 8 s／16 s 方案、原报告参数、历史 RES 与未知能力上限；未改 MAT。"},{"source":"input35b","note":"冻结输入：J=28.7、n=6800、k=0.0415、b=1.833、8 s／10 MJ／7 MW；带 SHA-256。"},{"source":"discussion","note":"用户选择数据库基线、同意三类上限标作算例假定，并确认无真实最大力／可用功率数据。"},{"source":"test-spec","note":"4.2.6 明确这些是默认测试输入，不是已给出的工程／材料限值来源。"}],"completed":"2026-10-13 · 参数基线与来源边界"},
+      {"id":"R04","title":"核对时间定义与双向验证边界","category":"验证口径","priority":"高","status":"已完成","dependsOn":["R01","R02","R03"],"summary":"静态时间与双向判据已核清；R05 已量化早同步和热积分分支，真实保存回调未运行，原实现未修复。","action":"追踪时间指标的计算与停止条件，核对接合搜索、双向校核及可行域绘制；说明恒定轴速、幂函数负载、固定等效系数与整机轴系耦合模型的区别，区分耗散热指标与未开展的温度预测。","acceptance":"形成一致的指标定义与适用范围；明确验证是否复用搜索模型，不夸大为独立整机或热耦合验证；核对提前同步情景和双向时间要求。","evidence":[{"source":"audit-batch1","note":"第 4 节交付时间／判据矩阵：接合搜索与双向校核范围、早同步、独立脱开初态、热积分覆盖及保存语义；第 6 节列 R05 核查情景。"},{"source":"engage6","note":"L105—111 先累计，L129—136 后清零同步点；已推导返回 Q 与时序积分可能不同，未测量误差。"},{"source":"verify6","note":"L78—92 检查接合时间与双向热量，未检查独立脱开完成时间或往返合计热量；同模型复算不称独立验证。"},{"source":"results-r05","note":"后续 R05 已量化：早同步数组终点与名义时长不同，默认手动／自动末点热积分差约26.18／27.91 J；双向范围仍不含脱开完成时间，实际 APP 保存未运行。"}],"completed":"2026-10-13 · 静态校核口径"},
+      {"id":"R05","title":"复现 APP6 可行域与典型时程","category":"结果复现","priority":"高","status":"已完成","dependsOn":["R02","R03","R04"],"summary":"默认手动／自动结果已复现，两个所选截面、18 案例、27 敏感性配置已记录；自动解步长／容差敏感，非工程认证。","action":"在统一参数下复现 APP6 固定／自动加载时间搜索，保存可行域和接合／脱开时程；检查超时、热越界、未同步与边界情景，记录版本、步长、网格及判据。不再安排 APP4 能力指标、角度映射或模型／测试复现。","acceptance":"APP6 原始数据、参数与计算版本可追溯，结果与判定可复核；核查机构边界适用性，必要时检查步长和网格敏感性。未复现的报告数值不得作为论文结论，同模型复算不称独立验证。","evidence":[{"source":"results-r05","note":"结果、单位、配置和边界已交付；默认手动／自动选解与历史报告显示精度下相符，两个截面的接合与双向通过数一致，不扩展为全部三维域验证。"},{"source":"runner-r05","note":"独立 R2024b Update 10 批处理退出 0；原生 MAT 输入核对、原函数调用与数值断言通过；只修自己的表格／JSON 导出兼容性。"},{"source":"results-r05","note":"验收 _04 的 69 数据／图像文件及 1 日志保留；配置与关键版本指纹见结果记录第 1／6 节，不另维护独立清单。R05 验收时717个保护文件指纹未变。"},{"source":"raw-r05","note":"保存全候选、掩码、报告、时序、敏感性和 6 图；自动默认热余量约 425 J，2 ms 或同步容差 .5% 已超限，局限未修复。"}],"completed":"2026-10-13 · 原实现数值复现"},
+      {"id":"R06","title":"重写 APP6 核心方法正文与图表","category":"论文写作","priority":"高","status":"已完成","dependsOn":["R01","R02","R03","R04","R05"],"summary":"已重写为 4 小节、3 表、4 图；固定加载时间方案与联合搜索方案并列比较，数值敏感性与机构前提明确披露。","action":"按模式转换需求、时间与热安全约束、离合器参数可行域、代表性工况校核组织正文；区分物理机构容量与代码受检约束，按用户确认删除未实施包线成果表述，不写 APP4 或界面。","acceptance":"正文符合 APP6 单一重点，数值来自核验算例，不宣称连续全局最优、独立整机或温度耦合验证；基础条件与实际受检约束分开。旧内容有明确保留／调整依据，术语与单位统一。","evidence":[{"source":"chapter","note":"2026-10-13 R06 原验收：第 2.4 节 4 小节、8 个新增公式、3 表、4 图；旧 image23／24／25 本节引用移除，原文件保留。同步本章引言／小结，不修改其他章。"},{"source":"discussion","note":"用户确认沿用原实现结果，并于2026-10-16改为两种计算方案并列比较，旧飞行包线为未实施的开题计划，可以删除本节成果表述。"},{"source":"publication-data","note":"9 份归档数据与 R05 _04 原文件逐字节一致；3 个矢量 PDF 与两份绘图／留边脚本可追溯，不重新运行算法。"},{"source":"results-r05","note":"第 8 节记录表图数值来源、单位、约425 J热余量与敏感性、cF 耦合、独立初态、整机温度及供能边界；不暗改原返回指标。"},{"source":"results-r05","note":"2026-10-14 意见1范围修订及复核见第9节：取消温度动态建模、三幅图同步替换，135页全文编译通过；耗散热算例与原算法／数据库不变。"}],"completed":"2026-10-13 · 正文与论文化图表"},
+      {"id":"R07","title":"核对章节衔接并完成编译验收","category":"论文验收","priority":"高","status":"已完成","dependsOn":["R06"],"summary":"原验收保留历史；2026-10-14 取消温度建模后135页全文再编译通过，章节接口、配图与版式已复核。","action":"核对本节对后续控制计划与控制研究的参数输出、前后引用及本章小结；编译全文，检查图表、交叉引用、单位和版式。","acceptance":"本章结论不超出证据；明确哪些参数 / 限制实际传入后续研究；编译成功、引用正常、PDF 可读，git diff --check 通过。","evidence":[{"source":"chapter","note":"明确 8 s／1.5 s／5 s 尚未作为第 3 章统一输入，不能等同其 3—7 s／1.7 s 设置；架构标签保留，第 5 章引用正常，本章引言和小结与证据一致。"},{"source":"final-pdf","note":"2026-10-13 R07 原验收：串行 latexmk 最终退出 0，共136页；新增正文印刷页34—41和架构／小结页42渲染检查通过，本章42个引用解析；无未定义引用、重复标签或缺字。"},{"source":"results-r05","note":"第8节登记数据一致性、730个保护文件、看板／浏览器与空白检查；原有第3／4章溢出和BibTeX告警未扩大修复，构建缓存冲突已恢复。"},{"source":"checklist","note":"与 B03 / S06 关联，但全论文清单未修改或标为完成。"},{"source":"results-r05","note":"2026-10-14 意见1范围修订及复核见第9节：取消温度动态建模、三幅图同步替换，135页全文编译通过；耗散热算例与原算法／数据库不变。"}],"completed":"2026-10-13 · 衔接、编译与版式验收"},
+      {"id":"R08","title":"根据用户意见逐项细修2.4节","category":"细节修订","priority":"高","status":"已完成","dependsOn":["R06","R07"],"summary":"用户已确认需求分解写作阶段结束；逐条细修及关联文字、符号、图表的检查已完成，记录归档。","action":"逐条研判用户意见，说明采纳理由并实施已确定的修改；检查术语、新概念、公式与符号释义、段落衔接、图表及交叉引用，并同步本章相关引言与小结。每次修改后完成必要的编译或版式检查，更新本看板及日志。","acceptance":"用户确认本轮细修告一段落；已采纳意见落实，直接关联位置同步，术语和符号前后一致，相关引用与版式检查通过。","evidence":[{"source":"discussion","note":"2026-10-16用户明确当前任务为根据其意见修改本节细节，下一任务为总结写作基础规则。"},{"source":"chapter","note":"第2.4节本轮细修已完成，逐项修改、编译与版式检查证据见工作日志。"},{"source":"discussion","note":"2026-10-17用户明确需求分解部分写作已结束，并授权将看板移入docs/chap02_requirements归档。"}],"completed":"2026-10-17 · 用户确认本轮写作结束"},
+      {"id":"R09","title":"总结修改经验并编写论文写作基础规则","category":"写作规范","priority":"普通","status":"已完成","dependsOn":["R08"],"summary":"已交付并精简docs/thesis_writing_rules.md：当前12条规则按高频与普遍适用程度优先排序，附修订实例、依据和13项自查清单。","action":"结合用户意见、工作日志和修改实例，按“规则—理由—检查方法—实例”提炼写作原则。优先总结技术无关且反复出现的问题，再整理图表与精度；局部排版只在自查清单保留最终PDF可读性检查，不虚构频次，不将个别算例取舍变成绝对禁令。","acceptance":"新建 docs/thesis_writing_rules.md，文档可独立阅读，包含明确可执行的规则、自查清单和真实修订实例。同一物理含义沿用全论文已确定的符号，参考轴、量纲或定义不同时明确区分。总结通用写作经验，避免把本算例参数或特定代码实现当作通用规则；完成后补充看板资料链接与验收记录。","evidence":[{"source":"discussion","note":"用户明确举例：谨慎引入新概念；相同含义的符号在不同章节保持一致。2026-10-17授权归纳总结，要求按高频与普遍适用程度排序，细节后置；后确认删除独立排版规则。"},{"source":"writing-rules-plan","note":"当前12条规则均有规则／理由／检查／实例，E1—E12定位到历史意见、日志或当前正文，含13项自查。校验编号、字段、证据及5个本地链接；明确必要假设、证明与数值条件不能因精简而删除，个别技术取舍不是通则。"}],"completed":"2026-10-17 · 规则文档与检查完成"},
+      {"id":"R10","title":"建立全论文概念与术语表","category":"全论文规范","priority":"高","status":"已完成","dependsOn":["R09"],"summary":"已交付89项核心术语、5项旧范围及10项差异；覆盖各章核心概念并建立共同查阅入口，正文未自动替换。","action":"梳理各章核心概念、术语及缩写，记录推荐名称、定义、已有别称、适用范围、来源位置和确认状态，识别同义多名、同名异义及翻译差异。以第四章既有专题术语表为来源，保留用户意见与专业解释；共同约定与章节专用说明相互引用，不建立竞争标准，不替代第四章C03的方法核对。","acceptance":"交付docs/thesis_terminology.md，覆盖各章核心术语，主要冲突得到处理或明确列为待确认，每项约定可追溯，不把现稿已有用法当作用户已确认。同步写作规则中的直接链接及必要章节表引用；建立表格不等于正文已全部统一。","evidence":[{"source":"thesis-terminology-plan","note":"89项含名称、定义、别称／缩写、范围、来源与确认状态；Q01—Q10定位跨章差异，用户未确认的建议明确标记，旧PINN／MWB等单列，不视为已解决。"},{"source":"writing-rules-plan","note":"前3条已直接链接两张实际工作表，同时保留R10／R11维护入口，说明集中表不替代首次定义。"},{"source":"chapter4-terms","note":"补充全论文表的双向入口和维护说明，32项专题术语与用户备注不变；C03独立核对仍待开始。"}],"completed":"2026-10-17 · 全论文查阅表及差异登记完成"},
+      {"id":"R11","title":"建立全论文符号定义表","category":"全论文规范","priority":"高","status":"已完成","dependsOn":["R09"],"summary":"已交付101项符号／符号族、下标规则及16项差异，主要公式可按模型和来源查阅；未修正文或生成印刷表。","action":"记录主要符号的定义、单位或维数、下标、适用章节、参考对象及定义位置，梳理同义异符和一符多义。同一物理含义优先统一；不同模型、参考轴或数学对象允许合理区分，并记录对应关系，不能仅凭字母相同就合并。参考既有章节资料，与R10术语约定相互校核，但不要求R10先完成。","acceptance":"交付docs/thesis_symbols.md，主要公式中的符号可查，跨章冲突得到处理或明确列出，未定义、缺单位及首次使用早于定义的问题有定位。同步写作规则直接链接，集中表不能替代正文首次定义；建立表格不等于正文已全部修正，不直接生成论文印刷版符号表。","evidence":[{"source":"thesis-symbols-plan","note":"按整机、离合器需求、热力、走廊、线性AMPC、新理论拟迁入及旧方案隔离登记；S001—S101含定义、单位／维数、作用域与出处，D01—D16定位缺定义、单位和公式／跨章差异。"},{"source":"writing-rules-plan","note":"已补实际符号表链接，强调参考对象与首次定义，表格建立不等于正文全部修正。"},{"source":"latex-denotation","note":"LaTeX占位和main.tex注释保持不变，没有生成或启用印刷版符号表。"},{"source":"chapter4-board","note":"新理论只登记K4已知角色，未完成英文全文核验、模型连接或C03验收；第四章任务状态不变。"}],"completed":"2026-10-17 · 全论文查阅表及差异登记完成"},
+      {"id":"R12","title":"第一批：同步已确认名称与试验事实","category":"全论文规范","priority":"高","status":"已完成","dependsOn":["R10","R11"],"summary":"已落实Q04／Q09已定名称和Q10试验状态；综合图旧字样按既定完稿安排保留TODO，不代替方法核验。","action":"核查摘要、各章引言／正文／小结及结论，将同一几何对象统一称为最大内接圆、同一优化概念统一称为Pareto前沿。按用户确认区分半物理试验条件已建立、实施路径已跑通与模式转换闭环试验尚未开展，同步直接相关的成果和计划表述；不推断其他场景试验状态，不改数值或算法。","acceptance":"相关正文、图题／图内文字与记录已逐项核查，有修改定位或保留理由；Q04／Q09／Q10追加处理依据，保留发现历史。闭环试验不被写为已经完成，平台建设成果也不被误删；论文有修改时编译并检查相关页面及引用。","evidence":[{"source":"thesis-terminology-plan","note":"Q04／Q09／Q10保留原差异定位并追加R12处理依据；A、C2、C3、C6共11处最大内切圆旧称改为最大内接圆，C4两处前沿与一处集合统一为Pareto名称；几何证明、指标和数值未改。"},{"source":"chapter","note":"C2控制架构正文／小结及C3标题／小结已同步；fig:3-5的image33.pdf仅增加图例文字覆盖，原嵌入图像流和页面尺寸不变。image15／image16／image26及其复用缩略图按既定完稿综合图安排保留，已补相关TODO，Q04不标作图内全部解决。"},{"source":"thesis-terminology-plan","note":"摘要、C1研究安排、C5引言／内容安排／小结、C6平台成果／后续安排区分平台条件和链路已建立与模式转换闭环试验拟开展；不更改其他场景完成状态或旧日程日期。C5原平台链路及集成方案保留。"},{"source":"chapter4-terms","note":"T15及第四章看板日志记录仅名称同步；C01—C10状态未变，未迁入理论或改动图4.8、公式、数据。"},{"source":"final-pdf","note":"全文latexmk编译退出0；最终132页，摘要关键词与正文同页，印刷页16、52、54、92、95、100、103—104及图3.5检查通过。无未定义引用或缺字；原有章节排版／参考文献告警不在本批处理。"},{"source":"discussion","note":"当前用户授权检查下一项后直接执行；已有名称与试验事实确认足够，无需新增用户选择。本次仅执行R12，R13—R15仍待开始。"}],"completed":"2026-10-18 · 本批名称／事实同步与编译检查"},
+      {"id":"R13","title":"第二批：核实录入疑点并补充符号释义","category":"全论文规范","priority":"高","status":"已完成","dependsOn":["R10","R11"],"summary":"D01／D02已对照英文稿修正，第2章D03与第3章D09释义已补；第4章D03仍待R15，未核教材原页。","action":"对照迭代变量表、残差方程和模型定义核实10／12项差异D01；核对低压转子方程中的N_1／N_2（D02）；补查第2章公式后缺失的符号释义（D03）；依据气动流量公式及来源核查lambda定义与m单位（D09）。先看上下文、维数与原文，证据不足时保留待核事项，不猜测补变量；D03的第4章部分交R15，不修补拟删除的旧式。","acceptance":"四项均有来源核对记录，明确哪些已修正、哪些确认并非错误、哪些仍待核；第4章转交部分单独保留，不以局部修正宣布整个D03解决。正文与符号表同步，必要的交叉引用／编译及公式页面检查通过；不改变模型、源代码、参数或数值结果。","evidence":[{"source":"thesis-symbols-plan","note":"文末R13核对记录附原始英文稿链接、标签、行号和SHA-256；变量表／10项残差及英文N_X=10印证eq:2-11末项应为X_10，tab:A3_difference印证低压行使用N_1。D01／D02保留原发现与修订依据。"},{"source":"chapter","note":"eq:2-9／eq:2-10后补x／u／y／X及f／g／h角色；eq:2-11仅修末项，tab:2-5仅改低压左端两处转速下标。高压行、力矩／效率／惯量、标签与图引用均不变；D03第4章部分明确未处理。"},{"source":"thesis-symbols-plan","note":"D09记录一维定常等熵关系的独立代入和SI量纲；正文补lambda临界声速基准、q(1)=1及m的s·K^(1/2)/m单位，原eq:3-2／eq:3-3及RN2522引用未改。没有教材原页，不声称逐页核验；未运行模型或改动结果。"},{"source":"final-pdf","note":"全文latexmk退出0，132页；印刷页25—29、44—45渲染检查通过，无未定义引用或缺字，原有非致命告警保留。公式定点差异、受保护文件和暂存区未改检查、看板／符号表校验及git diff --check通过。"}],"completed":"2026-10-18 · 本批录入核对、释义及编译检查"},
+      {"id":"R14","title":"第三批：核清物理定义与数学关系","category":"全论文规范","priority":"高","status":"已完成","dependsOn":["R13"],"summary":"用户确认C1／C2后，本批静态核对与正文修订完成；图2.5留完稿TODO，历史算例版本未认证，未改模型／参数／结果。","action":"核查Q01／Q02／Q03／Q06的STOVL展开、旋转喷管对象、校核／验证与反流／回流用法；联合核对Q05／D05喘振／失速裕度、Q07／D06换算及归一化转速。处理D04输出维数／约束分量／残差拼接、D07同步容差及分母、D08混合单位坐标距离的标度、D10分段控制计划公式与文字。查原文或代码后再判断，不把不同模型的合理差异强行统一；第4章对应定义与R15／C03协同，不提前认定几何推导有误。","acceptance":"各项记录模型对象、定义／单位／端点或维数检查、原始依据及处理结论；相同含义统一，不同含义有清楚对应。需要用户选择或确缺来源的项目单列，不把尚未解决的问题标为完成；若需改变算法、数值或研究结论，先说明影响并取得授权。已授权的正文修订同步查阅表，编译并核查相关公式和图表。","evidence":[{"source":"thesis-terminology-plan","note":"Q01／Q02／Q03／Q05／Q06／Q07为待核术语对象与定义；建议不等于已经确认。"},{"source":"thesis-symbols-plan","note":"D04—D08及D10涉及定义、维数、参考对象和推导，不是可一键替换的录入错误。"},{"source":"corridor-original","note":"用户确认后按eq:29／eq:29-weights统一递增连接分段及权重，起点／交点端值已核；图3.6使用英文稿现有图，两面积共用A_ref=0.6 m²。编译及页面检查通过，不证明历史结果均由新式生成。D08固定力截面仅比较两面积坐标，正文说明仍待补。"},{"source":"engine-wrapper","note":"历史封装接口线索保留；当前源码缺口已由engine-code解除，不再要求重复补充。"},{"source":"engine-code","note":"静态追到有效SM分支、顶层Clutch实例GR及保存配置1，标度从bin覆盖MWS初值；双向连接代码已定位。不是运行或历史结果版本认证。"},{"source":"r14-audit","note":"§6保留源码定位与原C1／C2问题，§8记录用户确认、理想式／数值实现区分、双向判据修订、限值保留决定和验收。图2.5仍需完稿同步；不宣称历史算例版本或零速实现已认证。"},{"source":"chapter","note":"eq:2-2理想式保留，式后说明1 rad/s数值偏移；两向切换判据取绝对值并限定N_o≠0。图2.5附近TODO包含旧判据与下一状态0／1倒置；原图、六编号公式、后续需求分析及参数表均未改。"},{"source":"discussion","note":"用户明确回复“两项都按照你的建议来执行即可”：C1按理想式／数值处理分别说明并同步判据；C2将Code仅作定义／实现依据，保留论文限值与结果。"},{"source":"final-pdf","note":"全文编译133页，PDF页38—39（印刷页24—25）已渲染检查；无未定义引用或LaTeX缺字，既有非致命告警保留。图2.5原字体的Poppler提示与旧内容另留完稿复核，不视为已修复。"}],"completed":"2026-10-18 · C1／C2确认后正文修订及本批验收"},
+      {"id":"R15","title":"第四批：随第四章迁移核对方法与符号","category":"全论文规范","priority":"高","status":"进行中","dependsOn":["R10","R11"],"summary":"C01—C03前置已完成，静态定义及实现差异已留证；后续随C04—C10迁移核对正文、证明与结果，R15未完成。","action":"以第四章原始英文来源与迁移后的实际方法为依据，核对状态／偏差／增广／固定LTI模型对象、矩阵维数、工作点项、预测与更新时序、代价函数、开关边界和性能指标；处理新稳定性路线的矩阵、分析域、分区及包络定义。D03第4章缺失释义、Q05／D05和Q07／D06的第4章部分与R14共享结论。按C01／C02／C03及迁移先后开展；将已取消MWB及其证明隔离，不为即将删除的内容重做修补或证明。","acceptance":"保留理论的符号、公式和模型连接可逐项回溯至原文；旧内容的取消／替换与保留结论分明。同步专题术语表、两张全论文表及第四章看板，保留未核事项；R15完成不能代替C01／C03各自验收，不因完成迁移就宣称证明或试验已验证。涉及正文时编译与页面检查通过。","evidence":[{"source":"thesis-symbols-plan","note":"D11—D16及D03第4章部分尚未核验；不是已完成理论证明的证据。"},{"source":"thesis-terminology-plan","note":"Q08记录同名x／u对应不同模型对象。"},{"source":"chapter4-board","note":"关联现有C01／C03及迁移任务，外部前置在行动中说明，不作为本看板不存在的依赖ID。"},{"source":"chapter4-terms","note":"复用专题原文入口和用户意见，不覆盖既有待核状态。"},{"source":"chapter4-mapping","note":"C01已建立A01—A14／B01—B09来源与公式对应及M01—M08后续核查；不将全文阅读、文件存在或源数值陈述当作方法／结果验收。"},{"source":"chapter4-structure","note":"C02明确理论结构、逐节输入输出及应用分工；M01—M08、Q08与D03／D11—D16核对未完成，不把结构确定当作R15完成。"},{"source":"chapter4-audit","note":"§11为C03收尾：末点保持、完整预测块、实现／指标差异与交接；C03静态完成不等于R15、正文、证明或数值验收完成。"},{"source":"integrator-explanation","note":"临时文件已在本轮前清理，不恢复；Q1依据及保留决定保存在正式方法记录§4／§10。"}]}
+    ],
+    "nextActions": [
+      {"task":"R15","title":"随第四章C04及后续迁入继续核对","description":"C03静态前置已完成，无新增用户确认。下一步第四章C04清理旧MWB／PINN；正文定义、精确计数、证明和配置／结果分别随C05—C10验收，R15保持进行中，不恢复已清理临时文件或重算。"}
+    ],
+    "issues": [
+      {"id":"I01","title":"mu_dyn 不是可直接引用的无量纲摩擦系数","status":"定义已核清并写入正文 · 材料范围未验证","observation":"R02 定义及用户确认已写入正文：mu_dyn=N R_eff μ_k，单位 m，N=2 为现公式盘数乘数。保留均匀压力假设与静／动摩擦条件，候选范围及锁定判据未获得材料／机构认证。","tasks":["R02","R05","R06"],"sources":["engage6","disengage6","audit-batch1","discussion","chapter","results-r05"]},
+      {"id":"I02","title":"AreaBPR 与角度映射：历史未确认问题","status":"移出研究范围 · 未解决","observation":"APP4 采用 0.1—3.0 与 -10°—20°的预设线性映射，物理定义与依据未确认。用户已决定不写 APP4；从 R02／R03 移出，保留历史，不宣称该问题已解决。","tasks":[],"sources":["core4","verify4"]},
+      {"id":"I03","title":"APP6 参数、字段与数据库基线","status":"原实现基线与假定已写入正文 · 真实上限缺失","observation":"正文统一采用冻结 stage1_demo35B：J=28.7、6800 rpm、k=.0415、b=1.833；8 s／10 MJ／7 MW 标为算例假定。报告 J=30／不同控制律不混用，真实力／可用功率无数据；不以候选网格替代机构边界。","tasks":["R03","R05","R06"],"sources":["input35b","thermal-report","audit-batch1","discussion","chapter","results-r05"]},
+      {"id":"I04","title":"耗散热校核与整机模型的边界","status":"温度建模移出范围 · 整机映射未验证","observation":"2026-10-14 用户取消离合器温度动态建模，正文不再声称具有径向传热或温度相关摩擦模型；该项不再是待开展研究。APP6 耗散热与峰值功率计算保留，不能解释为温升预测。整机仍描述轴系耦合和发动机运行边界，统一传参及材料／供能缺口未验证；缩减范围不等于问题解决。","tasks":["R01","R04","R06","R07"],"sources":["engage6","disengage6","chapter","results-r05","scope-diagrams"]},
+      {"id":"I05","title":"搜索、绘图和双向校核的受检范围","status":"所选截面已核对并披露 · 受检范围未扩展","observation":"R05 所选 1.5／5 s 截面双向通过数为 575／942，掩码与原绘图一致；正文不推广为全部三维域。提前同步、名义时长与数组终点分别解释；脱开完成时间、往返合计热量和整机温度未受检。","tasks":["R04","R05"],"sources":["audit-batch1","search6","verify6","results-r05","chapter"]},
+      {"id":"I06","title":"实际择优策略与最优性表述需区分","status":"离散择优口径已落实正文 · 非全局最优","observation":"实际 min_Ppeak 与函数默认 first_feasible 已区分，正文表述为给定离散接合可行候选中的峰值热功率择优。细网格会改变参数，自动全部三维域未双向加密；不宣称连续全局或唯一物理最优。","tasks":["R01","R05","R06"],"sources":["app6","search6","methods-r01","results-r05","chapter"]},
+      {"id":"I07","title":"旧飞行包线未实施成果表述","status":"用户确认未实施 · 旧成果表述已移除","observation":"用户确认旧飞行包线是开题阶段拟开展但最终未做的内容。R06 移除本节相应成果、重复步骤及 image23／24／25 引用，保留原图片和研究对象中的文献背景；此写作问题已处理。","tasks":["R06","R07"],"sources":["chapter","test-spec","results-r05"]},
+      {"id":"I08","title":"APP4 静态判据：仅保留历史边界","status":"移出研究范围 · 未验收","observation":"R01 记录 APP4 常量封装、代数／阈值判据、末值断言及外推差异，未核验边界结果或整机适用性。用户决定不纳入论文，不再安排 R04／R05／R06 处理；这不是研究验证完成。","tasks":[],"sources":["models","tests","methods-r01"]},
+      {"id":"I09","title":"APP6 的 MAT 数据基线与保存证据边界","status":"原生输入已核对 · APP 保存不属论文验收","observation":"R05 已原生读取并复现冻结 MAT，但未操作真实 APP 或保存回调。方法记录保留共享 DB 与关闭保存链，旧成功标志、hold 保存和快照风险仍是静态结论；不因 R06／R07 完成称实际保存已验收，也不新增 UI 修复任务。","tasks":["R04","R05"],"sources":["audit-batch1","main-entry","app6","results-r05","chapter"]},
+      {"id":"I10","title":"时间与热指标差异及数值敏感性","status":"细节留档、正文保留边界说明 · 原实现未修复","observation":"方法与结果记录保留返回Q与时序积分的差异：默认固定／联合约26.18／27.91 J，以及联合搜索方案约425 J余量、2 ms或同步容差0.5%超限等证据。按用户意见，正文删除实现细节及独立敏感性分析段／表，仅在方案比较处保留数值敏感性与预留余量的结论，基准计算条件及结果表余量仍保留。2.4.1继续解释单向滑移与反向滑移发热；粗步长反超、未同步fail_reason等风险未修复，未重新计算结果或运行实际APP保存。","tasks":["R04","R05"],"sources":["audit-batch1","engage6","verify6","app6","results-r05","chapter"]},
+      {"id":"I11","title":"APP6 负载幂函数的量纲与单位","status":"量纲与单位已写入正文 · 界面未修改","observation":"报告与代码使用未归一化 rad/s，T_L=k_L ω^b；正文给出 k_L 单位 N·m/(rad/s)^b、b无量纲。数据库和报告参数分开，不称全工况规律；原界面无量纲标签未改。","tasks":["R02","R05","R06"],"sources":["thermal-report","audit-batch1","engage6","chapter","results-r05"]},
+      {"id":"I12","title":"c 与最大压紧力在简化模型中仅以乘积起作用","status":"乘积耦合已写入正文 · 非唯一物理设计","observation":"R05 确认(.16,46000)与(.32,23000)的cF均为7360，两方向已检转速／热量差为0；正文披露这一乘积耦合。二维图不代表两个参数可独立辨识，网格择优不代表唯一机构设计。","tasks":["R05","R06"],"sources":["audit-batch1","engage6","disengage6","results-r05","chapter"]},
+      {"id":"I13","title":"真实机构容量与供给功率上限没有数据","status":"容量缺口已披露 · 未认证工程可实现性","observation":"正文保留真实最大力与可用功率未知的边界；额外 μ_k≤μ_s 条件下两截面仅保留12／9点，默认两点满足该条件也不证明实机可行。报告末态5 MW、热功率上限与容量功率代理不互相替代，未补造机构数据。","tasks":["R03","R05","R06"],"sources":["audit-batch1","discussion","thermal-report","results-r05","chapter"]},
+      {"id":"I14","title":"全论文术语、符号及跨章差异已登记","status":"R12—R14本批完成 · R15进行中","observation":"原发现历史保留在两张查阅表及日志。R14新增源码核查已同步STOVL展开、模块／喷管对象、需求模型校核名称、喘振裕度、相对换算转速与反流；D04输出编号／列方向／维数、D08截面面积距离已修，D10沿用户确认方向已同步。用户确认后D07正文判据已同步、理想式与数值偏移分开，Code仅作定义／实现依据，论文限值与结果保留。图2.5旧判据／状态编号留完稿TODO，历史算例版本未认证。R14本批完成，R15及C03其余核对不提前验收；旧综合图及D03第4章遗留沿既定任务处理。 R15已完成C01来源前置，source_mapping.md列出模型连接及源稿／旧稿差异，C02已形成结构与应用分工记录，下一步随C03核查；未改正文。 C03已进一步区分模型对象并补主要维数，实际追到legacy设计模型与精确保持验证映射；用户现已补ISA代码并选择写作以论文为准，Q2后续由助手查实现；Q1已按用户决定保留控制律与结果，迁入时简要区分设计与精确采样验证对象，见chapter4-audit第10节；C03恢复进行中，不重算。未修原算法、运行模型或迁入理论，R15仍未完成。 最新：C03已完成静态核对，Q2末点保持、完整块公式及实现／指标差异见正式方法记录§11；上文进行中描述保留过程，当前下一步C04，尚未执行，R15未完成。","tasks":["R10","R11","R12","R13","R14","R15"],"sources":["thesis-terminology-plan","thesis-symbols-plan","chapter4-terms","chapter4-board","chapter"]},
+      {"id":"I15","title":"R14确认后的处理结论与保留边界","status":"C1／C2已落实 · 图2.5留完稿复核","observation":"用户明确同意两项建议。C1：保留理想摩擦公式、简述1 rad/s数值偏移，正文采用绝对相对差／力矩绝对值，限定非零输出转速；不新增源码零速保护。图2.5原图旧判据及反向下一状态0／1倒置登记为完稿TODO，未改图。C2：Code仅作定义／实现依据，保留论文0.1—0.85及现有参数／结果；0—0.75、温度启用与面积基准差异仍作复现线索，历史配置未认证。详见审查§8，本批R14完成不等于研究或全部配图已验证。","tasks":["R14"],"sources":["corridor-original","engine-wrapper","thesis-symbols-plan","thesis-terminology-plan","engine-code","r14-audit"]}
+    ],
+    "decisions": [
+      "当前范围（2026-10-13 用户确认）：仅采用 APP6 核心方法，按模式转换需求→时间与热安全约束→离合器参数可行域→代表性工况校核组织本节。APP4 不写入论文。",
+      "APP9 曾被考虑，但当前范围不展开一般飞机控制品质分解；不为凑够两个方法而扩展研究主线。",
+      "原 APP4＋APP6 决策已被取代；APP4 静态分析、源指纹及问题保留为历史。AreaBPR／角度映射、APP4 指标与模型测试不再是后续任务，移出范围不等于问题解决。",
+      "有依据的最大压紧力、力矩容量与可用功率仍作为 APP6 基础条件核查，不包装为 APP4 成果；区分物理机构边界与代码实际检查的约束，不自动修改算法。",
+      "代码初读足以开始方法整理，不等于已具备定量结论的最终稿；尚未运行或核验的结果必须保留未验证标记。",
+      "仅维护本节任务，全论文清单 B03 / S06 未修改；用户确认旧飞行包线未实施，本节对应成果表述已移除，保留原图文件与文献背景。",
+      "R01—R07 已完成记录、原实现复现和正文／编译验收；固定加载时间方案与联合搜索方案并列比较。三类限制仅为算例假定，自动解敏感性、机构与供能缺口已披露而未修复或认证。",
+      "第 2 章 8 s 上限与 1.5／5 s 加载时间尚未作为第 3 章统一输入，不等同其 3—7 s／1.7 s 设置；明确接口边界，不修改第 3—5 章数值或自动启动新研究。",
+      "2026-10-14 采纳意见1：取消全文中的离合器径向传热、温度演化和温度—摩擦系数耦合建模及其成果／计划表述；保留状态机、力矩关系、APP6耗散热／峰值功率需求和发动机涡轮前温度约束。原模型、代码、数据和历史图源不改，未开展温度验证不再是本节待办。",
+      "2026-10-16 用户确认工作顺序：R08根据用户意见逐项细修本节；本轮细修告一段落后，R09总结全部修改经验并在docs中新建基础写作规则文档。当时规则文档尚未创建；2026-10-17经用户授权已完成R09，交付docs/thesis_writing_rules.md。原任务及工作日志保留。",
+      "2026-10-17 用户批准暂挂全论文规范任务R10／R11：第二章R01—R09保持完成归档，两个新任务均待开始，仅登记不执行。计划输出docs/thesis_terminology.md与docs/thesis_symbols.md，创建前不加文件链接；复用第四章专题来源但不替代C03，不填充LaTeX符号表，不自动修改正文或全论文清单。",
+      "2026-10-17后续授权实施R10／R11：已交付全论文术语和符号工作表，按登记、来源与差异定位范围完成；摘要和各章正文尚未自动统一，第四章C03与原文理论核验仍独立待办。名称建议、物理定义缺口及公式疑点分别保留，不以完成工作表代替解决问题。",
+      "2026-10-18用户授权将四批差异处理登记为R12—R15，均待开始；本次只更新本看板。R10／R11保持完成，不重开第二章写作，不改论文或第四章任务状态。执行后逐项保留原发现，并记录已修正、经核对非错误或仍待核的结论与依据；不以任务登记代替修复。",
+      "2026-10-18用户明确同意R14的C1／C2建议：保留理想离合器关系、说明数值偏移并同步正文切换判据；Code仅作定义／实现核对依据，论文算例限值与结果不变。图2.5原图判据和下一状态编号登记为完稿TODO，历史配置未认证，不运行研究或改原模型。",
+      "2026-10-18用户补ISA相关代码并选择运算量写作与论文一致，后续实现由助手核查，不再要求用户凭印象挑内部版本；这不是确认所有版本精确等价。Q1双积分器问题按要求另写根目录详细说明，尚未决定采用方案，不改控制律或结果。",
+      "2026-10-18：Q1保留现有双积分器控制律与结果，迁入正文时简要区分离散设计模型与连续对象精确采样模型。C03恢复进行中，R15仍未完成；不改研究结果。"
+    ],
+    "history": [
+      {"date":"建板前已完成","title":"阅读现稿与项目资料","description":"定位正文重复及证据对应问题，阅读两份 PDF 并比较 APP 的论文适用性。完成 H01 / H02；未修改正文。","tasks":["H01","H02"]},
+      {"date":"建板前已完成","title":"选题决策从 APP9 转回 APP4","description":"曾考虑 APP6＋APP9。用户强调模式转换主线并补充截图后，确定 APP4＋APP6，APP4 前置支撑、APP6 主体。完成 H03。","tasks":["H03"]},
+      {"date":"建板前已完成","title":"源码提取与静态初读","description":"成功直接读取 app4.mlapp / app6.mlapp，定位核心函数和资料目录，登记量纲、参数与验证口径问题。完成 H04 / H05；没有运行模型或核验研究结果。","tasks":["H04","H05"]},
+      {"date":"2026-10-13","title":"初始化并检查本节专用任务看板","description":"按用户批准的计划建立离线单文件看板及持续维护约定。初始化 5 项已完成的前期任务、7 项待开始任务；检查数据、依赖及 19 项资料索引，离线浏览、搜索筛选、展开、完整打印与筛选恢复通过，桌面及窄屏无横向溢出。此次交付不执行研究任务，不修改论文或算法。","tasks":[]},
+      {"date":"2026-10-13","title":"精简项目规则入口","description":"按用户要求，将 AGENTS.md 中的看板维护规则压缩为一条英文指引，详细约定迁入本 HTML 的 MAINTENANCE 注释。研究任务状态不变。","tasks":[]},
+      {"date":"2026-10-13","title":"开始 R01：记录方法与实际调用链","description":"按用户批准的实施计划，将 R01 置为进行中，保护原始文件，只读解析 APP、核心函数、模型 XML 和测试定义。未执行研究代码。","tasks":["R01"]},
+      {"date":"2026-10-13","title":"完成 R01 静态方法记录","description":"交付 chap02_requirements_methods.md，记录 APP4 六个模型与判据、APP6 实际 min_Ppeak 策略、网格与双向校核、DB 读写及未见自动传参的边界；附 21 个源文件指纹。R01 完成，R02—R07 保持待开始；尚未运行仿真或复现数值结果。 静态记录检查与看板浏览器检查通过，保护范围的 530 个文件指纹未变，git diff --check 通过。","tasks":["R01"]},
+{"date":"2026-10-13","title":"补充 MAT 数据交换链并澄清传参含义","description":"根据用户提供的主入口与文件选择截图，核对 app_RCE 的加载分支及 P2 的关闭保存分支，补充方法记录第 4.1 节、主入口源码定位与指纹。明确运行期间更新 DB，保存时才写输出 MAT；已有共享数据机制与 APP4 结果直接约束 APP6 搜索分开表述。记录 db_stage1_demo35B.mat 为 R03 候选线索，未读取参数值。R01 仍完成，R02—R07 状态不变，未运行程序或改动算法。","tasks":["R01"]},
+      {"date":"2026-10-13","title":"增加临时草稿本与自动刷新","description":"在任务看板前新增私人草稿区，输入即保存到当前浏览器，支持复制与导出，不写入 HTML 或自动传给助手。默认每 10 秒重新加载看板，可暂停或改为 30／60 秒；编辑、中文输入、选中文字与打印时暂缓，刷新保留草稿、位置、筛选和展开状态。浏览器存储不可用或保存失败时暂停刷新以保护草稿。浏览器交互与桌面／窄屏检查通过，任务和研究状态不变。","tasks":[]},
+      {"date":"2026-10-13","title":"取消定时自动刷新，保留草稿与手动刷新","description":"按用户反馈移除定时刷新、刷新开关、间隔设置与偏好读取，避免周期性页面闪动。草稿存储键保持不变，不清空已有草稿；继续支持自动本地保存、复制、导出及手动刷新后的浏览状态恢复。旧的自动刷新偏好不再生效，任务与研究状态不变。","tasks":[]},
+      {"date":"2026-10-13","title":"论文范围收敛到 APP6，APP4 历史留档","description":"用户确认不写 APP4 并授权更新计划与方法记录。同步当前目标、维护约定、R02／R03／R05／R06、下一步及问题；保留原选题和 R01 历史、源码指纹与 MAT 数据链。AreaBPR 和 APP4 验证移出范围但不标为解决；APP6 等效系数、负载量纲、容量／功率依据及双向口径仍待核对。R01 保持完成，R02—R07 保持待开始，共 6 完成／6 待开始；未修改论文、源代码、模型、数据库或全论文清单，未运行研究程序。","tasks":["R02","R03","R04","R05","R06","R07"]},
+      {"date":"2026-10-13","title":"开始第一批 R02—R04 合并核对","description":"用户授权先做第一批。将 R02／R03／R04 标为进行中，保留独立验收；读取物理与需求资料、APP6 实现及 MAT 参数，不运行研究函数或仿真，不改原始文件。用户已确认 mu_dyn 为含摩擦几何的等效系数，并提供离合器热计算报告作为负载来源。","tasks":["R02","R03","R04"]},
+      {"date":"2026-10-13","title":"完成第一批 R02—R04 静态核对并冻结基线","description":"交付 chap02_requirements_audit.md，保留原历史并更新方法入口。用户确认数据库基线、算例假定上限、N=2 与真实力／功率数据缺口；已只读比较 10 个 MAT，记录负载报告、符号单位、时间／双向判据、cF 耦合与同步点热积分差异。R02／R03／R04 按独立静态完成判据验收，共 9 完成／3 待开始；R05—R07 未执行。原始资料、代码、模型、数据库、论文和全论文清单不改动；没有运行研究程序或修复已识别问题。","tasks":["R02","R03","R04"]},
+      {"date":"2026-10-13","title":"开始 R05：原实现数值复现","description":"用户授权结果复现。将 R05 标为进行中，先检查原生 MATLAB 环境和冻结数据库；准备搜索、双向校核及边界／敏感性证据，保持工程原文件与论文只读，不自动修复算法。","tasks":["R05"]},
+      {"date":"2026-10-13","title":"完成 R05：复现原实现并量化边界","description":"交付结果记录、独立 MATLAB 脚本及 70 项产物指纹。R2024b Update 10 原生读取冻结输入，默认手动／自动搜索分别 575/1276、7055/12760；两所选截面双向掩码与原图一致，18 案例、27 敏感性配置、等乘积与有限网格检查完成。自动解热余量约425 J，2 ms 或容差 .5% 会超限；热积分覆盖、提前同步、粗步长超速及机构条件限制已量化但未修复。R05 按原实现复现范围验收，共10完成／2待开始，R06／R07 不执行。717个保护文件未变，原代码／模型／数据库／报告／论文／全清单不改动，真实 APP 交互／保存不在验收范围。","tasks":["R05"]},
+      {"date":"2026-10-13","title":"精简 R05：移除独立产物清单","description":"按用户要求删除根目录独立 JSON 清单，清理当前资料索引和证据链接；关键输入、源码、脚本指纹及参数配置保留在结果记录，原运行元数据与全部产物不删除。调整本地验收脚本以去除清单依赖，保留此前产物指纹验收历史。任务仍为10完成／2待开始，未运行研究程序或修改论文、算法、数据库。","tasks":["R05"]},
+      {"date":"2026-10-13","title":"开始合并实施 R06／R07","description":"用户确认沿用原实现结果：固定加载时间作主算例、联合搜索作边界对照；旧飞行包线为开题阶段计划而未实际开展，授权从正文移除。合并正文重写、论文化图表、章节衔接与全文编译验收；不修算法、不改原数据库，保留各任务独立完成判据。","tasks":["R06","R07"]},
+      {"date":"2026-10-13","title":"完成 R06／R07：正文、图表与全文验收","description":"第 2.4 节重写为4小节、8个新增公式、3表、4图；固定方案主算例与联合搜索边界对照采用原数据。删除旧包线未实施成果表述，保留原文件；同步本章引言／小结并披露与第3章输入尚未统一的接口。归档8个CSV及原metadata，9份数据逐字节一致；交付两绘图／留边脚本和3张矢量PDF。串行全文编译退出0，共136页，本章42个引用解析，新增正文与小结渲染检查通过；原有溢出／BibTeX非致命告警保留。构建缓存冲突已移到可恢复目录并重建。看板／浏览器／git diff --check及提交前检查通过，730个保护文件不变；原算法、模型、数据库、旧图、其他章、参考文献和全论文清单未改，未提交Git。现12完成／0待开始，数值与工程局限已披露但未修复或认证。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"采纳意见1：取消离合器温度动态建模","description":"用户决定不再开展该研究。删除全文相关建模、成果及计划；保留APP6耗散热与峰值发热功率需求及发动机温度约束。检查原图发现热效应建模／离合器温度反馈残留，定位Visio原生源，只改临时副本重新导出三图。同步方法／核对／结果记录与I04，进行全文编译和版式复核；R01—R07原历史不覆盖。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"意见1复核完成","description":"全文串行编译退出0，共135页；171处ref／eqref解析，无未定义引用、重复标签或缺字，原有非致命告警保留。摘要、目录、相关正文／计划及三幅配图已渲染检查；742个保护文件不变，原算法／模型／数据库／图源及数值未改。看板浏览器交互、筛选、打印、草稿、320—1440px布局通过；本次范围git diff --check与提交前图检查通过。用户原有提示词（手写）.md末尾空行告警未处理，文件保持原样；未提交Git。等待下一条写作意见。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"两幅概览图改回media并记完稿TODO","description":"用户要求按图处理，最终在media原路径修改，不另建修订目录。本次仅将第1章image15／image16引用改回原图，在各引用旁记完稿后检查技术路径、章节安排及离合器温度反馈的TODO；不改图片、不运行导出、不重新编译，image26暂不动。既有替换图和记录留作历史，待第三幅图单独处理后再收拢目录。","tasks":[]},
+      {"date":"2026-10-14","title":"控制架构改用media中的新版PDF","description":"用户提供并确认image26.pdf，状态反馈不再包含离合器温度。第2章引用切换为figures/media/image26.pdf，保留max width／max totalheight／keepaspectratio并添加trim=1pt 1pt 1pt 1pt,clip；图题及fig:2-9不变。正文已无scope_revision引用，旧图暂留历史。检查目标文件、JSON、PDF裁切规则与本次空白通过；未改PDF本身、未再编译或提交Git。","tasks":[]},
+      {"date":"2026-10-14","title":"清理无用配图目录及导出脚本","description":"用户明确要求删除。确认正文无引用，校验目录仅含3幅候选PNG与README后，将scope_revision及export_scope_revised_diagrams.ps1移至忽略的tmp备份，可恢复；活动目录和脚本已移除。清理资料索引及结果记录的失效链接，保留原历史和12项任务状态；media图片、已有用户修改、研究代码／数据、论文内容均不改，未再编译或提交Git。","tasks":[]},
+      {"date":"2026-10-14","title":"统一为转子动力学术语","description":"按用户要求，将第2章的轴系动力学及第2／6章的简化转动动力学表述统一为转子动力学，同步方法记录中的对应描述。保留轴系功率传递、轴系耦合等不同物理含义的术语，不改公式、参数、模型或结果；保护已有工作区和暂存修改，未重新编译、暂存或提交Git。","tasks":[]},
+      {"date":"2026-10-14","title":"补充需求分析的总体引入段","description":"用户认为直接讲时间与耗散热较突兀，建议采用Word原稿的总体引入。只读核对assets/content.docx中对应段落，保留前两句，重写末句为模式转换阶段时间／安全要求的指标分解、相容性与参数可行性校核，服务控制计划和控制器设计；不声称完成飞机级飞行品质全链条映射。原具体指标段作为第二段并补过渡语，不改公式／数值或Word文件，未重新编译、暂存或提交Git。","tasks":["R06"]},
+      {"date":"2026-10-14","title":"补充指标关系图及采用简化模型的原因","description":"按用户要求在离合器接合／脱开指标段加入图引用及关系图，原PNG未修改，复制至media并保留用户原文件。补充动摩擦系数与等效系数换算说明；模型段直接说明在恒定输入轴转速工况下突出加载参数影响、避免反复求解整机部件匹配方程、便于搜索与批量校核；小节标题统一为简化转子动力学模型。公式／参数／结果不变，保留已有工作区及暂存修改。串行全文编译退出0，共136页；渲染检查本节开头、新图、原流程图和相邻页，图题与引用可读，段末无孤立残字。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"按修订关系图精简正文","description":"用户已将media中的指标关系图摩擦框改为‘离合器等效摩擦力矩系数’，其他框仍仅用中文名称。正文删除‘图中的动摩擦系数通过摩擦盘数量与有效半径换算……’一句，保留后文c_mu与实际滑动摩擦系数的公式和单位定义。串行latexmk全文编译退出0，136页；渲染检查第33／34页，正文、图题及后文公式正常。原图源文件、其他公式、模型与结果未改。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"将三环节流程图与后续小节对应","description":"按用户意见修改fig:2-7：三框标题加粗并改为‘输入条件／需求分解／模型验证’，标题下用对应的2.4.1—2.4.3小节名称替换原零散参数条目；图题改为三个环节及对应小节。正文引用处明确该对应关系，精简后避免跨页残句。串行latexmk编译退出0，共136页；渲染检查印刷页33／34，方框文字和图题可读，无新增跨页残句；算法、参数、结果未改。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"在三环节流程图内加入小节编号","description":"在三个加粗环节标题与小节名称之间分别加入基于sec:2-req-model、sec:2-req-decomposition、sec:2-req-results的自动交叉引用编号，使用较小字号和一致的上下间距。串行latexmk编译退出0，共136页；图2.8实际显示2.4.1／2.4.2／2.4.3，印刷页34渲染检查三框文字不拥挤、不溢出。正文、公式、参数、模型和结果未改。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"简化2.4.1输入／输出轴表述","description":"用户选择正面陈述轴侧模型。将2.4.1开头改为沿用前文离合器模型的低压输入轴、升力风扇输出轴定义，并说明在输出轴侧建立升力风扇等效转动方程；删除‘所有转速、力矩和惯量在同一模型参考轴侧解释’这一含混措辞。后续符号、公式和数值不变。串行latexmk全文编译退出0，共136页；渲染检查印刷页34，段落与公式排版正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"收紧2.4.1三处防御性说明","description":"按用户意见将‘不能混同／不另行增加倍率’改为系数、单位与盘数的正面定义；将长篇热安全／供能说明改为累计耗散能量与瞬时峰值的用途；将提前同步与名义接合时长的否定式提醒改为简短计算口径。供能能力前提继续由2.4.3算例段承接，提前同步时程终点仍明确。公式、算法、参数和结果未改。串行latexmk全文编译退出0，共136页；渲染检查印刷页34／35，并调整段末措辞避免孤立残字。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"通读第2章并收敛需求分析的防御性表述","description":"重点改写2.4.1—2.4.4中关于负载模型、双向校核、离散择优、可行域、代表方案与后续章节衔接的重复否定式说明，同时调整本章引言、飞行包线文献背景和小结。保留算例限值的假定性质、机构与供能数据缺口、临界方案对步长／容差敏感等必要边界；公式、算法、参数、图表和研究结果不变。搜索范围段完整移至下一页，串行全文编译退出0，共136页；相关交叉引用正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-14","title":"为2.4节流程图补充独立内容导读段","description":"保留用户已分出的独立段落，在图2-7引用前概述本节依次处理需求指标与简化模型、时间和热约束下的离合器参数分解、代表性算例的接合／脱开校核，以及末尾的需求输出；明确流程图只对应前三个小节。未改流程图、公式、参数或研究结果。串行全文编译退出0，共135页；导读段与流程图同页，引用正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"统一2.4节离合器参数指代","description":"按用户意见将2.4节首段改为‘离合器等关键执行机构’，将本节及本章引言中专指离合器的‘执行机构参数’改为‘离合器参数’。保留研究对象部分对整机其他执行机构的准确称呼，并保留工作区已有的其他正文修改；公式、图表与研究结果不变。串行全文编译退出0，共136页，交叉引用正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"在2.4.1前改用低压轴称谓","description":"核查第2.2节已将低压轴定义为离合器输入轴。为使需求分析概述在进入2.4.1前更易理解，将第2章引言的‘恒定输入轴转速’和2.4节概述中的两处‘输入轴转速’改为‘低压轴转速’；2.4.1继续沿用前文的输入／输出轴定义。仅改术语，公式、参数和结果未动。串行全文编译退出0，共136页，交叉引用正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"仅补写2.4.1的输入—输出引导段","description":"根据用户指定的三项要求，在2.4.1开头新增独立段落：说明其承担输入条件和计算指标定义，承接前文离合器模型，以低压轴转速、升力风扇轴惯量及负载特性为对象条件，以最大压紧力、等效摩擦力矩系数及加载时间为候选参数，输出同步时间和两方向热指标供2.4.2分解。调整紧接着的起句以避免‘前文’重复；2.4.2／2.4.3不改，等待用户确认。串行全文编译退出0，共135页，新增段落与模型说明同页，交叉引用正常。","tasks":["R06"]},
+      {"date":"2026-10-15","title":"解释单向滑移近似及其适用条件","description":"在2.4.1首次使用该术语处，结合从静止接合与从同步状态卸载的路径，说明正向滑摩以低压轴转速不低于升力风扇转速为适用条件，摩擦力矩在输出轴上沿加速方向作用；解释反向滑移时力矩反向而仍会发热，并删去后文重复的‘单向滑移近似’提示。原公式、程序、数据库和数值结果未变；粗步长转速反超风险仍未修复。串行全文编译退出0，共136页，交叉引用正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"统一需求分析与前文离合器符号","description":"将2.4节压紧力记号统一为F_cl及其接合／脱开、最大值下标；对应检查公式、文字、可行域、表格和三张算例图的轴标签。补明低压／风扇轴与前文输入／输出轴的角速度对应、T_L作为T_o中的负载贡献，以及本节T_k采用正向滑动摩擦容量幅值而非前文含tanh的完整表达。用冻结数据重导出图，数值和算法不变；latexmk全文编译退出0，共136页，图中文字可提取且无未定义引用。2.4.2／2.4.3引导段仍待用户确认。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"补足2.4节公式首次出现处的符号说明","description":"按用户审阅意见，在2.4.1补明负载系数／指数、风扇角加速度、非负滑差、瞬时发热功率、各方向计算终点、接合／脱开压紧力及相对同步容差；2.4.2将重复的e／d下标释义改为接合热指标的说明。公式、参数、图表及研究结果不变；latexmk全文编译退出0，共136页。2.4.2／2.4.3引导段仍待用户确认。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"澄清正向滑移力矩的简化","description":"按用户意见删去含混的‘以摩擦容量近似传递力矩’，明确在正向滑移计算中将前文力矩式的tanh平滑因子近似取为1；删除公式后的重复说明。用户此前已自行修改2.4.1引导段和接合／脱开引入句，本次保留。公式、代码、参数与结果未改；latexmk全文编译退出0，共136页。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"精简接合时间指标","description":"依据用户确认，删除仅用于推导和表格呈现的同步前保持时长t_h符号、公式项与结果表行；改用文字说明加载后至同步的保持阶段，保留t_sync、加载时间tau和进入时间约束的t_e=max(tau,t_sync)。结尾需求输出改为名义接合时长。算法、参数、时间约束和既有数值结果不变；latexmk全文编译退出0，共136页。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"依据6.svg重绘图2.7指标关系","description":"删除飞机功能需求列，将中列统一为名义接合时长、每方向耗散热和峰值发热功率上限，将右列统一为加载／卸载时间、等效摩擦力矩系数和最大压紧力；以组间箭头表达共同约束，移除最大压紧时长。新增可编辑DOT源并重导出media PNG，根目录6.svg保留。正文引图段明确离合器名义接合时长和算例假定上限，图题与图片宽度同步调整；简化相邻导读句以避免跨页残句。latexmk全文退出0，共136页，印刷页33／34渲染检查通过；研究模型、参数、数值和图2.8未改。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"采用用户新版图2.7并改善公式排版","description":"核对根目录‘离合器约束与参数筛选流程图.png’中三项上限、三个候选参数及共同约束关系与正文一致；原样复制覆盖media现用PNG，根目录用户原图保留，DOT标为上一版草稿。图2.7引用、标签、图题及图2.8均不变。latexmk全文编译退出0，共136页，印刷页34渲染检查文字和公式可读；模型、参数、数值未改。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"厘清2.4.2接合与脱开的集合关系","description":"在用户已分段的正文基础上引入候选参数p、接合通过集合Omega_e、脱开热约束通过集合Omega_d及其交集Omega_ed。明确t_e上限是接合时间约束，双向共同通过并非并集；保持原实现先在Omega_e与离散网格中按接合峰值择优、再校核脱开，不改算法与数值。图2.8截面文字相应引用Omega_ed。用户已删除旧DOT草稿，看板清理失效来源链接。latexmk全文编译退出0，共136页，印刷页36公式与相邻文字排版正常。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"统一需求分析节的搜索术语","description":"按用户意见，将tau在联合搜索中的身份和c_mu、F_cl,max在固定／联合配置中的身份称为决策变量；将p称为参数向量，G称为离散参数网格，网格上的具体取值保留候选称谓。同步修正‘两个候选参数’‘数值候选域’‘候选网格’及所选参数等混用处，不改Omega_e与Omega_ed关系、搜索顺序、参数值或数值结果。latexmk全文编译退出0，共136页，印刷页36／39渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"直述2.4.2的两种计算模式","description":"将公式前文字改为先给定tau、搜索c_mu和F_cl,max，或将tau也作为决策变量共同搜索；保持接合可行离散候选中按峰值热功率择优、再校核脱开的实际顺序及Omega_e与Omega_ed的区分。公式、算法、参数和结果未改；同时精简2.4.3首段并保持后续段落同页，避免分页孤行。latexmk全文编译退出0，共136页；印刷页36／37渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"将数值搜索设置移入2.4.3","description":"按用户意见，把c_mu、F_cl,max及tau的具体离散网格、候选数、Euler／梯形积分、步长和同步容差整段从2.4.2移至2.4.3对象参数表后，首词改为‘本算例’；2.4.2以方法与乘积耦合收尾。LaTeX表格为浮动体，PDF中数值设置出现在小节引言后、表格在下一页；该位置不影响内容归属。公式、数值、代码和模型未改。latexmk全文编译退出0，共136页；印刷页36／37渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-15","title":"准备2.4节纸质审阅件","description":"按用户要求从当时136页main.pdf原样提取PDF页49—57，根目录交付9页A4 PDF。验证提取文本与原始页逐字一致、首末页画面可读；起止两页同时包含相邻小节内容。当时未重编译或修改论文正文。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"统一接合与脱开阶段术语","description":"检查全论文data目录，只有2.4.2出现接合侧／脱开侧，已分别改为接合阶段／脱开阶段；输入／输出轴侧和两侧转速涉及物理位置，保持不变。收紧联合集合释义以避免孤行，并精简2.4.3引言的同页孤字，不改公式、约束、数值或模型。latexmk全文编译退出0，共136页，印刷页36渲染检查通过。旧9页打印摘录当前不在根目录，不自动重建；看板撤销失效链接。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"在定义引入句中配对名称与符号","description":"按用户意见在接合通过集合、脱开热约束通过集合及两阶段均通过集合的名称后分别加入Omega_e、Omega_d与Omega_ed。通读2.4节，同样补明滑动摩擦力矩T_k、有效半径R_eff、总耗散热Q、峰值功率P_h,peak、名义接合时长t_e及所选参数组合p_star；将离散参数网格G的释义移至择优公式前，删除公式后的重复释义。公式、约束和数值不变，保留用户最新文字调整。latexmk全文编译退出0，共136页，印刷页34—36渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"将卸载窗口改为具体过程表述","description":"按用户确认，将2.4.2脱开热指标定义与2.4.3脱开结果说明中的两处‘卸载窗口’改为‘压紧力卸载过程中’；结果段的‘热量和峰值’同时明确为累计耗散热与峰值发热功率。计算区间、公式和数值不变。本章已无卸载窗口用词。latexmk全文编译退出0，共136页，印刷页36／39渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"统一固定加载时间方案与联合搜索方案名称","description":"承接用户将计算模式改称计算方案的修改，补齐2.4.2两处XXX并直接命名固定加载时间方案与联合搜索方案。同步本章引言、小结、2.4节正文、表题、表头和图题；两种配置改为两种方案，固定／联合方案简称改用全称。敏感性表头分行，涉及固定参数的操作按句意改写。使用MATLAB绘图技能从原有数据重导出三张矢量图：可行域子图标题及接合／脱开曲线图例使用方案全称，保留PDF留白与LaTeX裁切。10份论文化数据文件SHA-256均未变，原算法、模型和算例数值未改。latexmk全文编译退出0，共136页；印刷页19、36—42和三张独立图渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"将乘积耦合说明移至可行域结果分析","description":"采用用户提出的移入结果节方案：将原2.4.2结尾关于c_mu与F_cl,max乘积耦合的段落移至sec:2-req-results，在fig:2-8（实际图2.9）后直接引用二维可行域，结合原方程解释等乘积参数组合的理想化响应，随后衔接几何条件筛选。2.4.2以择优与脱开校核收尾。为避免段落首行孤立跨页，保持后续脱开结果说明段同页。公式、图像和数值未改；latexmk全文编译退出0，共136页，印刷页36—40渲染检查通过，图与乘积耦合说明同页。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"明确静摩擦系数的表格备注","description":"按用户确认，将表2.10中静摩擦系数mu_s=0.5的‘仅用于附加条件核查’改为‘用于校核mu_k≤mu_s’，与后文摩擦系数筛选条件直接对应。沿用用户当前正文修改，筛选条件及数值不变。latexmk全文编译退出0，共136页，印刷页37表格渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"简化摩擦盘数量的表格说明","description":"按用户确认，将表2.10的‘摩擦盘数量乘数’改为‘摩擦盘数量’，数值仍为2，第三列改为计数单位‘片’，删除‘沿用当前力矩公式’。与前文n_disc的摩擦盘数量定义保持一致。latexmk全文编译退出0，共136页，印刷页37表格渲染检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"取消两种计算方案的主从定位","description":"按用户意见，2.4.3改为并列比较两种方案的接合同步时间、累计耗散热及峰值发热功率；2.4.4同步归纳两种方案的热量余量与峰值差异，删除固定加载时间方案作为主算例／代表性算例、联合搜索方案仅作对照的定位。既有图表已并列展示，无需改图或数值。保持可行域图说明整段同页，避免首行孤立跨页。看板当前R06摘要、证据及写作约定改为并列比较，保留旧决策的历史日志。latexmk全文编译退出0，共136页，相关段落与分页检查通过。","tasks":["R06","R07"]},
+      {"date":"2026-10-16","title":"明确当前细修任务与下一项写作规范任务","description":"按用户要求更新任务安排：R08进行中，持续根据用户意见修改第2.4节细节；R09待开始，依赖R08，下一步总结此前修改经验，在 docs/thesis_writing_rules.md 新建论文写作基础规则文档。R09记录谨慎引入新概念、符号跨章节一致及首次定义、术语统一、方法与算例分层、图表衔接和证据表述等范围。本次只更新看板，规则文档待后续任务创建；保留R01—R07及全部原历史记录。","tasks":["R08","R09"]},
+      {"date":"2026-10-17","title":"提取2.4与2.5节供纸质审阅","description":"按用户要求从现有main.pdf提取PDF页49—58（印刷页33—42），根目录交付chap02_sections_2_4_2_5.pdf，共10页A4。末页保留2.5节的浮动图2.12，边界页连带相邻小节内容。逐页核对尺寸与内容流一致，全文提取文本一致，首末页渲染可读。未重新编译、未修改论文或研究结果；R08保持进行中，R09保持待开始。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"将可行域图的元素说明集中至首次引用附近","description":"按用户意见删除结果表前对fig:2-8的提前引用，将首次引用集中到图前读图段。颜色、灰点、红色五角星、虚线和空心圈在相邻段落解释，摩擦系数条件、换算依据及筛选点数同步前移，图后保留乘积耦合分析并删除重复解释。原图、判据及数值不变；串行全文编译退出0，共136页，印刷页38渲染确认首次引用、元素说明与图同页，无未定义引用。看板数据校验和git diff --check通过，R08保持进行中。此前打印摘录不自动覆盖。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"简化加载时间表述并调整结果展示精度","description":"通查2.4节，将加载时间截面统一改为不同／两种加载时间下的可行域，正文与图题同步。有效半径及系数上界显示约0.180 m，两方案摩擦系数显示约0.45／0.39；结果表时间、热量和功率及正文百分比等适当舍入，保留原输入参数精度。结果表补充接合热量余量，敏感性表将联合搜索耗散热列改为带正负号的kJ余量，按原CSV未舍入热量换算，避免遮蔽425 J余量及301 J超限。精简重复总结，避免段末句被浮动图表隔开。原始数据、筛选判据、模型与研究结果未改；逐项核对CSV换算及舍入，串行全文编译退出0，共136页，印刷页37—40渲染检查通过，无未定义引用；看板数据校验及git diff --check通过。R08保持进行中，R09待开始，旧打印摘录不自动覆盖。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"贯通需求分解与模型校核的叙述主线","description":"按用户意见，在2.4.2补写导言，说明由时间与热指标上限确定离合器参数的作用及与前后小节的联系；结尾交代搜索输出与所选方案校核的衔接。2.4.3开头明确两环节的输入输出，在参数搜索、可行域、接合／脱开时程及数值敏感性分析的转接处说明各自作用；结果表将前三行分解输出与后续校核指标分组，表题统一为需求分解及模型校核。保持先在接合可行候选中择优、再校核脱开的实际计算顺序，不将同模型校核表述为独立验证。收紧新增导言并保持乘积耦合、敏感性说明各自成段；算法、原始数据和结果不变，全部equation公式、标签及图片引用与修改前一致。串行全文编译退出0，共136页，印刷页36—42渲染检查、看板数据校验及git diff --check通过，无未定义引用。R08保持进行中，R09待开始，旧打印摘录不自动覆盖。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"清理需求分析正文中的实现细节与重复说明","description":"落实用户批准的清理计划：接合时程段保留时间与热约束结论和方案差异，删除含混的共同作用提醒及热量累积／末点清零说明；敏感性段保留表格与可行性判定对数值设置敏感的结论，删除重复数字、百分比及逐行复述，将余量定义移至表注，并补明基准步长1 ms与同步容差1%。整段移除热积分差、细网格测试和等乘积数值对照，已有方法／结果记录继续保存相应证据，不新增附录；前文保留离散搜索范围及力矩关系，用最大滑动摩擦力矩解释等乘积响应。公式、标签、图片引用和表格主体均与修改前一致，模型、参数与原始数据未改。串行全文编译退出0，共136页，印刷页36—41渲染检查通过，无未定义引用；看板JSON、任务依赖与证据引用校验及git diff --check通过。R08保持进行中，R09待开始，旧打印摘录不自动覆盖。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"移除独立敏感性分析，保留必要边界结论","description":"按用户确认，删除2.4.3的独立数值敏感性分析段落、tab:2-req-sensitivity表及表注／引用；在接合方案比较处保留联合搜索方案接近热量上限、可行性判定对数值设置敏感及后续需预留余量的一句结论。同步删去小节导言和本章小结对展开敏感性分析的引导／成果表述；基准步长、同步容差及结果表中的热量余量保留。详细分析与原始数据继续留在方法／结果记录，不将删减正文解释为解决数值问题。当前正文为4小节、2表、5图（包含后来新增的指标关系图），I10同步区分正文与记录。调整段末句及相邻接口段分页，避免被浮动图隔开。仅删除指定表与标签，其余公式、图片引用和表格主体均未改变。串行全文编译退出0，共135页，印刷页36—41渲染检查通过，无未定义引用；看板数据校验及git diff --check通过。R08保持进行中，R09待开始，旧打印摘录不自动覆盖。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"再次提取最新版2.4与2.5节供打印","description":"按用户要求从删除独立敏感性分析后的135页main.pdf，原样提取PDF页49—57（印刷页33—41），根目录生成chap02_sections_2_4_2_5.pdf，共9页A4。包含2.5节的图2.12；按整页保留边界处相邻小节内容，不覆盖带后缀的旧摘录。逐页尺寸、裁切框和内容流一致，提取文本完全一致；首末页及2.5节起始页渲染检查通过。未重新编译、未修改论文；R08保持进行中，R09待开始。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"移除脱开时程图，以结果表呈现脱开校核","description":"按用户确认，从2.4.3移除fig:2-req-disengage图及引用，改为引用tab:2-req-solutions，说明沿用需求分解参数、以同步状态为初始条件，并确认卸载过程的累计耗散热与峰值发热功率满足假定上限。删除的是正文展示，不将风扇尚未停转解释为计算错误，不新增停转指标或延长仿真；模型中卸载结束的计算终点保持不变。原PDF图、绘图脚本和原始数据均保留，结果表与公式未改。当前为4小节、2表、4图，打印摘录标为删除脱开图前的历史版本并修正本机链接，不覆盖文件。串行全文编译退出0，共135页，印刷页39—41渲染检查通过，控制架构图自动改为图2.11，无未定义引用或残留的被删图标签。看板数据校验及git diff --check通过；R08保持进行中，R09待开始。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"统一需求分析图中的升力风扇名称","description":"按用户意见核查第2.4节，正文已全部使用升力风扇，无需替换主发动机风扇称谓。将公用绘图脚本中的风扇转速改为升力风扇转速，保留n_f符号；利用现有MATLAB会话从冻结数据向临时目录导出，仅替换正文使用的接合时程PDF，并恢复既有6 pt留白，LaTeX裁切不变。图中文字对比仅增加升力二字，脚本仅修改标签；全部冻结数据及可行域图、留档脱开图SHA-256未变，不运行原研究算法或仿真。独立图和印刷页39渲染检查通过，串行全文编译退出0，共135页，无未定义引用；看板数据校验与git diff --check通过。R08保持进行中，R09待开始，旧打印摘录不覆盖。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"将可行域子图题移至各子图下方","description":"按用户确认，使用MATLAB绘图与PDF检查技能，将图2.9两幅子图原顶部标题移至各自横轴标签下方、公共图例上方，分别合并显示固定加载时间方案（tau=1.5 s）和联合搜索方案（tau=5 s）。仅更新绘图脚本和可行域PDF，保留整体图题、坐标标签、图例、6 pt留白及LaTeX裁切；冻结数据与两张时程PDF的12项SHA-256均未变，未运行原研究算法或仿真。独立图与印刷页38渲染检查无重叠或裁切，串行全文编译退出0，共135页，无未定义引用或缺字。看板数据校验及git diff --check通过；R08保持进行中，R09待开始，不覆盖历史打印摘录。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"将口径与机构容量等表述改为具体含义","description":"按用户确认改写本章小结：以系数与最大压紧力乘积对响应的影响、同步时间与名义接合时长的关系替代等乘积参数耦合及时间指标口径，以离合器参数设计替代机构容量。通查本章，将2.4节首段口径不一致改为指标定义不一致、模型缺位改为缺少计算模型；引言中数值口径与边界方案检查改为时间与热指标上限校核，避免继续引导已删除的独立敏感性分析；所检数值配置改为本算例，轴系耦合按此前约定统一为转子耦合。保留用户已删除跨章时间对比段的现状，未恢复或归为本次删除。公式、标签、图片引用和数值不变，历史技术记录不替换术语。PDF技能用于相关版式检查，串行全文编译退出0，共135页，印刷页19、33、39—41渲染正常，无未定义引用或缺字；看板JSON、任务依赖及证据校验和git diff --check通过。R08保持进行中，R09待开始，不覆盖打印摘录。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"第一批清理根目录与临时检查产物","description":"按用户授权，将三份已跟踪的方法、第一批核对和结果记录移入docs/chap02_requirements，修正看板及文档超链接，补充普通路径和命令仍按项目根目录解释的说明；研究正文和历史证据内容不改。核对精确路径、Git跟踪状态及无重解析点后，将38项临时文件／目录（含137个文件，约25.9 MiB的页面预览、报告提取副本、一次性检查脚本及修改前快照）送入Windows回收站，可从回收站恢复。完整R05运行目录、运行日志、正式复现及绘图脚本、论文化数据、旧配图备份、用户笔记和浏览器目录保留；浏览器仍运行，未清理可能关联草稿的配置。用户此前已删除的打印摘录不恢复，根目录原图与摘录的失效链接改为历史说明。174项受保护文件SHA-256未变；三份记录除路径调整与路径说明外内容一致，看板JSON／依赖／证据及本地链接校验、git diff --check通过。未改论文或重新编译，未暂存或提交；R08进行中、R09待开始。","tasks":["R08"]},
+      {"date":"2026-10-17","title":"结束R08并将需求分解看板归档","description":"用户确认需求分解写作阶段结束，将R08标为已完成，补充用户确认与既有逐项验收证据；R09写作规则总结仍待开始，本次不执行。看板移入docs/chap02_requirements，与三份研究记录同目录；同步英文AGENTS.md入口和研究记录返回链接。资料索引继续显示项目根目录相对路径，通过明确的项目根URL解析链接，不改变页内锚点；历史任务、问题及原工作日志保留。按用户要求不迁移旧草稿，归档位置使用新的草稿存储键，从空白开始，后续输入仍可本地保存；未读取或复制旧浏览器草稿。校验14项任务（13完成、1待开始）、依赖、全部本地资料及文档链接、脚本语法、链接解析与草稿初始化／保存恢复逻辑，git diff --check通过；论文、模型、参数和数值不变，不重新编译，未暂存或提交。","tasks":["R08","R09"]},
+      {"date":"2026-10-17","title":"按授权同步全论文清单并安排第四章优先","description":"用户确认第二章本轮写作结束，明确要求更新博士论文待办清单。总清单将B03、S04、S06按当前范围标为完成，B03不再包含已取消且未实施的可转换飞行包线求解，不声称参数已统一传入后续章节；取消离合器温度动态建模的范围继续保留。B02独立过渡态验证仍为可选补充，S05保留完稿图内文字与最终架构复核，不作为转入第四章的前置。新增下一阶段优先完善现第四章的安排，待用户提供已有论文后，先核对方法、公式、理论与已有结果，再确认章节重排和缺口；B06跨章闭环仿真不自动启动，既有理论／应用拆章方案保持拟议。R09写作规则总结仍待开始，不阻塞下一阶段；本看板维持归档。检查任务编号、完成状态、资料链接、看板依赖及git diff --check，未改论文、模型、参数或仿真结果，未暂存或提交。","tasks":["R08","R09"]},
+      {"date":"2026-10-17","title":"开始R09：按普遍性与高频经验优先归纳写作规则","description":"用户授权先归纳总结，要求优先排列反复出现且与具体技术无关、能在多个章节复用的经验，将细节后置。将R09置为进行中，对照当前可见用户建议、工作日志及正文整理通用原则；排序采用定性判断，不虚构统计频次，不要求用户补充材料。本次不修改论文或启动研究任务。","tasks":["R09"]},
+      {"date":"2026-10-17","title":"完成R09：交付论文写作基础规则","description":"新建docs/thesis_writing_rules.md，按概念克制、术语／符号一致、首次定义、导言与输入输出、主题贯通、正面解释、修改联动等通用规则优先排序，再归纳正文与实现细节分层、证据等级、方案比较、图文衔接、精度及版式，共13条，每条均含规则、理由、检查方法及真实实例，另附12项自查清单和E1—E13依据。核对当前正文、日志标题、必要条件及个别取舍的适用边界；第3章表格经验明确来自可见历史建议，不冒充第2章日志。规则编号、字段、例证及6个本地链接校验通过；看板JSON、脚本语法、14项任务依赖与证据、资料链接及git diff --check通过。R09完成，全部14项记录完成，看板继续归档，保留未解决研究问题，不新增自动任务。除新增规则文档及更新本看板外未修改其他文件；论文、模型、参数、研究记录与数值不变，未编译、未暂存或提交。","tasks":["R09"]},
+      {"date":"2026-10-17","title":"精简R09：删除独立排版规则","description":"按用户确认删除写作规则第13条及E13实例依据，不再展开子图题位置、表格细线、对齐和PDF裁切等局部样式；在自查清单单独保留最终PDF中图表、公式和相邻文字清晰可读、无重叠裁切或阅读顺序问题的检查。同步调整引言和分组，精度规则归入结果呈现；当前为12条规则、13项自查、E1—E12及5个本地链接。看板当前数量与R09证据同步，原13条交付历史保留；规则字段、编号、实例、链接、看板JSON及依赖证据检查与git diff --check通过。R09保持完成，本次只改规则文档与本看板，未改论文、AGENTS.md、研究资料或已有PDF，未编译、暂存或提交。","tasks":["R09"]},
+      {"date":"2026-10-17","title":"暂挂R10／R11全论文术语与符号统一任务","description":"按用户批准计划，仅在第二章看板新增R10全论文概念与术语表、R11全论文符号定义表，类别全论文规范、优先级高、状态待开始，各依赖已完成R09，彼此不设强制先后。明确交付内容、独立完成判据和第四章C03／专题术语表的分工；两张计划表尚未创建，不直接生成论文印刷版符号表。写作规则前3条增加查阅说明，仅链接本看板任务卡并显示计划文件名，强调集中表不能替代正文首次定义。概况、维护说明、资料索引、下一步和决策同步；保留原14项完成任务、问题与全部历史。校验16项任务（14完成、2待开始）、依赖、证据、资料路径、Markdown任务锚点与脚本语法，git diff --check通过；脚本及草稿功能未改。只更新本看板和写作规则，未执行两项整理任务、未创建空表，第四章资料、AGENTS.md、总清单、论文及已有PDF指纹未变；未编译、暂存或提交。","tasks":["R10","R11"]},
+      {"date":"2026-10-17","title":"开始实施R10／R11全论文工作表","description":"用户授权检查任务后直接落实。确认可在不改论文的情况下完成查阅表和差异登记，将R10／R11置为进行中；对照main.tex、摘要、第1—6章主要术语／公式及第四章专题初稿，保留旧范围和新理论尚未核验的边界。","tasks":["R10","R11"]},
+      {"date":"2026-10-17","title":"完成R10／R11：交付全论文术语及符号查阅表","description":"建立docs/thesis_terminology.md（89项核心术语、5项旧范围、10项差异）与docs/thesis_symbols.md（101项符号／符号族、下标规则及16项缺口），每项记录定义、适用对象、别称或单位维数、来源和状态。区分用户已定、现稿、建议、新理论拟迁入与取消内容；定位X_12／10项、N_1／N_2、SM定义、转速归一化和模型对象等差异，不改公式或把差异标为解决。写作规则改为实际链接；第四章专题表仅加双向入口与维护记录，32项术语和用户备注不变，第四章看板只补资料及日志，C03等任务状态均不变。校验T001—T089、S001—S101、表格列数、来源标签、本地链接、两看板JSON／脚本语法及依赖证据；git diff --check通过。148项受保护文件指纹不变，论文、模型、算法、参数、研究记录和已有PDF未改，未编译、运行仿真、暂存或提交。R10／R11按建立工作表和定位差异范围完成，全16项记录完成；后续术语选择与章节技术核对经授权开展。","tasks":["R10","R11"]},
+      {"date":"2026-10-18","title":"确认两项名称并澄清半物理平台与闭环试验状态","description":"用户采纳最大内接圆和Pareto前沿，更新全论文术语表T047／T071、Q04／Q09及第四章专题表T15为已确认名称，正文仍待同步。用户说明半物理仿真试验条件已建立、实施路径已跑通，但模式转换闭环试验尚未开展；Q10明确关注控制计划／控制器在模式转换过程的闭环试验，不是平台搭建或链路调试，不由此推断其他场景试验情况。同步T083／T089、I14和两看板日志，保留其余技术差异及原任务状态；仅维护记录，不改正文、总清单或研究结果，不运行仿真或编译。检查词条、链接、表格列数、JSON／脚本语法、任务及原历史保持和git diff --check通过。","tasks":["R10","R11"]},
+      {"date":"2026-10-18","title":"登记R12—R15四批全论文差异处理任务","description":"按用户授权，仅在本看板新增四项高优先级待开始任务：R12已确认名称与试验事实、R13录入疑点及符号释义、R14物理定义与数学关系、R15随第四章迁移核对。分别列出Q／D编号、依据、边界及完成判据；R12／R13可合批优先开展，R14在基础核查后推进，R15与既有C01／C03及迁移任务联动，不另建竞争标准或修补将删除的旧证明。保留原16项完成记录、差异历史与草稿脚本，更新概况、下一步、I14及维护约定；任务总数20项，16完成、4待开始。本次不执行修订，不改论文、两张查阅表、第四章资料或全论文清单，不编译或运行研究。","tasks":["R12","R13","R14","R15"]},
+      {"date":"2026-10-18","title":"完成R12：同步确认名称与平台／模式转换试验状态","description":"用户授权检查下一任务后直接执行。已有确认足够，本批只做R12：摘要与第2／3／6章11处旧名称统一为最大内接圆；第4章两处前沿和一处集合统一为Pareto名称，图4.8英文保留。image33.pdf仅覆盖图例文字，原图像流、页面尺寸及坐标数据不变；综合图image15／image16／image26及其复用缩略图按此前完稿安排保留旧字样，相关正文TODO和Q04明确跟踪。摘要、第1／5／6章区分已建平台与已打通链路、尚未开展的模式转换闭环试验，删除不存在的试验结果引导，不推断其他场景状态。更新全论文术语表、第四章T15及日志，C01—C10和R13—R15状态不变。串行全文编译退出0，最终132页；压缩摘要新增状态说明后关键词同页，相关印刷页16、52、54、92、95、100、103—104渲染检查通过，无未定义引用或缺字，原有非致命告警保留。核对数学内容、标签／引用、图片尺寸／裁切选项及其他media文件未改；任务总数20，17完成、3待开始，原历史与草稿脚本保留。未修改算法、参数、数值、英文原稿、总清单、AGENTS.md或符号表，未运行仿真、暂存或提交。","tasks":["R12"]},
+      {"date":"2026-10-18","title":"完成R13：核实录入疑点并补齐本批符号释义","description":"按用户授权检查下一项后直接执行。对照第2章表2-3／表2-4、残差向量及最新版走廊英文稿的N_X=10、eq:vector-definitions与tab:A3_difference，eq:2-11末项X_12修为X_10，低压行左端两处N_2修为N_1；高压及所有右端项不变。补第2章eq:2-9／eq:2-10后的x／u／y／X和f／g／h释义；D03第4章部分仍交R15。第3章原流量与系数公式不改，补lambda临界声速基准、q(1)=1、所用SI单位和m单位。符号表保留原差异并追加来源标签／行号／SHA-256、气动恒等关系与量纲推导；RN2522引用保留，未取得教材原页，不称逐页核验。全文编译退出0，132页；印刷页25—29、44—45渲染检查，无未定义引用或缺字，原有非致命告警保留。仅本看板、符号表和第2／3章新增本轮修改；其余受保护文件、原始英文稿、模型／参数／图像／结果与暂存区未改，原任务历史及草稿脚本保留，git diff --check通过。20项记录中18完成、2待开始；未执行R14／R15、仿真或研究测试，未暂存／提交。","tasks":["R13"]},
+      {"date":"2026-10-18","title":"R14只读初核：收窄到分段方向与整机核心源码确认","description":"按用户要求先检查下一项是否需确认。已对照最新版走廊英文稿eq:tilde-h／eq:F-tilde、截面距离说明、eq:29／eq:29-weights及原／新版连接图，检查论文部件名称、模型校核用语、输出维数及整机／APP6判据。D08在固定压紧力截面内只比较两面积坐标，不能直接认定为混合单位度量错误；D10则存在分段方向、权重和起点释义不一致，需要用户确认是否按最新版英文稿统一。查现有Req_APP模型与RCE_P1接口，核心分别调用sfun_enginecore／sfun_modelcore并提供mex／dll，可读核心实现未定位；SM公式、相对换算转速基准及整机锁定判据不能由简化APP6推断，需用户提供源码／工程位置。将R14置为待确认，新增I15与来源索引；未开始正文修订，不将任何未核问题标为解决。任务仍20项，18完成、1待确认、1待开始；原历史与草稿脚本保留，未改论文、查阅表、模型、参数、数值或暂存区，未编译、运行模型或仿真。","tasks":["R14"]},
+      {"date":"2026-10-18","title":"解除R14来源障碍并落实已确认的D10","description":"用户同意式3-26按新版统一并提供Code。静态定位C核心、Fan／HPC／Clutch内嵌XML及初始化脚本，源码足够继续核查，无需手动导出；新增审查记录含公式定位、版本指纹及剩余差异。同步递增连接公式、起点／交点说明与image34.png，配图逐字节取自英文稿schedule_start_connection.png，两面积共用0.6 m²参考值。全文编译退出0，132页，印刷页54—55渲染检查通过；符号表追加D05—D08线索及D10处理结果，保留发现历史。R14改为进行中，20项中18完成、1进行中、1待开始。顶层覆盖、参考轴／GR、滑差偏移等尚待核，R14未完成，R15未启动。未执行初始化、加载模型、仿真或研究测试；原工程、APP6参数及既有数值不变，未暂存或提交。","tasks":["R14"]},
+      {"date":"2026-10-18","title":"R14继续：落实定义与维数修订，剩两项待确认","description":"按用户授权继续静态追踪。确认FanVar/HPC的SMNEn=off及SMavail百分数通道；追到DP_MWS加载、bin标度覆盖、GR=1实例和双向连接脚本。正文同步STOVL展开、3BSM／3BSN对象区别、需求流程模型校核、反流、喘振裕度及LPV风扇相对换算转速。补表2-6原有23号面积下限，修第3章列方向、Ny−1与2(Ny−1)、11维合并残差，补截面面积距离m²说明及T4／Tt4／Tti对象。同步两张全论文表与第四章共享定义记录，C03状态不变。未改模型／原始参数／结果，未运行初始化或仿真。新发现的同步附近+1数值处理及当前脚本与论文限值差异需C1／C2确认，R14转待确认，R15未启动；20项中18完成、1待确认、1待开始。全文编译退出0，133页；相关表格／公式／流程图已渲染检查，无未定义引用或缺字，原有非致命告警不在本轮清理。原历史、草稿脚本及暂存区保持不变，git diff --check通过。","tasks":["R14"]},
+      {"date":"2026-10-18","title":"推进R15来源前置：完成第四章C01","description":"用户要求检查下一项后直接执行，未将R14两处待确认视为同意。R15依赖第四章来源与迁入安排，故本批先完成C01：两英文全文、9项文本和12图指纹、7张表、公式／定理／证明与旧稿处置对应，形成source_mapping.md。记录M01—M08，包括增量与固定LTI对象、双积分器预测矩阵／分区、旧新版数值及浮点候选边界；C03／C07／C08未验收。R15标进行中，仅来源前置已完成；第四章C01完成后下一步C02。R14仍待确认，任务20项为18完成、1进行中、1待确认。仅维护记录，未改论文、原项目、模型、参数、数值、总清单或暂存区，未编译／运行模型或新研究。两看板数据、脚本、链接及git diff --check检查通过，原历史与草稿功能保留。","tasks":["R15"]},
+      {"date":"2026-10-18","title":"推进R15结构前置：完成第四章C02","description":"按用户授权继续下一项，既有理论定位与拟议章分工足够，无新增用户选择。第四章交付chapter_structure.md：4.1—4.7作用／输入输出／来源、共同QP去重、固定LTI稳定性衔接、理论图表取舍、拟第五章应用与拟第六章平台边界；当前chap05平台文件与拟应用章号区分，未执行章节搬移。C02完成后第四章13任务为5完成、8待开始，下一步C03；R15仍进行中，只完成来源和结构前置，R14两项仍待确认，本看板20任务计数不变。未改论文、原项目、算法、参数、结果、总清单或暂存区，未编译／运行研究。两看板JSON、脚本、依赖、证据和本地链接及git diff --check检查通过，原历史与私人草稿脚本保持。","tasks":["R15"]},
+      {"date":"2026-10-18","title":"完成R14：落实用户确认的C1／C2处理方案","description":"用户明确同意两项建议。保留eq:2-2理想式，简述1 rad/s滑差数值偏移及切换采用数值力矩；按GR=1基准，正文同步绝对相对差、abs(T_cls)<abs(T_k)与反向abs(T_cls)>T_s且lock cmd=0，限定N_o非零。图2-5旧判据和反向下一状态0／1倒置登记为完稿TODO，原图未改，不冒称图文全部同步。Code仅作定义／实现依据，论文0.1—0.85及现有限值、结果保留，历史算例配置未认证。审查§8、两张查阅表与第四章状态记录同步。R14本批静态核对／文字修订完成，第二章20任务为19完成、1进行中（R15）；第四章C03仍待开始。全文编译133页，相关印刷页24—25检查通过，无未定义引用或LaTeX缺字；图原字体渲染提示及既有非致命版式告警保留。未运行模型、仿真或研究测试，原源码／参数／图像／数值和暂存区不改。","tasks":["R14"]},
+      {"date":"2026-10-18","title":"R15随C03部分核对：补角色与维数，待Q1／Q2确认","description":"第四章新增model_symbol_audit.md，静态核对两套状态／输入、采样索引、主要维数与QP展开，追踪七区域控制律实际返回legacy表、KKT设计Bd=[0;1]及主方法连续对象精确保持映射。Q1需确认博士论文的实际设计模型表述；ISA末点D项约定缺失，在AST找到两种实现但无法认定结果版本，Q2请用户确认MPC_Controller_XF或提供对应工程。第四章C03转待确认、未完成，C04未执行；R15保持进行中，本看板20项仍19完成、1进行中，R14不重开。同步查阅表与资料入口，保留原历史和浏览器脚本。未改论文、原代码／模型／参数／数据／结果、总清单或暂存区，未编译、运行求解器／仿真，不将静态核对记为研究验收。","tasks":["R15"]},
+      {"date":"2026-10-18","title":"补ISA源码入口并交付根目录双积分器详细说明","description":"用户提供AMPC_ISA_Latex_ori/Code，并选择运算量分析与ISA正文保持一致；已登记目录及代表函数，Q2后续由助手查实现，不再要求用户猜版本，也不把DSS／DMS等形式的精确运算量或所有结果视为相同。按要求新建double_integrator_model_explanation.md，从物理类比、两种离散公式、七区域控制律调用、精确连续采样验证讲清Q1及对结论的影响，列明源文件和两种处理方案，用户尚未采纳任一方案。同步C03记录、两看板和查阅入口；R15仍进行中、C03待确认，计数不变。未改论文、原工程、模型／参数／结果、总清单或暂存区，未编译或运行研究；原历史与草稿脚本保留。","tasks":["R15"]},
+      {"date":"2026-10-18","title":"登记Q1保留方案，R15继续随C03核对","description":"用户采纳保留现有控制律与结果、正文迁入时简要区分设计与精确采样验证对象的方案，Q1不再待确认。同步第四章记录及全论文查阅入口；Q2由助手继续查实现，C03恢复进行中，R15未完成，R14不重开。第二章已完成任务及历史不改，本次不改正文、源代码／模型／参数／结果或暂存区，不运行研究。","tasks":["R15"]},
+      {"date":"2026-10-18","title":"同步C03静态核对完成，R15继续迁入跟踪","description":"第四章正式记录补全末点保持与完整预测块，辨明DMS／DSS、输入惩罚、归一化与评价指标差异；理论写作按用户既定的ISA主稿取向，不要求再选内部版本。C03完成但正文／证明／历史结果尚未验收，下一步C04未执行，R15进行中，R14及第二章已完成写作不重开。根目录临时说明已清理，撤下失效链接并由正式记录承接。未改论文、原源码／模型／参数／数值或暂存区，未运行研究。","tasks":["R15"]}
+    ]
+  }
+  </script>
+  <script>
+    "use strict";
+    const board = JSON.parse(document.getElementById("board-data").textContent);
+    const sourceMap = new Map(board.sources.map(source => [source.id, source]));
+    const taskMap = new Map(board.tasks.map(task => [task.id, task]));
+    const controls = { search:document.getElementById("search"), status:document.getElementById("status-filter"), category:document.getElementById("category-filter") };
+    const printState = { active:false, details:[], filters:null };
+    const draftInput = document.getElementById("draft");
+    const draftStatus = document.getElementById("draft-save-status");
+    const refreshStatus = document.getElementById("refresh-status");
+    // Source paths remain project-root-relative; in-page anchors stay local.
+    const projectRootUrl = new URL("../../", location.href);
+    const storagePrefix = "chap02-requirements:" + location.pathname + ":";
+    // The archived board starts empty and does not import the old path draft.
+    const draftKey = storagePrefix + "draft-v2-archive";
+    const viewKey = storagePrefix + "view-v1";
+    let draftStorage = null;
+    let viewStorage = null;
+    let draftUnsaved = false;
+    let composingDraft = false;
+    let refreshing = false;
+    function el(tag, className, text) {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      if (text !== undefined) node.textContent = text;
+      return node;
+    }
+    function sourceLink(id) {
+      const source = sourceMap.get(id);
+      if (!source) throw new Error("Unknown source: " + id);
+      if (!source.path) return el("span", "", source.title);
+      const link = el("a", "", source.title);
+      link.setAttribute("href", new URL(encodeURI(source.path), projectRootUrl).href);
+      link.setAttribute("title", source.path);
+      return link;
+    }
+    function taskLink(id) {
+      if (!taskMap.has(id)) throw new Error("Unknown task: " + id);
+      const link = el("a", "dependency", id);
+      link.setAttribute("href", "#task-" + id);
+      link.setAttribute("title", taskMap.get(id).title);
+      link.addEventListener("click", () => {
+        resetFilters();
+        const details = document.querySelector("#task-" + id + " details");
+        if (details) details.open = true;
+      });
+      return link;
+    }
+    function validateData() {
+      if (taskMap.size !== board.tasks.length || sourceMap.size !== board.sources.length) throw new Error("Duplicate IDs");
+      const visitState = new Map();
+      function visit(id) {
+        if (visitState.get(id) === 1) throw new Error("Dependency cycle: " + id);
+        if (visitState.get(id) === 2) return;
+        visitState.set(id, 1);
+        const task = taskMap.get(id);
+        if (!task) throw new Error("Missing dependency: " + id);
+        task.dependsOn.forEach(visit);
+        visitState.set(id, 2);
+      }
+      for (const task of board.tasks) {
+        if (!board.statuses.includes(task.status)) throw new Error("Unknown status: " + task.id);
+        if (!task.action || !task.acceptance || !task.category || !task.priority) throw new Error("Incomplete task: " + task.id);
+        if (task.status === "已完成" && (!task.completed || !task.evidence.length)) throw new Error("Completion without evidence: " + task.id);
+        task.evidence.forEach(item => { if (!sourceMap.has(item.source)) throw new Error("Missing evidence source: " + task.id); });
+        visit(task.id);
+      }
+      board.issues.forEach(issue => {
+        issue.tasks.forEach(id => { if (!taskMap.has(id)) throw new Error("Unknown issue task"); });
+        issue.sources.forEach(id => { if (!sourceMap.has(id)) throw new Error("Unknown issue source"); });
+      });
+      board.nextActions.forEach(item => { if (!taskMap.has(item.task)) throw new Error("Unknown next task"); });
+      board.history.forEach(entry => entry.tasks.forEach(id => { if (!taskMap.has(id)) throw new Error("Unknown history task"); }));
+    }
+    function renderOverview() {
+      const metadata = document.getElementById("metadata");
+      ["创建 " + board.meta.created, "更新 " + board.meta.updated, board.meta.owner].forEach(text => metadata.append(el("span", "", text)));
+      const statistics = [{ label:"全部记录", count:board.tasks.length, hint:"含前期工作与后续任务" }, ...board.statuses.map(status => ({ label:status, count:board.tasks.filter(task => task.status === status).length, hint:status === "已完成" ? "逐项判据已有对应记录" : status === "待开始" ? "尚未执行，不代表已验证" : status === "待确认" ? "确需用户来源或选择" : "仅记录实际开展的工作" }))];
+      for (const stat of statistics) {
+        const card = el("div", "stat" + (stat.label === "已完成" ? " done" : ""));
+        card.append(el("p", "stat-label", stat.label), el("p", "stat-value", String(stat.count)), el("p", "stat-hint", stat.hint));
+        document.getElementById("stats").append(card);
+      }
+      document.getElementById("stage-title").textContent = board.meta.stage;
+      document.getElementById("stage-description").textContent = board.meta.stageDescription;
+      board.nextActions.forEach((item, index) => {
+        const card = el("article", "next-card");
+        card.append(el("small", "", "NEXT " + String(index + 1).padStart(2, "0") + " / " + item.task), el("h3", "", item.title), el("p", "", item.description));
+        const linkLine = el("p", ""); linkLine.style.marginTop = "10px"; linkLine.append(taskLink(item.task)); card.append(linkLine);
+        document.getElementById("next-actions").append(card);
+      });
+    }
+    function renderTask(task) {
+      const card = el("article", "task"); card.id = "task-" + task.id; card.dataset.taskId = task.id;
+      const meta = el("div", "task-meta");
+      meta.append(el("span", "task-id", task.id), el("span", "", task.category), el("span", "priority" + (task.priority === "普通" ? " normal" : ""), task.priority === "高" ? "高优先级" : "普通优先级"));
+      card.append(meta, el("h4", "", task.title), el("p", "task-summary", task.summary), el("p", "task-state", task.status + (task.completed ? " · " + task.completed : " · 尚未达到完成判据")));
+      const details = el("details", "");
+      details.append(el("summary", "", "行动、完成判据与证据"));
+      const list = el("dl", "");
+      list.append(el("dt", "", "具体行动"), el("dd", "", task.action), el("dt", "", "完成判据"), el("dd", "", task.acceptance), el("dt", "", "前置依赖"));
+      const dependencies = el("dd", "");
+      if (!task.dependsOn.length) dependencies.textContent = "无";
+      else task.dependsOn.forEach(id => { dependencies.append(taskLink(id), el("span", "", taskMap.get(id).status + " ")); });
+      list.append(dependencies, el("dt", "", task.status === "已完成" ? "完成证据" : "待核验线索（不是验收证据）"));
+      const evidence = el("dd", ""); const evidenceList = el("ul", "");
+      task.evidence.forEach(item => {
+        const row = el("li", ""); row.append(sourceLink(item.source), document.createTextNode("：" + item.note)); evidenceList.append(row);
+      });
+      evidence.append(evidenceList); list.append(evidence); details.append(list); card.append(details);
+      return card;
+    }
+    function matchesTask(task) {
+      const query = controls.search.value.trim().toLocaleLowerCase();
+      const evidenceText = task.evidence.map(item => sourceMap.get(item.source).title + " " + (sourceMap.get(item.source).path || "") + " " + item.note).join(" ");
+      const relatedIssues = board.issues.filter(issue => issue.tasks.includes(task.id)).map(issue => issue.title + " " + issue.observation).join(" ");
+      const text = [task.id, task.title, task.category, task.priority, task.status, task.summary, task.action, task.acceptance, evidenceText, relatedIssues].join(" ").toLocaleLowerCase();
+      return (!controls.status.value || task.status === controls.status.value) && (!controls.category.value || task.category === controls.category.value) && (!query || text.includes(query));
+    }
+    function renderTasks() {
+      const openIDs = new Set(Array.from(document.querySelectorAll(".task details[open]")).map(details => details.closest(".task").dataset.taskId));
+      const matched = board.tasks.filter(matchesTask);
+      const kanban = document.getElementById("kanban"); kanban.replaceChildren();
+      for (const status of board.statuses) {
+        if (controls.status.value && status !== controls.status.value) continue;
+        const column = el("section", "column"); column.dataset.status = status; column.setAttribute("aria-label", status + "任务");
+        const heading = el("div", "column-heading"); const title = el("h3", ""); title.append(el("span", "dot"), document.createTextNode(status));
+        const tasks = matched.filter(task => task.status === status);
+        heading.append(title, el("span", "count", String(tasks.length))); column.append(heading);
+        tasks.forEach(task => { const card = renderTask(task); card.querySelector("details").open = openIDs.has(task.id); column.append(card); });
+        if (!tasks.length) column.append(el("p", "empty", controls.search.value || controls.category.value ? "当前筛选下没有任务" : "暂无此状态任务"));
+        kanban.append(column);
+      }
+      document.getElementById("filter-summary").textContent = "显示 " + matched.length + " / " + board.tasks.length + " 项任务。搜索范围包含行动、判据、证据与关联问题；顶部数量始终反映完整记录。";
+      document.getElementById("board-empty").hidden = matched.length !== 0;
+      kanban.hidden = matched.length === 0;
+    }
+    function resetFilters() {
+      controls.search.value = ""; controls.status.value = ""; controls.category.value = ""; renderTasks();
+    }
+    function renderIssues() {
+      board.issues.forEach(issue => {
+        const card = el("article", "issue");
+        card.append(el("span", "badge coral", issue.id + " / " + issue.status), el("h3", "", issue.title), el("p", "", issue.observation));
+        const foot = el("div", "issue-foot"); foot.append(document.createTextNode("跟踪任务 ")); issue.tasks.forEach(id => foot.append(taskLink(id)));
+        const evidence = el("p", ""); evidence.style.marginTop = "6px"; evidence.append(document.createTextNode("源码 / 资料："));
+        issue.sources.forEach((id, index) => { if (index) evidence.append(document.createTextNode(" · ")); evidence.append(sourceLink(id)); });
+        foot.append(evidence); card.append(foot); document.getElementById("issue-list").append(card);
+      });
+      board.decisions.forEach(text => document.getElementById("decision-list").append(el("li", "", text)));
+    }
+    function renderHistoryAndSources() {
+      board.history.slice().reverse().forEach(entry => {
+        const row = el("article", "log-entry"); const description = el("div", ""); description.append(el("h3", "", entry.title), el("p", "", entry.description));
+        const links = el("p", ""); entry.tasks.forEach(id => links.append(taskLink(id))); if (entry.tasks.length) description.append(links);
+        row.append(el("p", "log-date", entry.date), description); document.getElementById("work-log").append(row);
+      });
+      board.sources.forEach(source => {
+        const row = el("article", "source"); row.id = "source-" + source.id;
+        const name = el("div", "source-name"); name.append(sourceLink(source.id));
+        const info = el("div", ""); info.append(el("p", "source-note", source.note), el("p", "source-path mono", source.path || "建板前对话摘要 · 无本地附件"));
+        row.append(name, info); document.getElementById("source-list").append(row);
+      });
+    }
+    function preparePrint() {
+      if (printState.active) return;
+      printState.active = true;
+      printState.filters = { search:controls.search.value, status:controls.status.value, category:controls.category.value };
+      printState.details = Array.from(document.querySelectorAll(".task details[open]")).map(details => details.closest(".task").dataset.taskId);
+      resetFilters();
+      document.querySelectorAll(".task details").forEach(details => { details.open = true; });
+    }
+    function restorePrint() {
+      if (!printState.active) return;
+      const { search, status, category } = printState.filters;
+      document.querySelectorAll(".task details").forEach(details => { details.open = printState.details.includes(details.closest(".task").dataset.taskId); });
+      controls.search.value = search; controls.status.value = status; controls.category.value = category; renderTasks();
+      printState.active = false;
+    }
+    function setDraftStatus(message, warning = false) {
+      draftStatus.textContent = message;
+      draftStatus.classList.toggle("warning", warning);
+    }
+    function updateDraftCount() {
+      document.getElementById("draft-count").textContent = Array.from(draftInput.value).length + " 字符";
+    }
+    function saveDraft() {
+      updateDraftCount();
+      if (!draftStorage) {
+        draftUnsaved = draftInput.value.length > 0;
+        setDraftStatus("无法本地保存，请及时复制或导出；手动刷新已受保护。", true);
+        return false;
+      }
+      try {
+        const savedAt = new Date().toISOString();
+        draftStorage.setItem(draftKey, JSON.stringify({ text:draftInput.value, savedAt }));
+        draftUnsaved = false;
+        const time = new Date(savedAt).toLocaleTimeString("zh-CN", { timeZone:"Asia/Shanghai", hour12:false });
+        setDraftStatus("已自动保存到当前浏览器 · " + time);
+        return true;
+      } catch {
+        draftUnsaved = true;
+        setDraftStatus("保存失败，草稿仍在当前文本框；请导出后再刷新。", true);
+        return false;
+      }
+    }
+    function initializeScratchpad() {
+      try {
+        const storage = window.localStorage;
+        const raw = storage.getItem(draftKey);
+        if (raw !== null) {
+          const saved = JSON.parse(raw);
+          if (!saved || typeof saved.text !== "string") throw new Error("Invalid draft data");
+          draftInput.value = saved.text;
+        }
+        const probe = storagePrefix + "storage-probe";
+        storage.setItem(probe, "1"); storage.removeItem(probe);
+        draftStorage = storage;
+        setDraftStatus(raw === null ? "输入即自动本地保存" : "已恢复当前浏览器保存的草稿");
+      } catch {
+        setDraftStatus("浏览器存储不可用或已有草稿无法读取；请复制／导出后再刷新。", true);
+      }
+      try {
+        const storage = window.sessionStorage;
+        const probe = storagePrefix + "view-probe";
+        storage.setItem(probe, "1"); storage.removeItem(probe); viewStorage = storage;
+      } catch { /* Reload is disabled when the view cannot be preserved. */ }
+      updateDraftCount();
+      restoreViewState();
+    }
+    function captureViewState() {
+      const headerHeight = document.querySelector(".topbar").getBoundingClientRect().height;
+      const visible = Array.from(document.querySelectorAll(".task[id],.source[id],#scratchpad,#tasks,#issues,#history,#materials,#overview"))
+        .map(node => ({ node, rect:node.getBoundingClientRect() }))
+        .filter(item => item.rect.bottom > headerHeight && item.rect.top < innerHeight)
+        .sort((a,b) => Math.abs(a.rect.top-headerHeight)-Math.abs(b.rect.top-headerHeight));
+      return {
+        savedAt:Date.now(), search:controls.search.value, status:controls.status.value, category:controls.category.value,
+        openIDs:Array.from(document.querySelectorAll(".task details[open]")).map(node => node.closest(".task").dataset.taskId),
+        scrollY, scrollX, anchor:visible[0] ? { id:visible[0].node.id, top:visible[0].rect.top } : null,
+        draftHeight:draftInput.getBoundingClientRect().height, draftScroll:draftInput.scrollTop,
+        selectionStart:draftInput.selectionStart, selectionEnd:draftInput.selectionEnd
+      };
+    }
+    function restoreViewState() {
+      if (!viewStorage) return;
+      let state;
+      try {
+        state = JSON.parse(viewStorage.getItem(viewKey) || "null");
+        viewStorage.removeItem(viewKey);
+      } catch { return; }
+      if (!state || !Number.isFinite(state.savedAt) || Date.now()-state.savedAt > 120000) return;
+      controls.search.value = typeof state.search === "string" ? state.search : "";
+      if (Array.from(controls.status.options).some(option => option.value === state.status)) controls.status.value = state.status;
+      if (Array.from(controls.category.options).some(option => option.value === state.category)) controls.category.value = state.category;
+      renderTasks();
+      if (Array.isArray(state.openIDs)) document.querySelectorAll(".task details").forEach(node => { node.open = state.openIDs.includes(node.closest(".task").dataset.taskId); });
+      if (Number.isFinite(state.draftHeight)) draftInput.style.height = Math.min(1200, Math.max(190,state.draftHeight)) + "px";
+      if (Number.isFinite(state.selectionStart) && Number.isFinite(state.selectionEnd)) draftInput.setSelectionRange(state.selectionStart,state.selectionEnd);
+      requestAnimationFrame(() => requestAnimationFrame(() => {
+        const anchor = state.anchor && typeof state.anchor.id === "string" ? document.getElementById(state.anchor.id) : null;
+        const y = anchor && Number.isFinite(state.anchor.top) ? anchor.getBoundingClientRect().top + window.scrollY - state.anchor.top : state.scrollY;
+        const behavior = document.documentElement.style.scrollBehavior;
+        document.documentElement.style.scrollBehavior = "auto";
+        window.scrollTo(Number.isFinite(state.scrollX) ? state.scrollX : 0, Number.isFinite(y) ? Math.max(0,y) : 0);
+        document.documentElement.style.scrollBehavior = behavior;
+        if (Number.isFinite(state.draftScroll)) draftInput.scrollTop = state.draftScroll;
+      }));
+    }
+    function refreshBlockReason() {
+      if (printState.active || window.matchMedia("print").matches) return "打印中，暂缓刷新";
+      if (composingDraft) return "中文输入中，暂缓刷新（草稿持续保存）";
+      if (!draftStorage || draftUnsaved) return "草稿未能安全保存，已暂停刷新；请复制或导出";
+      if (!viewStorage) return "无法保留浏览位置，手动刷新已暂停";
+      return "";
+    }
+    function refreshBoard() {
+      if (refreshing) return;
+      const reason = refreshBlockReason();
+      if (reason) { refreshStatus.textContent = reason; return; }
+      try { viewStorage.setItem(viewKey, JSON.stringify(captureViewState())); }
+      catch { refreshStatus.textContent = "无法保留浏览状态，刷新已暂停"; return; }
+      refreshing = true;
+      refreshStatus.textContent = "正在重新加载最新看板…";
+      location.reload();
+    }
+    draftInput.addEventListener("input", saveDraft);
+    draftInput.addEventListener("compositionstart", () => { composingDraft = true; });
+    draftInput.addEventListener("compositionend", () => { composingDraft = false; saveDraft(); });
+    document.getElementById("refresh-now").addEventListener("click", refreshBoard);
+    document.getElementById("copy-draft").addEventListener("click", async () => {
+      const start = draftInput.selectionStart, end = draftInput.selectionEnd;
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(draftInput.value);
+        else { draftInput.focus(); draftInput.select(); if (!document.execCommand("copy")) throw new Error("Clipboard unavailable"); draftInput.setSelectionRange(start,end); }
+        setDraftStatus(draftUnsaved ? "草稿已复制；本地保存仍失败，请导出备份。" : "草稿已复制；本地保存内容不变。", draftUnsaved);
+      } catch { draftInput.focus(); draftInput.select(); setDraftStatus("浏览器未允许复制，已选中草稿；请按 Ctrl+C 或导出。", true); }
+    });
+    document.getElementById("export-draft").addEventListener("click", () => {
+      const url = URL.createObjectURL(new Blob(["\uFEFF",draftInput.value], { type:"text/plain;charset=utf-8" }));
+      const link = document.createElement("a"); link.href = url; link.download = "chap02_requirements_draft.txt";
+      document.body.append(link); link.click(); link.remove(); setTimeout(() => URL.revokeObjectURL(url),10000);
+    });
+    window.addEventListener("beforeunload", event => { if (draftUnsaved && draftInput.value) { event.preventDefault(); event.returnValue = ""; } });
+    validateData();
+    board.statuses.forEach(status => controls.status.append(new Option(status, status)));
+    Array.from(new Set(board.tasks.map(task => task.category))).forEach(category => controls.category.append(new Option(category, category)));
+    renderOverview(); renderTasks(); renderIssues(); renderHistoryAndSources();
+    controls.search.addEventListener("input", renderTasks);
+    controls.status.addEventListener("change", renderTasks);
+    controls.category.addEventListener("change", renderTasks);
+    document.getElementById("reset-button").addEventListener("click", resetFilters);
+    document.getElementById("print-button").addEventListener("click", () => { preparePrint(); window.print(); });
+    window.addEventListener("beforeprint", preparePrint);
+    window.addEventListener("afterprint", restorePrint);
+    initializeScratchpad();
+    document.documentElement.dataset.boardReady = "true";
+  </script>
+</body>
+</html>

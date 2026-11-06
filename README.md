@@ -4,7 +4,7 @@
 
 一个面向长期项目的轻量 AI skill：让 AI 在工作前读取项目看板，在完成授权工作后更新进展，把任务、下一步行动、证据和历史记录留在项目自己的 HTML 文件中。
 
-适合论文返修、科研实验、软件开发等需要多轮推进的项目。技能规则见 [SKILL.md](SKILL.md)。
+适合论文返修、科研实验、软件开发等需要多轮推进的项目。技能规则见 [SKILL.md](project-workboard/SKILL.md)。
 
 技能由 Markdown 指令和 HTML 案例组成，可用于能够加载 `SKILL.md`、访问配套资源并读写项目文件的 AI 工具，例如 Codex、Claude Code、WorkBuddy。安装路径、调用入口和项目指令文件随工具及其配置而变化。
 
@@ -23,7 +23,7 @@
 需要能够加载本技能并读取和编辑项目文件的 AI 工具，以及用于查看 HTML 的现代浏览器。此 skill 无需额外安装 Python、Node.js、服务器或包管理器。
 
 1. 在本仓库的 GitHub 页面选择 **Code → Download ZIP**，下载并解压。
-2. 保留包含 `SKILL.md` 和 `assets/` 的完整技能目录，按所用工具的方式安装到技能目录，或通过技能面板导入。
+2. 找到解压后仓库根目录中的 `project-workboard/` 子目录；将这个包含 `SKILL.md` 和 `assets/` 的完整子目录安装到所用工具的技能目录，或按该工具的要求打包后通过技能面板导入。
 3. 在该工具的技能列表或调用入口中选择 `project-workboard`。如果没有识别到新技能，按该工具的要求刷新或重新启动会话。
 
 | 工具或安装配置 | 用户级目录示例（当前用户的所有项目） | 项目级目录示例（仅当前项目） |
@@ -46,7 +46,7 @@ project-workboard/
         └── AMPC_ISA_revision_board.html
 ```
 
-如果已有安装，更新前保留自己添加或替换的 HTML 案例。README 和许可证可随目录一起保留。
+如果已有安装，更新前保留自己添加或替换的 HTML 案例。仓库根目录的 README 和许可证也可一并复制到安装后的技能目录中。
 
 ## 开始使用
 
@@ -68,7 +68,7 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 
 ## 选择或添加自己的 HTML 案例
 
-案例目录为此 skill 内的 [`assets/example/`](assets/example/)。你可以替换内置案例，也可以把自己的 HTML 文件放到该目录，与现有案例并存；无需沿用内置文件名。
+案例目录为此 skill 内的 [`assets/example/`](project-workboard/assets/example/)，在本仓库中的路径为 `project-workboard/assets/example/`。你可以替换内置案例，也可以把自己的 HTML 文件放到该目录，与现有案例并存；无需沿用内置文件名。
 
 - **多个 HTML**：AI 列出可用文件，请用户选择。
 - **只有一个 HTML**：AI 仍需请用户确认。
@@ -76,11 +76,11 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 - **目录中没有 HTML**：AI 请用户添加或提供案例后再继续。
 - **项目已有看板**：优先继续维护，无需每次工作都重新选择案例。
 
-内置的 [AMPC_ISA_revision_board.html](assets/example/AMPC_ISA_revision_board.html) 是论文返修看板案例，界面以中文为主，包含原项目的任务、历史及材料链接。相关项目材料不随本仓库提供。创建新看板时，AI 会替换这些项目内容和链接，将结果保存在目标项目中，保留案例文件供后续使用。
+内置的 [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) 是论文返修看板案例，界面以中文为主，包含原项目的任务、历史及材料链接。相关项目材料不随本仓库提供。创建新看板时，AI 会替换这些项目内容和链接，将结果保存在目标项目中，保留案例文件供后续使用。
 
 ## 阶段如何收尾
 
-每个阶段按以下顺序安排三个独立任务，以 [SKILL.md](SKILL.md) 的规则为准：
+每个阶段按以下顺序安排三个独立任务，以 [SKILL.md](project-workboard/SKILL.md) 的规则为准：
 
 1. **独立核验与修正**：在项目根目录写出核验要求，给出引用该文件的提示词，请用户另开新对话核验；记录发现、修正和再次核验。当前实施对话及其子代理不能代替独立核验。
 2. **用户审阅**：处理反馈，并取得用户对本轮审阅结束的明确确认。
@@ -91,15 +91,16 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 ## 仓库结构
 
 ```text
-project-workboard/
-├── SKILL.md                 # AI 读取的技能规则
+project-workboard-repo/
 ├── README.md                # 中文说明（默认首页）
 ├── README.en.md             # 英文说明
 ├── LICENSE                  # MIT 许可证
 ├── .gitignore               # 系统及编辑器临时文件忽略规则
-└── assets/
-    └── example/             # 可替换、可并存的 HTML 案例
-        └── AMPC_ISA_revision_board.html
+└── project-workboard/       # 可直接安装的技能目录
+    ├── SKILL.md             # AI 读取的技能规则
+    └── assets/
+        └── example/         # 可替换、可并存的 HTML 案例
+            └── AMPC_ISA_revision_board.html
 ```
 
 ## 许可证

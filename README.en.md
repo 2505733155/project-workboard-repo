@@ -4,7 +4,7 @@
 
 A lightweight AI skill for long-term projects. It guides the AI to read a project board before working and update it after authorized work, keeping tasks, next actions, evidence, and history in the project's own HTML file.
 
-Use it for paper revisions, research experiments, software development, and other projects spanning multiple work sessions. The skill's instructions are in [SKILL.md](SKILL.md).
+Use it for paper revisions, research experiments, software development, and other projects spanning multiple work sessions. The skill's instructions are in [SKILL.md](project-workboard/SKILL.md).
 
 The skill consists of Markdown instructions and HTML examples. It can be used with AI tools that load `SKILL.md`, access supporting resources, and read and edit project files, such as Codex, Claude Code, and WorkBuddy. Installation paths, invocation methods, and project instruction files depend on the tool and its configuration.
 
@@ -23,7 +23,7 @@ This is a file-maintenance workflow carried out by the AI. Refresh the board in 
 You need an AI tool that can load the skill and read and edit project files, and a modern browser to view the HTML. The skill requires no additional Python, Node.js, server, or package manager installation.
 
 1. On this repository's GitHub page, select **Code → Download ZIP** and extract the archive.
-2. Keep the complete skill directory, including `SKILL.md` and `assets/`, and install it in your tool's skill directory or import it through the tool's skills panel.
+2. Find the `project-workboard/` subdirectory in the extracted repository root. Install this complete subdirectory, including `SKILL.md` and `assets/`, in your tool's skill directory, or package it as required by your tool and import it through the skills panel.
 3. Select `project-workboard` through that tool's skill list or invocation interface. If it does not appear, refresh or restart the session as required by the tool.
 
 | Tool or installation configuration | User-level directory example (all your projects) | Project-level directory example (current project only) |
@@ -46,7 +46,7 @@ project-workboard/
         └── AMPC_ISA_revision_board.html
 ```
 
-Before updating an existing installation, preserve any HTML examples you have added or replaced. You may keep the README files and license alongside the installed skill.
+Before updating an existing installation, preserve any HTML examples you have added or replaced. You may also copy the README files and license from the repository root into the installed skill directory.
 
 ## Getting started
 
@@ -69,7 +69,7 @@ Open the generated project HTML in a browser. The bundled example includes topic
 
 ## Choosing or adding HTML examples
 
-Examples live in this skill's [`assets/example/`](assets/example/) directory. Replace the bundled example or add your own HTML files alongside it. You do not need to keep the bundled filename.
+Examples live in this skill's [`assets/example/`](project-workboard/assets/example/) directory, at `project-workboard/assets/example/` in this repository. Replace the bundled example or add your own HTML files alongside it. You do not need to keep the bundled filename.
 
 - **Multiple HTML files:** the AI lists the available files and asks the user to choose.
 - **One HTML file:** the AI still asks the user to confirm it.
@@ -77,11 +77,11 @@ Examples live in this skill's [`assets/example/`](assets/example/) directory. Re
 - **No HTML files:** the AI asks the user to add or provide an example before proceeding.
 - **An existing project board:** the AI prioritizes maintaining it, without requiring a new example selection for every work session.
 
-The bundled [AMPC_ISA_revision_board.html](assets/example/AMPC_ISA_revision_board.html) is a paper-revision example with a primarily Chinese interface. It contains tasks, history, and material links from its original project; those project materials are not included in this repository. When creating a new board, the AI replaces that project content and its links, saves the result in the target project, and preserves the example for future use.
+The bundled [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) is a paper-revision example with a primarily Chinese interface. It contains tasks, history, and material links from its original project; those project materials are not included in this repository. When creating a new board, the AI replaces that project content and its links, saves the result in the target project, and preserves the example for future use.
 
 ## Closing a phase
 
-Each phase ends with three separate tasks in this order, following [SKILL.md](SKILL.md):
+Each phase ends with three separate tasks in this order, following [SKILL.md](project-workboard/SKILL.md):
 
 1. **Independent verification and corrections:** write verification requirements in the project root, provide a prompt referencing that file, and ask the user to open a new conversation for verification. Record findings, corrections, and re-verification. The implementing conversation and its subagents cannot fulfill this independent verification task.
 2. **User review:** address feedback and obtain the user's explicit confirmation that the review is complete.
@@ -92,15 +92,16 @@ To opt a project out of workboard use, tell your current AI assistant explicitly
 ## Repository layout
 
 ```text
-project-workboard/
-├── SKILL.md                 # Instructions read by the AI
+project-workboard-repo/
 ├── README.md                # Chinese documentation and default landing page
 ├── README.en.md             # English documentation
 ├── LICENSE                  # MIT license
 ├── .gitignore               # OS and editor temporary-file ignore rules
-└── assets/
-    └── example/             # Replaceable HTML examples that can coexist
-        └── AMPC_ISA_revision_board.html
+└── project-workboard/       # Installable skill directory
+    ├── SKILL.md             # Instructions read by the AI
+    └── assets/
+        └── example/         # Replaceable HTML examples that can coexist
+            └── AMPC_ISA_revision_board.html
 ```
 
 ## License
