@@ -1,0 +1,2675 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <meta name="description" content="ISA Transactions 论文返修：按讨论逻辑与十二个意见主题导航，逐条核验审稿意见是否得到回应。">
+  <title>ISA Transactions · 论文返修任务看板</title>
+  <style>
+    :root { --ink:#192e40; --muted:#637583; --blue:#215bd6; --blue-soft:#edf3ff; --line:#dce4e9; --paper:#fff; --bg:#f4f7f9; --green:#21684b; --green-soft:#edf8f2; --amber:#8b5b0d; --amber-soft:#fff6df; --radius:16px; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; scroll-padding-top:84px; }
+    body { margin:0; color:var(--ink); background:var(--bg); font-family:"Segoe UI","Microsoft YaHei",system-ui,sans-serif; font-size:14px; line-height:1.65; }
+    a { color:var(--blue); text-underline-offset:3px; overflow-wrap:anywhere; }
+    button,input,select,textarea { font:inherit; }
+    button,select { cursor:pointer; }
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible,a:focus-visible { outline:3px solid #8ab1ff; outline-offset:3px; }
+    button { color:inherit; }
+    .shell { width:min(1480px,calc(100% - 64px)); margin:0 auto; }
+    .topbar { position:sticky; top:0; z-index:10; background:#f4f7f9f5; border-bottom:1px solid var(--line); backdrop-filter:blur(12px); }
+    .topbar .shell { display:flex; justify-content:space-between; align-items:center; gap:20px; min-height:64px; }
+    .brand { font-weight:700; letter-spacing:.035em; display:flex; align-items:center; gap:10px; }
+    .brand-mark { width:24px; height:24px; border:7px solid var(--blue); border-radius:7px; transform:rotate(-8deg); }
+    .brand small { color:var(--muted); font-weight:500; font-size:12px; }
+    nav { display:flex; gap:23px; }
+    nav a { color:var(--muted); text-decoration:none; font-size:13px; }
+    nav a:hover { color:var(--blue); }
+    main { padding:38px 0 40px; }
+    .hero { display:grid; grid-template-columns:minmax(0,1.8fr) minmax(270px,1fr); gap:32px; align-items:stretch; }
+    .eyebrow { color:var(--blue); font-size:11px; font-weight:700; letter-spacing:.16em; text-transform:uppercase; margin:0 0 12px; }
+    h1 { font-size:clamp(26px,3vw,42px); line-height:1.3; letter-spacing:-.035em; margin:0 0 16px; max-width:860px; }
+    .lead { font-size:16px; color:var(--muted); max-width:760px; margin:0; }
+    .hero-meta { display:flex; flex-wrap:wrap; gap:8px 20px; color:var(--muted); font-size:12px; margin-top:24px; }
+    .focus-card { background:var(--ink); color:white; padding:26px; border-radius:var(--radius); display:flex; flex-direction:column; justify-content:space-between; position:relative; overflow:hidden; }
+    .focus-card:after { content:""; position:absolute; width:150px; height:150px; border:28px solid #ffffff07; border-radius:50%; right:-65px; top:-65px; pointer-events:none; }
+    .focus-card .eyebrow { color:#a9c5ff; }
+    .focus-card h2 { margin:0 0 12px; font-size:23px; }
+    .focus-card p { margin:0; color:#c4d0dc; font-size:13px; }
+    .focus-foot { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:24px; font-size:12px; color:#c4d0dc; }
+    .focus-foot a { color:white; }
+    section { margin-top:36px; scroll-margin-top:84px; }
+    .section-head { display:flex; justify-content:space-between; gap:20px; align-items:baseline; margin-bottom:15px; }
+    .section-head h2 { font-size:19px; margin:0; letter-spacing:-.025em; }
+    .section-head p { color:var(--muted); margin:0; font-size:12px; }
+    .roadmap { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; }
+    .phase { min-width:0; background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); }
+    .phase.current { border-color:#8faefa; box-shadow:inset 0 3px 0 var(--blue); }
+    .phase.selected { outline:2px solid var(--blue); outline-offset:3px; }
+    .phase-select { display:block; width:100%; padding:21px; border:0; border-radius:var(--radius); color:inherit; background:transparent; text-align:left; }
+    .phase-select:hover { background:#f5f8ff; }
+    .phase-name { display:block; font-size:17px; font-weight:700; margin:0 0 8px; overflow-wrap:anywhere; }
+    .phase-description { display:block; color:var(--muted); font-size:13px; margin:0 0 14px; }
+    .phase-hint { display:block; font-size:12px; color:var(--blue); }
+    .phase-top { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:13px; }
+    .phase-num { color:#94a3af; font-size:29px; line-height:1; font-weight:650; }
+    .phase.current .phase-num { color:var(--blue); }
+    .phase h3 { margin:0 0 7px; font-size:17px; }
+    .phase .environment { color:var(--blue); font-size:12px; margin-bottom:12px; }
+    .phase p { font-size:13px; color:var(--muted); margin:0 0 14px; }
+    .phase details { border-top:1px solid var(--line); padding-top:12px; margin:0 21px 18px; }
+    .phase summary { cursor:pointer; font-size:12px; font-weight:600; }
+    .phase details p { margin:10px 0 0; font-size:12px; }
+    .phase details .pending { color:var(--amber); }
+    .badge { display:inline-flex; align-items:center; gap:5px; border-radius:6px; padding:3px 8px; background:#eef2f5; color:#61717e; font-size:11px; font-weight:600; white-space:nowrap; }
+    .badge.doing,.badge.current { background:var(--blue-soft); color:var(--blue); }
+    .badge.done { background:var(--green-soft); color:var(--green); }
+    .badge.waiting { background:var(--amber-soft); color:var(--amber); }
+    .review-verdict { display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 18px; background:var(--amber-soft); border:1px solid #e8d2a5; border-radius:12px; padding:17px 20px; margin-bottom:14px; }
+    .review-verdict strong { font-size:17px; color:var(--amber); }
+    .review-verdict p { margin:0; color:var(--muted); font-size:13px; flex:1 1 480px; }
+    .review-grid { display:grid; grid-template-columns:1.35fr 1fr; gap:14px; }
+    .review-card { min-width:0; padding:20px; border:1px solid var(--line); border-radius:12px; background:var(--paper); }
+    .review-card h3,.review-subhead { font-size:15px; margin:0 0 12px; }
+    .review-card p { margin:0 0 10px; font-size:13px; color:var(--muted); overflow-wrap:anywhere; }
+    .review-card p:last-child { margin-bottom:0; }
+    .review-facts { margin:0; }
+    .review-facts dt { font-size:12px; font-weight:700; margin:13px 0 4px; }
+    .review-facts dt:first-child { margin-top:0; }
+    .review-facts dd { margin:0; font-size:13px; color:var(--muted); overflow-wrap:anywhere; }
+    .review-links { display:flex; flex-wrap:wrap; gap:4px 14px; font-size:12px; margin-top:6px; }
+    .review-chain { margin-top:14px; }
+    .review-flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:18px; }
+    .review-node { min-width:0; background:var(--blue-soft); border:1px solid #d9e4fc; border-radius:9px; padding:14px; position:relative; }
+    .review-node:not(:last-child):after { content:"→"; position:absolute; top:17px; right:-16px; color:var(--blue); }
+    .review-node span { display:block; color:var(--blue); font-size:11px; margin-bottom:5px; }
+    .review-node h4 { font-size:13px; margin:0 0 6px; }
+    .review-node p { font-size:12px; margin:0; }
+    .review-feedback { border-left:3px solid var(--blue); padding:8px 12px; background:#f6f9ff; margin-top:12px !important; }
+    .review-scoring { margin-top:10px !important; }
+    .review-metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(155px,1fr)); gap:10px; margin-top:14px; }
+    .review-metric { border:1px solid var(--line); background:white; border-radius:10px; padding:14px; min-width:0; }
+    .review-metric span { display:block; font-size:11px; color:var(--muted); }
+    .review-metric strong { display:block; font-size:22px; font-weight:650; margin:3px 0; }
+    .review-metric small { color:var(--muted); font-size:11px; }
+    .review-issues { margin:0; padding-left:20px; color:var(--muted); font-size:13px; }
+    .review-issues li + li { margin-top:10px; }
+    .review-audit { margin-top:18px; }
+    .review-table { width:100%; border-collapse:separate; border-spacing:0; border:1px solid var(--line); border-radius:12px; background:white; overflow:hidden; table-layout:fixed; }
+    .review-table th,.review-table td { padding:14px 16px; text-align:left; vertical-align:top; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
+    .review-table th { background:#eaf0f5; font-size:12px; }
+    .review-table th:first-child { width:20%; }
+    .review-table th:nth-child(2) { width:46%; }
+    .review-table tr:last-child td { border-bottom:0; }
+    .review-table td { font-size:12px; }
+    .review-table td strong { display:block; font-size:13px; margin:3px 0 5px; }
+    .review-table td p { color:var(--muted); margin:8px 0 0; }
+    .review-table details { margin-top:8px; }
+    .review-table summary { cursor:pointer; color:var(--blue); font-size:12px; }
+    .review-table .review-links { margin-top:9px; }
+    .review-task-links { display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:8px; }
+    @media(max-width:800px) { .review-grid { grid-template-columns:1fr; } .review-flow { grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; } .review-node:after { display:none; } }
+    @media(max-width:600px) { .review-table,.review-table tbody,.review-table tr,.review-table td { display:block; width:100%; } .review-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); } .review-table td { border:0; padding:7px 14px; } .review-table td:first-child { padding-top:16px; } .review-table td:last-child { padding-bottom:16px; } .review-table tr + tr td:first-child { border-top:1px solid var(--line); } .review-table td[data-label]:before { content:attr(data-label); display:block; font-size:11px; color:var(--muted); margin-bottom:5px; } }
+    @media(max-width:380px) { .review-flow { grid-template-columns:1fr; } .review-metrics { grid-template-columns:1fr; } }
+    .next-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:12px; }
+    .next-card { background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:17px; border-left:3px solid var(--blue); }
+    .next-order { font-size:11px; color:var(--muted); margin-bottom:8px; }
+    .next-title { font-weight:650; margin:0 0 12px; font-size:14px; }
+    .text-btn { background:none; border:0; padding:0; color:var(--blue); font-size:12px; text-align:left; text-decoration:underline; text-underline-offset:3px; }
+    .note { background:#eef2f6; color:var(--muted); padding:11px 14px; border-radius:9px; font-size:12px; margin:14px 0 0; }
+    .toolbar { display:flex; flex-wrap:wrap; align-items:end; gap:14px; padding:16px; background:var(--paper); border:1px solid var(--line); border-radius:12px; margin-bottom:16px; }
+    .field { display:flex; flex-direction:column; gap:5px; }
+    .field label { font-size:11px; color:var(--muted); font-weight:600; }
+    .field select,.field input { height:38px; border:1px solid #ccd7e0; border-radius:7px; background:white; padding:7px 10px; min-width:156px; color:var(--ink); }
+    .field.search { flex:1; min-width:210px; }
+    .field input { width:100%; }
+    .reset { border:1px solid var(--line); background:#f7f9fb; height:38px; border-radius:7px; padding:0 13px; font-size:12px; }
+    .scratch-card { background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:18px; }
+    .scratch-label { display:block; font-size:12px; color:var(--muted); margin-bottom:10px; }
+    .scratch-card textarea { display:block; width:100%; min-height:180px; max-height:70vh; resize:vertical; border:1px solid #ccd7e0; border-radius:9px; padding:13px 15px; color:var(--ink); background:#fbfcfe; line-height:1.7; }
+    .scratch-controls { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; }
+    .scratch-actions,.refresh-controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px; }
+    .scratch-status,.refresh-status { font-size:12px; color:var(--muted); }
+    .scratch-status.error { color:var(--amber); }
+    .scratch-help { color:var(--muted); font-size:12px; margin:12px 0 0; }
+    .board-caption { display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px 18px; font-size:12px; color:var(--muted); margin-bottom:14px; }
+    .board { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:14px; align-items:start; }
+    .column { min-width:0; background:#eaf0f4; border-radius:12px; padding:12px; }
+    .column[data-status=doing] { background:#eaf0fc; }
+    .column[data-status=waiting] { background:#f5f0e4; }
+    .column[data-status=done] { background:#e9f2ee; }
+    .column-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin:0 2px 12px; }
+    .column-head h3 { margin:0; font-size:13px; font-weight:650; }
+    .dot { display:inline-block; width:7px; height:7px; border-radius:50%; background:#738797; margin-right:7px; }
+    [data-status=doing] .dot { background:var(--blue); }
+    [data-status=waiting] .dot { background:#b78022; }
+    [data-status=done] .dot { background:var(--green); }
+    .count { padding:1px 7px; border-radius:5px; background:#ffffffa6; color:var(--muted); font-size:11px; }
+    .task { border:1px solid #d7e0e6; background:var(--paper); border-radius:10px; margin-bottom:10px; scroll-margin-top:86px; }
+    .task:last-child { margin-bottom:0; }
+    .task summary { cursor:pointer; list-style:none; padding:15px; }
+    .task summary::-webkit-details-marker { display:none; }
+    .task-idline { display:flex; align-items:center; justify-content:space-between; gap:8px; font-size:11px; color:var(--muted); }
+    .task-id { font-family:Consolas,monospace; letter-spacing:.035em; }
+    .priority { font-size:10px; font-weight:650; color:#6c7e8c; background:#f0f4f7; padding:1px 5px; border-radius:4px; }
+    .task-title { display:block; margin:9px 0 11px; font-weight:650; font-size:14px; line-height:1.55; }
+    .task-foot { display:flex; align-items:center; justify-content:space-between; font-size:10px; gap:8px; color:var(--muted); }
+    .task-expand { color:var(--blue); font-size:11px; }
+    .task[open] .task-expand:after { content:"收起 −"; }
+    .task:not([open]) .task-expand:after { content:"详情 +"; }
+    .task-detail { border-top:1px solid #e6ecf0; padding:14px 15px; font-size:12px; }
+    .task-detail p { margin:0 0 13px; color:var(--muted); overflow-wrap:anywhere; }
+    .detail-label { display:block; color:var(--ink); font-size:11px; font-weight:700; margin-bottom:4px; }
+    .deps { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:13px; }
+    .dep { border:1px solid var(--line); background:#f6f8fa; border-radius:5px; padding:2px 6px; color:var(--blue); font-size:11px; }
+    .evidence { list-style:none; padding:0; margin:0 0 13px; }
+    .evidence li + li { margin-top:5px; }
+    .verify { background:#f4f7f9; border-radius:6px; padding:9px; }
+    .task-detail p:last-child { margin-bottom:0; }
+    .empty { border:1px dashed #bdcbd6; border-radius:8px; padding:20px 10px; font-size:12px; color:var(--muted); text-align:center; }
+    .empty-result { padding:14px; background:var(--amber-soft); color:var(--amber); border-radius:8px; margin:0 0 14px; }
+    .history { background:var(--paper); border:1px solid var(--line); border-radius:var(--radius); padding:8px 24px; }
+    .history-row { display:grid; grid-template-columns:120px minmax(0,1fr); gap:20px; padding:20px 0; border-bottom:1px solid var(--line); }
+    .history-row:last-child { border-bottom:0; }
+    .history-date { font-size:12px; color:var(--muted); padding-top:2px; }
+    .history-row h3 { display:inline; font-size:14px; font-weight:650; margin-left:8px; }
+    .history-row p { color:var(--muted); font-size:13px; margin:9px 0 0; }
+    .history-links { display:flex; flex-wrap:wrap; gap:8px 18px; font-size:12px; margin-top:10px; }
+    footer { border-top:1px solid var(--line); padding:22px 0 30px; color:var(--muted); font-size:12px; }
+    footer .shell { display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px; }
+    .visually-hidden { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+    @media(max-width:1150px) { .roadmap,.board { grid-template-columns:repeat(2,minmax(0,1fr)); } .next-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:800px) { .shell { width:calc(100% - 32px); } .hero { grid-template-columns:1fr; gap:20px; } .roadmap { grid-template-columns:1fr; } main { padding-top:26px; } .section-head { align-items:start; flex-direction:column; gap:5px; } .brand small { display:none; } nav { gap:13px; } .focus-card { padding:22px; } }
+    @media(max-width:540px) { .board,.next-grid { grid-template-columns:1fr; } .brand { font-size:12px; } nav { gap:10px; } nav a { font-size:11px; } .history { padding:5px 16px; } .history-row { grid-template-columns:1fr; gap:7px; } .history-row h3 { display:block; margin:7px 0 0; } .field:not(.search) { flex:1; min-width:0; } .field select { min-width:0; width:100%; } .field.search { min-width:100%; } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+    @media print { .topbar,.toolbar,.text-btn,.task-expand { display:none; } .shell { width:100%; } body { background:white; font-size:11px; } .hero { grid-template-columns:2fr 1fr; } .board { grid-template-columns:repeat(2,1fr); } .task,.phase,.history-row { break-inside:avoid; } .focus-card { color:var(--ink); background:#eef2f5; } .focus-card p,.focus-foot,.focus-card .eyebrow { color:var(--muted); } section { margin-top:20px; } }
+    [hidden] { display:none !important; }
+    .roadmap { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .phase-select { height:100%; padding:19px; }
+    .phase-top { margin-bottom:10px; }
+    .phase-num { font-size:23px; }
+    .phase-name { font-size:16px; line-height:1.6; margin-bottom:12px; }
+    .phase-description { margin:0; font-size:12px; }
+    .phase.selected { outline:0; border-color:#8faefa; box-shadow:inset 0 3px 0 var(--blue); }
+    .topic-panel { margin-top:20px; padding:20px; border:1px solid var(--line); border-radius:var(--radius); background:#edf2f7; }
+    .topic-label { margin:0 0 12px; color:var(--muted); font-size:12px; }
+    .topic-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .topic-choice { min-width:0; border:1px solid var(--line); border-radius:10px; padding:16px; background:white; text-align:left; }
+    .topic-choice:hover { border-color:#8faefa; }
+    .topic-choice[aria-pressed=true] { border-color:var(--blue); background:var(--blue-soft); }
+    .topic-choice strong { display:block; font-size:14px; margin:6px 0 10px; line-height:1.65; }
+    .topic-choice span { font-size:11px; color:var(--muted); }
+    .topic-choice .topic-number { font-family:Consolas,monospace; color:var(--blue); }
+    .review-grid { align-items:start; }
+    .review-card h3 { margin-bottom:14px; }
+    .source-details { margin-top:12px; padding-top:12px; border-top:1px solid var(--line); }
+    .source-details summary,.original-quote summary { color:var(--blue); cursor:pointer; font-size:12px; }
+    .source-comment + .source-comment { margin-top:18px; }
+    .source-comment strong { display:block; margin:12px 0 6px; font-size:12px; }
+    blockquote { margin:8px 0 0; padding:8px 13px; border-left:3px solid #bed0ec; background:#f6f8fc; color:#526574; white-space:pre-wrap; overflow-wrap:anywhere; font-size:12px; }
+    .audit-head { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:baseline; gap:8px 16px; margin-bottom:12px; }
+    .audit-head h3 { margin:0; }
+    .audit-head p { margin:0; font-size:12px; color:var(--muted); }
+    .review-table th:first-child { width:21%; }
+    .review-table th:nth-child(2) { width:49%; }
+    .review-table td:first-child strong { font-size:12px; }
+    .review-table ul { margin:0; padding-left:17px; }
+    .review-table li + li { margin-top:7px; }
+    .review-table .original-quote { margin:9px 0 0; }
+    .review-table .review-state { margin-top:9px; }
+    .review-links { gap:6px 14px; }
+    .hero h1 { max-width:800px; }
+    .focus-card h2 { font-size:20px; line-height:1.55; }
+    .focus-foot { align-items:flex-start; }
+    .focus-foot a { flex-shrink:0; }
+    .task-columns section { margin-top:0; }
+    .column .empty { min-height:84px; display:grid; place-items:center; }
+    .history:empty { padding:0; }
+    .blank-history { margin:0; padding:18px 0; font-size:12px; color:var(--muted); }
+    .error-panel { color:#983d35; border:1px solid #e9bbb6; background:#fff4f2; border-radius:12px; padding:18px; }
+    .audit-error { display:block; color:#983d35; }
+    @media(max-width:1150px) { .roadmap { grid-template-columns:repeat(2,minmax(0,1fr)); } .topic-list { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:800px) { .roadmap { grid-template-columns:repeat(2,minmax(0,1fr)); } .topic-list { grid-template-columns:1fr; } .topic-panel { padding:15px; } }
+    @media(max-width:540px) { .roadmap { grid-template-columns:1fr; } .phase-select { padding:16px; } .hero h1 { font-size:29px; } .brand small { display:none; } }
+    @media print { .no-print,.scratchpad { display:none !important; } .roadmap { grid-template-columns:repeat(3,1fr); } .topic-panel { background:white; } .topic-choice { break-inside:avoid; } .review-table { table-layout:auto; } .review-table tr { break-inside:avoid; } .review-table blockquote { color:#333; } }
+  </style>
+</head>
+<body>
+  <header class="topbar"><div class="shell">
+    <div class="brand"><span class="brand-mark" aria-hidden="true"></span>AMPC / ISA <small>论文返修任务看板</small></div>
+    <nav aria-label="页面导航"><a href="#roadmap">主题</a><a href="#stage-review">验收</a><a href="#tasks">任务</a><a href="#history">记录</a></nav>
+  </div></header>
+  <main class="shell">
+    <div class="hero">
+      <div>
+        <p class="eyebrow">ISA Transactions / ISATRANS-D-26-02621</p>
+        <h1>逐条回应审稿意见，<br>完成论文修改。</h1>
+        <p class="lead">按讨论逻辑选择主题，以当前修订稿和原始审稿意见为输入，核验每条意见是否得到回应。</p>
+        <div class="hero-meta"><span id="updated-at">最近更新：2026-10-21 · 北京时间</span><span>本地单文件 · 离线查看</span><span>拟修改方案仍在讨论中</span></div>
+      </div>
+      <aside class="focus-card" aria-label="所选意见主题">
+        <div><p class="eyebrow">Selected topic / 所选意见主题</p><h2 id="focus-title"></h2><p id="focus-summary"></p></div>
+        <div class="focus-foot"><span id="focus-state">待逐条核验</span><a href="#stage-review">查看逻辑与验收 →</a></div>
+      </aside>
+    </div>
+    <section id="roadmap" aria-labelledby="roadmap-heading">
+      <div class="section-head"><h2 id="roadmap-heading">阶段路线</h2><p>第一级：讨论逻辑 · 第二级：意见主题</p></div>
+      <div id="group-list" class="roadmap" aria-label="选择讨论逻辑"></div>
+      <div class="topic-panel"><p id="topic-label" class="topic-label"></p><div id="topic-list" class="topic-list" aria-label="选择意见主题"></div></div>
+    </section>
+    <section id="stage-review" aria-labelledby="stage-review-heading">
+      <div class="section-head"><h2 id="stage-review-heading">逻辑闭环与验收</h2><p id="stage-review-caption"></p></div>
+      <div id="stage-review-content"></div>
+    </section>
+    <section id="next" aria-labelledby="next-heading">
+      <div class="section-head"><h2 id="next-heading">接下来，按这个顺序推进</h2><p id="next-caption">由当前主题的任务看板生成</p></div>
+      <div id="next-list" class="next-grid"></div>
+    </section>
+    <section id="scratchpad" class="scratchpad no-print" aria-labelledby="scratchpad-heading">
+      <div class="section-head"><h2 id="scratchpad-heading">草稿本</h2><p>随手记录想法与下一步提示词</p></div>
+      <div class="scratch-card">
+        <label class="scratch-label" for="scratch-draft">你的临时草稿 · 输入后自动保存</label>
+        <textarea id="scratch-draft" placeholder="在这里写下临时想法、待讨论的问题或下一步提示词…" aria-describedby="draft-save-status scratch-help" spellcheck="false"></textarea>
+        <div class="scratch-controls"><div class="scratch-actions"><span id="draft-save-status" class="scratch-status" role="status" aria-live="polite">草稿为空</span><button id="download-draft" class="text-btn" type="button">下载草稿</button></div><div class="refresh-controls"><span id="refresh-status" class="refresh-status">手动刷新以查看最新进展</span><button id="refresh-now" class="reset" type="button">立即刷新</button></div></div>
+        <p id="scratch-help" class="scratch-help">草稿保存在当前浏览器中，刷新或重新打开可恢复。如需我处理草稿，请粘贴到对话中；也可下载备份。看板仅手动刷新。</p>
+      </div>
+    </section>
+    <section id="tasks" aria-labelledby="tasks-heading">
+      <div class="section-head"><h2 id="tasks-heading">任务看板</h2><p id="tasks-caption">仅显示所选主题的任务</p></div>
+      <div class="toolbar no-print" aria-label="筛选任务"><div class="field"><label for="status-filter">状态</label><select id="status-filter"><option value="all">全部状态</option><option value="todo">未开始</option><option value="doing">进行中</option><option value="waiting">待确认</option><option value="done">已完成</option></select></div><div class="field search"><label for="task-search">搜索</label><input id="task-search" type="search" placeholder="任务名称、编号或说明…" autocomplete="off"></div><button id="reset-filters" class="reset" type="button">重置筛选</button></div>
+      <div class="board-caption"><span id="filter-summary" role="status" aria-live="polite"></span><span id="overall-count"></span></div>
+      <div id="task-board" class="board task-columns"></div>
+    </section>
+    <section id="history" aria-labelledby="history-heading">
+      <div class="section-head"><h2 id="history-heading">工作与决策记录</h2><p>仅所选主题 · 按日期倒序</p></div>
+      <div id="history-list" class="history"></div>
+    </section>
+    <noscript><p class="note">请启用 JavaScript 以使用两级主题选择。原始意见及修改方案可直接在 <a href="Comments/意见总结与修改方案.md">意见总结与修改方案.md</a> 中查看。</p></noscript>
+  </main>
+  <footer><div class="shell"><span>逐条核验 · 方案讨论不等于修改完成</span><span><a href="Comments/意见总结与修改方案.md">意见与修改方案</a> · <a href="Comments/View%20letter（英文）.md">编辑信原文</a></span></div></footer>
+  <!-- 维护入口：board-data 的 groups 为一级导航，topics 为二级导航。
+       意见正文与验收要点按审稿编号追溯；重复意见在不同主题分别验收。
+       修改验收状态前须补充当前稿件位置与验证证据，不把讨论稿当作已完成修改。
+       当前仅录入 Topic 1 任务；后续主题按顺序讨论后再添加。task 使用 topic、status、order、deps、acceptance、deliverables、evidence；交付位置与完成证据分开记录。
+       next 从当前主题 tasks 的非 done 项按 order 排列；不另预置工作计划。
+       浏览器仅保存草稿与浏览状态，正式验收及任务记录由本文件维护。
+       主题取自 Comments/意见总结与修改方案.md；同步原文时需再次核对 36 条独立意见覆盖。 -->
+  <script id="board-data" type="application/json">
+{
+  "meta": {
+    "title": "ISA Transactions · 论文返修任务看板",
+    "created": "2026-10-16",
+    "updated": "2026-11-02",
+    "defaultTopic": 1,
+    "workflow": "T01-10A用户人工审阅已由用户确认完成；下一步为T01-10B全工作目录清查清理，之后开展T01-11独立核验；Topic 1及S03未验收完成",
+    "sourceSha256": "d5715a54b20e5fe81668ca0a8bdbb0ac789370ecc233b1c6f17d857436e0a479"
+  },
+  "sources": {
+    "summary": "Comments/意见总结与修改方案.md",
+    "letter": "Comments/View letter（英文）.md",
+    "manuscript": [
+      {
+        "label": "当前修订稿目录",
+        "path": "AMPC_ISA_Latex_Revised/"
+      },
+      {
+        "label": "正文源码",
+        "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+      },
+      {
+        "label": "普通稿入口",
+        "path": "AMPC_ISA_Latex_Revised/main.tex"
+      },
+      {
+        "label": "标注稿入口",
+        "path": "AMPC_ISA_Latex_Revised/main_highlighted.tex"
+      }
+    ]
+  },
+  "groups": [
+    {
+      "id": "g1",
+      "title": "为什么需要这个方法？创新在哪里？",
+      "topics": [
+        1
+      ]
+    },
+    {
+      "id": "g2",
+      "title": "方法是否成立、是否安全？",
+      "topics": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "g3",
+      "title": "优势是否有充分、公平、接近实际的证据？",
+      "topics": [
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "id": "g4",
+      "title": "结果能否复现，关键性能结论是否可靠？",
+      "topics": [
+        8,
+        9
+      ]
+    },
+    {
+      "id": "g5",
+      "title": "适用范围和局限在哪里？",
+      "topics": [
+        10
+      ]
+    },
+    {
+      "id": "g6",
+      "title": "如何清楚呈现并完成返修提交？",
+      "topics": [
+        11,
+        12
+      ]
+    }
+  ],
+  "topics": [
+    {
+      "id": 1,
+      "title": "明确方法新颖性及与已有多速率、输入分块等 MPC 方法的差异",
+      "group": "g1",
+      "comments": [
+        {
+          "id": "R3.3",
+          "label": "Reviewer #3, Comment 3",
+          "text": "The comparison is limited to conventional MPC and PI control. Comparing the proposed approach with other recent low-complexity MPC techniques would better highlight its advantages and novelty.",
+          "checks": [
+            "纳入有文献依据的近期低复杂度 MPC 代表性方法。",
+            "与现有标准 MPC、PI 比较共同支撑优势及新颖性，说明基线选择和公平条件。"
+          ],
+          "status": "待核验",
+          "response": "2026-10-22讨论更新：现有IB／MMPC／事件驱动代表性比较已纳入。事件驱动属于近年来持续发展的低复杂度路线；审稿人未指定必须完整复现2022／2024具体论文，不以缺少这种复现自动要求新试验。按用户决定暂不新增试验，先用现有结果、可比性理由及明确的适配范围组织回应。具体算法来源与近期背景分开，不能称当前ET为未实测方案的完整复现；正式回应及最终覆盖仍待核验。",
+          "evidence": [
+            {
+              "label": "覆盖核对与阶段确认历史（已并入工作记录）",
+              "path": "docs/返修工作记录.md"
+            },
+            {
+              "label": "当前修订稿与LaTeX标签位置",
+              "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+            },
+            {
+              "label": "当前版本检查记录",
+              "path": "Code/Revision/support/results/topic1_coverage_checks.json"
+            },
+            {
+              "label": "按Topic持续累积的审稿回复草稿（非正式回复）",
+              "path": "Comments/审稿意见回复草稿.md"
+            }
+          ]
+        },
+        {
+          "id": "R4.5",
+          "label": "Reviewer #4, Comment 5",
+          "text": "Although the proposed AMPC framework appears promising, its relationship to existing dual-rate, multi-rate, multiplexed, and input-blocking MPC methods is not sufficiently clarified. The manuscript would benefit from a more explicit discussion of the fundamental algorithmic differences and the resulting advantages over existing approaches. Could the authors clearly identify the principal technical novelty of the proposed AMPC framework and explicitly distinguish it from existing dual-rate and related MPC formulations, preferably through a comparative discussion or summary table?",
+          "checks": [
+            "逐项澄清与双速率、多速率、复用式及输入分块 MPC 的关系。",
+            "指出根本算法差异和主要技术新颖性，并用比较讨论或汇总表说明相应优势。"
+          ],
+          "status": "已核验",
+          "response": "内部正文覆盖已核验（2026-10-22）：引言与表1逐项区分双速率、多速率、复用式、输入分块；3.3节说明粗网格与细网格分块的区别，4.2节／表5／图6对应收益与代价，4.5节保留局限。主要贡献落实到可实施的实时性改进，不将解耦单独作为贡献。此为内部覆盖判断，仍需T01-11独立回查，不证明首次提出或审稿人已接受。",
+          "evidence": [
+            {
+              "label": "覆盖核对与阶段确认历史（已并入工作记录）",
+              "path": "docs/返修工作记录.md"
+            },
+            {
+              "label": "当前修订稿与LaTeX标签位置",
+              "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+            },
+            {
+              "label": "当前版本检查记录",
+              "path": "Code/Revision/support/results/topic1_coverage_checks.json"
+            }
+          ]
+        },
+        {
+          "id": "R5.1",
+          "label": "Reviewer #5, Comment 1",
+          "text": "The novelty of asynchronous MPC requires clearer differentiation from existing multirate, input-blocking, and multiplexed MPC approaches, particularly regarding theoretical contributions beyond decoupling prediction and control sampling periods.",
+          "checks": [
+            "明确与多速率、输入分块和复用式 MPC 的差异。",
+            "回答预测与控制周期解耦之外的理论贡献；贡献表述与实际成立的结果一致。"
+          ],
+          "status": "待核验",
+          "response": "部分回应（2026-10-22）：引言／表1和3.3节已澄清三类方法差异，分析范围与工程贡献已写明；新增说明不声称新的通用稳定性／递归可行性定理，并修正Pareto验证理论优势的措辞。现有公式、成本分析和效果不能直接视为已满足审稿人对理论新意的期待。沿用用户确认的贡献定位，后续Topic 2分析及正式回复需回查本条，未擅自加定理或仿真。",
+          "evidence": [
+            {
+              "label": "覆盖核对与阶段确认历史（已并入工作记录）",
+              "path": "docs/返修工作记录.md"
+            },
+            {
+              "label": "当前修订稿与LaTeX标签位置",
+              "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+            },
+            {
+              "label": "当前版本检查记录",
+              "path": "Code/Revision/support/results/topic1_coverage_checks.json"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "补充闭环稳定性、递归可行性及粗预测误差的分析",
+      "group": "g2",
+      "comments": [
+        {
+          "id": "R1.1",
+          "label": "Reviewer #1, Comment 1",
+          "text": "Please include a discussion or theoretical analysis of the closed-loop stability and recursive feasibility of the proposed AMPC framework.",
+          "checks": [
+            "讨论或分析闭环稳定性，明确假设、适用工况和结论范围。",
+            "单独回应递归可行性，并给出论证或明确未获得保证的限制。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R3.1",
+          "label": "Reviewer #3, Comment 1",
+          "text": "The proposed AMPC strategy is interesting, but the paper does not explain whether the controller remains stable under all operating conditions. A stability analysis or theoretical justification would make the proposed method more convincing.",
+          "checks": [
+            "说明稳定性可适用的运行条件，回应是否具有全工况保证。",
+            "给出稳定性分析或理论依据，并明确超出结论范围的情况。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R3.4",
+          "label": "Reviewer #3, Comment 4",
+          "text": "Using a larger prediction sampling time may reduce the accuracy of future state predictions. The authors should discuss how this affects tracking performance and constraint handling, especially during fast engine transients.",
+          "checks": [
+            "分析增大预测采样时间带来的未来状态预测偏差。",
+            "解释对快速发动机瞬态跟踪性能和约束处理的影响，并提供依据。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.1",
+          "label": "Reviewer #4, Comment 1",
+          "text": "The proposed asynchronous MPC framework is validated through simulation and hardware-in-the-loop experiments; however, the manuscript does not provide any theoretical guarantees regarding recursive feasibility or closed-loop stability. Since the prediction model operates on a coarse sampling grid while the control input is updated on a finer sampling grid, the proposed asynchronous implementation introduces approximation errors whose influence on closed-loop behavior is not analyzed. Furthermore, the conclusion states that theoretical stability analysis will be considered in future work, suggesting that this important aspect remains unresolved. Could the authors clarify whether the proposed AMPC formulation admits formal guarantees of recursive feasibility and closed-loop stability? If rigorous proofs are beyond the scope of this work, please discuss the theoretical conditions under which stability may be expected, and clearly state the limitations of the proposed approach\ntogether with its intended scope of applicability.",
+          "checks": [
+            "明确回答是否具有递归可行性和闭环稳定性的形式化保证。",
+            "分析粗预测／细执行近似误差对闭环的影响。",
+            "若无完整证明，给出有依据的稳定性条件、局限及预期适用范围；不能只写未来工作。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.3",
+          "label": "Reviewer #5, Comment 3",
+          "text": "Coarse prediction discretization may overlook fast engine dynamics and transient constraint violations; quantify prediction errors and evaluate how increasing the prediction sampling interval affects closed-loop stability and tracking performance.",
+          "checks": [
+            "量化粗预测误差，分析遗漏快速动态及瞬态约束违反的问题。",
+            "评估增大预测采样间隔对闭环稳定性和跟踪性能的影响。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "分析预测节点之间的约束满足，量化温度越限与安全裕度",
+      "group": "g2",
+      "comments": [
+        {
+          "id": "R3.6",
+          "label": "Reviewer #3, Comment 6",
+          "text": "Since the constraints are checked only at the coarse prediction points, there is a possibility that constraint violations may occur between two prediction intervals. This aspect should be analyzed in more detail, particularly for safety-critical engine operation.",
+          "checks": [
+            "分析粗预测节点之间的约束违反风险。",
+            "针对发动机安全相关参数提供节点间分析或验证，并说明保证范围。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.4",
+          "label": "Reviewer #4, Comment 4",
+          "text": "The HIL experiments show temporary violations of turbine temperature constraints, although the manuscript states that the proposed controller rigorously enforces engine safety limits. The discussion attributes these violations to actuator dynamics and suggests introducing safety margins, but neither the required margins nor their impact on controller performance are quantified. Could the authors explain the source of these constraint violations, quantify the required safety margins, and discuss whether complete constraint satisfaction can be achieved without significantly degrading controller performance?",
+          "checks": [
+            "解释 HIL 涡轮温度短暂越限的来源。",
+            "量化安全裕度及其对跟踪性能的影响。",
+            "回答何种条件下可完全满足约束，并使安全性主张与证据一致。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.4",
+          "label": "Reviewer #5, Comment 4",
+          "text": "Output constraints are enforced only at coarse prediction nodes, potentially missing intermediate excursions in critical engine variables; provide rigorous safety-margin selection and validate constraint satisfaction throughout continuous-time trajectories.",
+          "checks": [
+            "给出关键输出的安全裕度选取依据。",
+            "验证节点间及连续时间轨迹的约束满足；区分数值验证与严格保证。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "解释执行机构速率约束的物理依据、可行性与保守性",
+      "group": "g2",
+      "comments": [
+        {
+          "id": "R4.7",
+          "label": "Reviewer #4, Comment 7",
+          "text": "The tightened actuator rate constraint is applied to all predicted control moves, although only the first control action is implemented before the optimization is repeated. The motivation for this formulation and its physical interpretation within the asynchronous prediction framework are not entirely clear, and it may introduce unnecessary conservatism. Could the authors justify the proposed rate constraint formulation and discuss whether a less conservative implementation could improve performance while preserving feasibility and safety?",
+          "checks": [
+            "解释为何对所有预测增量收紧约束，以及异步预测下的物理意义。",
+            "分析其保守性，讨论较少保守实现的性能、可行性和安全性。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.5",
+          "label": "Reviewer #5, Comment 5",
+          "text": "The actuator-rate constraint formulation requires further justification because the optimized input sequence uses coarse prediction intervals while physical commands update faster; demonstrate feasibility under actuator saturation and rapid thrust changes.",
+          "checks": [
+            "论证粗预测输入与快速物理命令更新下的速率约束形式。",
+            "在执行机构饱和及快速推力变化下验证可行性。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "完善计算复杂度指标，并补充实际计算耗时与资源占用证据",
+      "group": "g3",
+      "comments": [
+        {
+          "id": "R1.3",
+          "label": "Reviewer #1, Comment 3",
+          "text": "Although the computational complexity is analyzed theoretically, the manuscript would benefit from reporting practical implementation metrics such as optimization time, CPU utilization, memory usage, and solver iterations.",
+          "checks": [
+            "报告实测优化时间、CPU 利用率、内存使用量及求解器迭代次数。",
+            "注明实现平台、统计口径和样本范围。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R1.5",
+          "label": "Reviewer #1, Comment 5",
+          "text": "Add a summary table comparing the computational complexity of conventional MPC and the proposed AMPC.",
+          "checks": [
+            "增加传统 MPC 与 AMPC 的计算复杂度汇总表。",
+            "列明比较假设、问题规模及主要计算项。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R3.5",
+          "label": "Reviewer #3, Comment 5",
+          "text": "The computational benefits are mainly presented through theoretical complexity analysis. Including actual execution time, processor utilization, and solver performance on the embedded hardware would provide stronger evidence of the real-time capability.",
+          "checks": [
+            "报告嵌入式／实时硬件上的实际执行时间、处理器利用率与求解器性能。",
+            "区分实际实时平台证据与桌面测试结果。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.2",
+          "label": "Reviewer #4, Comment 2",
+          "text": "The manuscript presents a FLOP-based computational complexity analysis indicating approximately cubic growth with the prediction horizon. However, the subsequent Pareto optimization employs the prediction horizon Nas the computational cost metric, which appears inconsistent with the earlier analysis. In addition, it is unclear whether the reported computational savings account for matrix sparsity or block-Toeplitz structures that could be exploited in practical implementations. Could the authors clarify the computational cost metric used in the optimization framework, reconcile it with the FLOP-based analysis, and justify the reported computational savings using actual implementation results?",
+          "checks": [
+            "解释 Pareto 中 N 指标与约三次增长的 FLOP 分析的关系。",
+            "说明矩阵稀疏性、块 Toeplitz 结构是否被利用。",
+            "用实际实现结果核对计算节省及计算代价指标。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.2",
+          "label": "Reviewer #5, Comment 2",
+          "text": "The computational complexity analysis assumes dense-matrix operations and specific solver behavior; comparisons with sparse formulations, alternative QP solvers, and warm-start strategies are needed to establish general applicability.",
+          "checks": [
+            "比较稀疏形式、其他 QP 求解器及热启动策略。",
+            "说明原稠密矩阵／求解器假设对结论一般适用性的影响。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.8",
+          "label": "Reviewer #5, Comment 8",
+          "text": "The claimed computational reduction of up to two orders of magnitude should be supported by measured execution times, worst-case latency, processor specifications, and deadline-miss statistics rather than computational estimates alone.",
+          "checks": [
+            "用实测执行时间核对最高两数量级的计算降低主张。",
+            "报告最坏延迟、处理器规格和超时统计，注明测试最大值与严格时间界的区别。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "保证对比公平性，并补充更强的实时 MPC 基线",
+      "group": "g3",
+      "comments": [
+        {
+          "id": "R3.3",
+          "label": "Reviewer #3, Comment 3",
+          "text": "The comparison is limited to conventional MPC and PI control. Comparing the proposed approach with other recent low-complexity MPC techniques would better highlight its advantages and novelty.",
+          "checks": [
+            "纳入有文献依据的近期低复杂度 MPC 代表性方法。",
+            "与现有标准 MPC、PI 比较共同支撑优势及新颖性，说明基线选择和公平条件。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.3",
+          "label": "Reviewer #4, Comment 3",
+          "text": "The comparison between the proposed AMPC and conventional MPC appears to employ different effective prediction horizons. Since the prediction horizon directly affects tracking performance, robustness, and computational effort, it is unclear whether the comparison provides an equivalent basis for evaluating the two controllers.  Could the authors justify the selected prediction horizons or provide additional comparisons using equivalent physical prediction horizons to ensure a fair performance evaluation?",
+          "checks": [
+            "解释既有有效预测时域的选取理由。",
+            "补充等效物理预测时域比较或给出充分依据，说明对性能、鲁棒性与计算量的影响。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.10",
+          "label": "Reviewer #5, Comment 10",
+          "text": "The comparison with standard MPC and gain-scheduled PI control is insufficient to establish overall superiority; include stronger real-time MPC baselines and compare tracking error, constraint violations, computational latency, and control effort under identical conditions.",
+          "checks": [
+            "增加更强的实时 MPC 基线，并说明代表性。",
+            "在相同条件下比较跟踪误差、约束违反、计算延迟与控制作用量。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "title": "加强鲁棒性与 HIL 验证，补充实验配置及重复性细节",
+      "group": "g3",
+      "comments": [
+        {
+          "id": "R1.2",
+          "label": "Reviewer #1, Comment 2",
+          "text": "The robustness evaluation should be strengthened by considering model uncertainties, external disturbances, measurement noise, and parameter variations, together with a comparison against conventional MPC.",
+          "checks": [
+            "覆盖模型不确定性、外部扰动、测量噪声和参数变化。",
+            "在相同测试条件下与传统 MPC 比较，并给出结果和设置依据。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R1.8",
+          "label": "Reviewer #1, Comment 8",
+          "text": "Expand the discussion of the hardware-in-the-loop (HIL) results, particularly regarding the effects of actuator nonlinearities on system performance.",
+          "checks": [
+            "扩展 HIL 结果讨论，结合实际响应解释执行机构非线性对性能的影响。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R3.2",
+          "label": "Reviewer #3, Comment 2",
+          "text": "The controller is tested under nominal conditions only. It would be useful to evaluate its performance under model uncertainties, parameter variations, and measurement noise to demonstrate its robustness in practical aero-engine applications.",
+          "checks": [
+            "补充模型不确定性、参数变化和测量噪声下的性能评估。",
+            "说明条件依据，并给出支持实际发动机鲁棒性主张的结果。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R3.8",
+          "label": "Reviewer #3, Comment 8",
+          "text": "The Hardware-in-the-Loop experiments demonstrate the feasibility of the controller; however, more details about the experimental setup, processor specifications, communication delays, and repeatability of the tests would improve the credibility and reproducibility of the results.",
+          "checks": [
+            "补充 HIL 实验配置和处理器规格。",
+            "说明通信延迟、测试流程及重复性，提供可复现信息。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.9",
+          "label": "Reviewer #5, Comment 9",
+          "text": "Hardware-in-the-loop validation should include more extensive actuator nonidealities, sensor noise, communication delays, model mismatch, and repeated trials to establish robustness under realistic aero-engine operating conditions.",
+          "checks": [
+            "HIL 覆盖代表性执行机构非理想性、传感器噪声、通信延迟及模型失配。",
+            "补充重复试验和统计，明确实物与软件验证各自支持的结论。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "title": "补充整定工作量、优化设置、可扩展性与 Pareto 收敛证据",
+      "group": "g4",
+      "comments": [
+        {
+          "id": "R1.6",
+          "label": "Reviewer #1, Comment 6",
+          "text": "Include a brief discussion regarding the controller tuning effort required for AMPC compared with standard MPC.",
+          "checks": [
+            "比较 AMPC 与标准 MPC 的整定参数、工作量和计算代价。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.6",
+          "label": "Reviewer #4, Comment 6",
+          "text": "The proposed tuning methodology combines traversal enumeration with nonlinear optimization; however, its scalability, reproducibility, and practical implementation for larger systems are not discussed. In addition, several tuning parameters and optimization settings are not explicitly reported. Could the authors provide the complete tuning parameters, discuss the scalability of the proposed tuning methodology, and report solver performance statistics such as convergence rate, execution time, and computational reliability?",
+          "checks": [
+            "完整报告枚举与非线性优化的整定参数和设置。",
+            "讨论更大系统下的可扩展性、可复现性及实际实现。",
+            "报告收敛率、执行时间和计算可靠性等统计。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.6",
+          "label": "Reviewer #5, Comment 6",
+          "text": "The bi-objective tuning framework requires reproducibility details, including optimization algorithm settings, parameter bounds, population size, stopping criteria, and evidence that the reported Pareto frontier is sufficiently converged.",
+          "checks": [
+            "报告算法设置、参数边界、种群规模（若不适用须说明）和停止准则。",
+            "提供所报告 Pareto 前沿充分收敛的数值证据。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "title": "补充频率响应方法说明及带宽提升的多工况验证",
+      "group": "g4",
+      "comments": [
+        {
+          "id": "R4.9",
+          "label": "Reviewer #4, Comment 9",
+          "text": "The manuscript is generally well written; however, several presentation issues reduce its clarity and reproducibility. These include citation formatting errors, insufficient explanation of the frequency-response analysis, redundancy between the Abstract and the Introduction, and figure captions that are not entirely self-contained. Could the authors carefully revise the manuscript to improve presentation quality, correct the citation and formatting issues, clarify the frequency-response methodology, and enhance the readability and reproducibility of the work?",
+          "checks": [
+            "纠正引文及格式问题，精简摘要与引言重复内容。",
+            "解释频率响应分析方法，完善可独立阅读的图注。",
+            "核对稿件可读性及必要的复现信息。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R5.7",
+          "label": "Reviewer #5, Comment 7",
+          "text": "The reported bandwidth improvement from 1.22 rad/s to 4.28 rad/s requires broader validation across operating points, thrust-command amplitudes, and disturbance conditions, with consistent metrics and uncertainty estimates.",
+          "checks": [
+            "在多个运行点、推力指令幅值及扰动条件下验证带宽提升。",
+            "统一带宽评价指标，报告不确定性估计并解释其来源。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "title": "讨论高阶模型、嵌入式部署、其他系统适用性与未来方向",
+      "group": "g5",
+      "comments": [
+        {
+          "id": "R1.4",
+          "label": "Reviewer #1, Comment 4",
+          "text": "Please discuss the potential applicability of the proposed AMPC framework to other fast constrained control systems, such as automotive, robotics, UAVs, or industrial process control.",
+          "checks": [
+            "讨论汽车、机器人、无人机和工业过程控制的潜在应用。",
+            "说明可迁移的条件及应用限制，区分讨论与已经验证的应用。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R1.9",
+          "label": "Reviewer #1, Comment 9",
+          "text": "Extend the conclusion by briefly outlining possible future research directions, including nonlinear MPC, adaptive AMPC, learning-based predictive control, and formal stability analysis.",
+          "checks": [
+            "在结论中讨论非线性 MPC、自适应 AMPC、基于学习的预测控制及形式化稳定性分析。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R3.7",
+          "label": "Reviewer #3, Comment 7",
+          "text": "The proposed method is validated using a relatively simple engine model. The authors should discuss whether the approach can be extended to higher-order engine models or more complex propulsion systems without significantly affecting computational efficiency.",
+          "checks": [
+            "讨论向高阶发动机模型及更复杂推进系统扩展的可行性。",
+            "说明计算效率随模型规模变化的代价和限制。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.8",
+          "label": "Reviewer #4, Comment 8",
+          "text": "The manuscript demonstrates real-time feasibility using a desktop-based HIL platform; however, several practical aspects required for deployment on actual aero-engine controllers are not discussed, including model generation, embedded implementation, computational resources, and scalability to higher-order engine models. Could the authors discuss the practical implementation of the proposed AMPC framework for real aero-engine control systems, including model generation, embedded deployment, computational requirements, and scalability?",
+          "checks": [
+            "说明实际发动机控制系统中的模型生成、嵌入式实现和计算资源需求。",
+            "讨论高阶模型的扩展及桌面 HIL 到实际控制器的差异。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "title": "改进缩写、引文格式、图注及摘要与引言的表述",
+      "group": "g6",
+      "comments": [
+        {
+          "id": "R1.7",
+          "label": "Reviewer #1, Comment 7",
+          "text": "Ensure that all abbreviations are defined when they first appear in the manuscript.",
+          "checks": [
+            "所有缩写在首次出现时定义；摘要和正文按独立阅读需要检查。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "R4.9",
+          "label": "Reviewer #4, Comment 9",
+          "text": "The manuscript is generally well written; however, several presentation issues reduce its clarity and reproducibility. These include citation formatting errors, insufficient explanation of the frequency-response analysis, redundancy between the Abstract and the Introduction, and figure captions that are not entirely self-contained. Could the authors carefully revise the manuscript to improve presentation quality, correct the citation and formatting issues, clarify the frequency-response methodology, and enhance the readability and reproducibility of the work?",
+          "checks": [
+            "纠正引文及格式问题，精简摘要与引言重复内容。",
+            "解释频率响应分析方法，完善可独立阅读的图注。",
+            "核对稿件可读性及必要的复现信息。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "title": "编辑总体要求、回复信与提交要求",
+      "group": "g6",
+      "comments": [
+        {
+          "id": "AE",
+          "label": "Associate Editor",
+          "text": "The reviewers think that the subject may be worthy of investigation. However, they point out numerous issues in the paper. My recommendation is to invite the authors to fully address these comments in a revised version.",
+          "checks": [
+            "逐项处理审稿人提出的问题，并在修改稿中给出相应修改与依据。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "EIC",
+          "label": "Editor-in-Chief",
+          "text": "I concur with the recommendation from the handling editor. Reviewers have expressed mixed opinions and perspectives. The sentiment, however, is that the authors should strengthen their arguments in terms of the novelty, contribution, relevance to the related literature, testing and evaluation of the proposed algorithm with other related methods , as well improve the overall presentation. Should the authors opt to revise and resubmit, they must emphasize the   contributions of the paper beyond the current state-of-the-art and clearly establish its novelty. Additionally, they must provide a comprehensive and explicit point-by-point response to the reviewers in a separate document that observes the journal double-blind policy. In addition, the anonymized revised manuscript should be highlighted with all the changes made due to the revision. It is important to note that revising the manuscript does not imply its ultimate acceptance. The revised version will be subjected to\nfurther scrutiny and review to ensure that it addresses all the issues raised and meets the standards expected for this publication.",
+          "checks": [
+            "加强新颖性、超越现有研究的贡献、相关文献及算法比较评价。",
+            "改善整体表述，单独准备全面、明确的逐点回复。",
+            "回复文件遵守双盲政策，修改稿匿名且突出标注本轮全部改动。",
+            "说明修改稿仍需进一步审查，不能将修改完成视为录用保证。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "E1",
+          "label": "Decision letter · 1",
+          "text": "We have now completed the review process of the captioned manuscript. Based on the reports from reviewers and our editorial evaluation, we would like to inform you the paper requires major revision.",
+          "checks": [
+            "按大修要求完成实质修改，并在提交前核对整体回应情况。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "E2",
+          "label": "Decision letter · 2",
+          "text": "Please make sure that the revised version is re-submitted on or before Dec 11 2026 11:59:59:000PM. You may request an additional extension of up to one month by writing to the Editor-in-Chief. Authors should note that their paper will be automatically withdrawn if the revised version is not submitted on or before Dec 11 2026 11:59:59:000PM. You may, however, submit the paper as a new submission if the paper is withdrawn due to late revision.  In that case, the paper will go through a new review cycle and new reviewers will be invited.",
+          "checks": [
+            "核实投稿系统时区及 2026-12-11 23:59:59 截止时间。",
+            "如需延期，向主编申请最多一个月并确认获批；明确逾期自动撤回及重新投稿需新审稿周期。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "E3",
+          "label": "Decision letter · 3",
+          "text": "Should you decide to submit a revised manuscript, please provide a detailed and point-by-point response / rebuttal to each comment by every reviewer (included below) in a separate document. We have adopted aa double blind review system; therefore, please do not include the names and affiliations of authors in this document.",
+          "checks": [
+            "单独文件逐点回应每位审稿人的每条意见或给出有依据的申辩。",
+            "回复文件不包含作者姓名及单位。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        },
+        {
+          "id": "E4",
+          "label": "Decision letter · 4",
+          "text": "To submit your revision, please do the following:\n\n1. Go to: https://www.editorialmanager.com/isatrans/\n\n2. Enter your login details \n\n3. Click [Author Login]\nThis takes you to the Author Main Menu.\n\n4. Click [Submissions Needing Revision]",
+          "checks": [
+            "通过 Editorial Manager 的 Author Login → Submissions Needing Revision 提交修改稿。"
+          ],
+          "status": "待核验",
+          "response": "",
+          "evidence": []
+        }
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "T01-01",
+      "topic": 1,
+      "title": "梳理方法差异与创新定位",
+      "status": "done",
+      "order": 1,
+      "description": "核实比较表中的方法原理、与 AMPC 的差异及比较方式，整理双速率、显式 MPC 等方法的文字讨论依据，明确本文贡献、适用条件及与其他方法的组合空间。交付物直接写回意见总结与修改方案.md 的 Topic 1 比较表及整体性文字，暂不新增报告。 本轮已核对八份代表文献的相关内容，回查关键 PDF，补充章节依据及“本文贡献与表述边界”，收紧复用式、结构化求解、显式 MPC 和热启动等描述；方法定位与比较依据已在用户讨论中确认；后续试验可反馈调整，尚未据此修改论文正文。",
+      "acceptance": "形成经讨论确认的方法定位与比较表，关键判断具有可追溯的文献依据，清楚说明预测时间配置的贡献及局限；后续结果可反馈调整。此任务完成不等于正文修改或 S03 已完成。",
+      "deps": [],
+      "deliverables": [
+        {
+          "label": "意见总结与修改方案.md（Topic 1）",
+          "path": "Comments/意见总结与修改方案.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "本轮交付：Topic 1 比较表、文献依据与贡献讨论",
+          "path": "Comments/意见总结与修改方案.md"
+        },
+        {
+          "label": "核对文献及 PDF 版本入口",
+          "path": "assets/competitor_papers/文献清单.md"
+        }
+      ]
+    },
+    {
+      "id": "T01-02",
+      "topic": 1,
+      "title": "核对多速率变分 NMPC 的适用性",
+      "status": "done",
+      "order": 2,
+      "description": "依据 Lishkova 等的文献，核对快慢构型变量及输入分组、变分建模和误差界等条件与发动机模型的适配情况。简要结论、依据、障碍或适配办法及未解决问题写回比较表对应行；仅在确需较长推导或代码验证时另存必要材料并链接。 本轮已对照原文 §II–V 与现有 N1/N2 状态、Wf/A8 输入、LPV-ZOH 及线性插值接口，记录变分表示、快慢分组与管束／终端条件的适配缺口。已与用户讨论确认本轮采用文字比较、暂不增加该基线仿真，并强调本文局部线性／LPV 接口的适配便利性；未将其表述为发动机不存在多时间尺度或数学上不适用。",
+      "acceptance": "明确是否开展代表性仿真及理由，区分快慢变量分组与方程解耦，不仅凭动态耦合排除该方法。若适用，再确定仿真工作；有依据的不适用结论同样可完成此项。",
+      "deps": [],
+      "deliverables": [
+        {
+          "label": "意见总结与修改方案.md（Topic 1）",
+          "path": "Comments/意见总结与修改方案.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "T01-02 核对结论与比较建议（表格对应行）",
+          "path": "Comments/意见总结与修改方案.md"
+        },
+        {
+          "label": "Lishkova 原文转写（§II–V）",
+          "path": "assets/competitor_papers/02_Multirate_Lishkova_2022.md"
+        },
+        {
+          "label": "现有状态导数接口",
+          "path": "Code/AMPC_test2/EngineInterp/StateFcn_interp_codegen.m"
+        },
+        {
+          "label": "现有 LPV-ZOH 离散化接口",
+          "path": "Code/AMPC_test2/Functions/discretize_lpv_model.m"
+        },
+        {
+          "label": "现有线性插值动态接口",
+          "path": "Code/AMPC_test2/EngineInterp/EngineDyn_interp.m"
+        }
+      ]
+    },
+    {
+      "id": "T01-03",
+      "topic": 1,
+      "title": "开展输入分块 MPC 对比研究",
+      "status": "done",
+      "order": 3,
+      "description": "T01-08B已将本任务当前预测LPV统一为Linear/Clip，原数值权重和硬输出约束保持；三组46 s闭环、6点×30次配对、同配置轨迹及12组同输入QP核对通过。150/180共同准确成功样本中，AMPC／IB构建0.450／0.761 ms，求解1.502／1.685 ms；两者均为7变量，评价节点不同。在线失败118／76／72次，Tt5皆零越限，但其他物理输出仍有缺口；峰值和超20 ms记录保留。研究限于结构、计算及固定整定基本表现，不扩展全面寻优。旧最近邻及软化诊断保留为历史材料，当前表图、README和总报告已同步，待C用户审查及A独立核验；正文和审稿验收未完成。",
+      "acceptance": "按已确认的有限研究范围完成：留下可复现配置、代码、代数核对、仿真和诊断结果；报告问题规模、QP 构建／求解／总耗时及同组仿真的基本跟踪与约束表现，明确固定整定、不可行与软化的结论边界；在 README 记录论文修改依据。无需全面性能寻优或穷举结构；本任务完成不等于正文已改、最终性能对比完成或审稿意见验收通过。",
+      "deps": [],
+      "deliverables": [
+        {
+          "label": "实验入口、配置、结果与局限",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "实验说明与实测结论",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        },
+        {
+          "label": "当前硬输出／原数值权重主结果（含失败与物理越限）",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/comparison.csv"
+        },
+        {
+          "label": "代数与求解质量验证",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/validation.json"
+        },
+        {
+          "label": "推力响应",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/thrust_response.png"
+        },
+        {
+          "label": "温度响应及越限",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/temperature_response.png"
+        },
+        {
+          "label": "QP 构建与求解测时",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/controller_timing.png"
+        },
+        {
+          "label": "历史步长加权硬约束诊断（非当前主结果）",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/comparison_hard_diagnostic.csv"
+        },
+        {
+          "label": "四组温度配置诊断",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/temperature_configuration_diagnostic.csv"
+        },
+        {
+          "label": "原归档完整输出轨迹核对",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/legacy_archive_temperature_check.json"
+        },
+        {
+          "label": "新主配置与既有同配置轨迹／QP核对",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/primary_configuration_checks.json"
+        },
+        {
+          "label": "旧原始记录保留与跨任务来源核验",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/primary_provenance.json"
+        },
+        {
+          "label": "配置切换前记录与归档映射",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/primary_recompute_state.json"
+        }
+      ]
+    },
+    {
+      "id": "T01-04",
+      "topic": 1,
+      "title": "开展复用式 MPC 对比研究",
+      "status": "done",
+      "order": 4,
+      "description": "已在原目录完成复用式MPC代表性适配，并由T01-08B统一Linear/Clip重算。MMPC每20 ms优化一个通道、另一通道保持，两通道轮换、各40 ms更新；AMPC每20 ms联合更新。原权重、硬输出约束和0.24 s时域保持，变量数7／13／25。两相位验证、三组46 s闭环及90/120共同准确成功样本配对通过。失败118／60／72次，Tt5越限0／3.798／0 K，其他输出缺口与完整在线峰值保留。当前数据在原目录，历史设置外移及最近邻记录按各自范围保留。不是Richter原曲线复现或各方法最佳性能比较；待C审查、A核验和正文整合。",
+      "acceptance": "按已确认的有限范围留下可复现配置、代码、文献适配说明、两相位降维与保持验证、完整仿真和计算证据；报告基础周期与通道更新周期、基本跟踪／约束／控制作用量、在线退出标志及成功配对快照的构建／求解／总耗时。明确固定权重、原硬约束不可行及桌面测时边界，无需搜索全部轮转顺序或进行全面性能寻优；研究完成不表示正文已改或最终性能对比、审稿验收完成。",
+      "deps": [
+        "T01-03"
+      ],
+      "deliverables": [
+        {
+          "label": "实验入口、验证与论文修改依据",
+          "path": "Code/Revision/T01_04_Multiplexed/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "实验说明、结论与论文修改依据",
+          "path": "Code/Revision/T01_04_Multiplexed/README.md"
+        },
+        {
+          "label": "完整比较及在线失败计数",
+          "path": "Code/Revision/T01_04_Multiplexed/results/comparison.csv"
+        },
+        {
+          "label": "两相位降维与保持验证",
+          "path": "Code/Revision/T01_04_Multiplexed/results/validation.json"
+        },
+        {
+          "label": "模型副本来源与连接核对",
+          "path": "Code/Revision/T01_04_Multiplexed/results/model_provenance.json"
+        },
+        {
+          "label": "AMPC 原配置完整轨迹复核",
+          "path": "Code/Revision/T01_04_Multiplexed/results/AMPC_baseline_check.json"
+        },
+        {
+          "label": "配对快照测时口径与环境",
+          "path": "Code/Revision/T01_04_Multiplexed/results/environment.json"
+        },
+        {
+          "label": "推力响应",
+          "path": "Code/Revision/T01_04_Multiplexed/results/thrust_response.png"
+        },
+        {
+          "label": "温度响应",
+          "path": "Code/Revision/T01_04_Multiplexed/results/temperature_response.png"
+        },
+        {
+          "label": "构建与求解测时",
+          "path": "Code/Revision/T01_04_Multiplexed/results/controller_timing.png"
+        }
+      ]
+    },
+    {
+      "id": "T01-05",
+      "topic": 1,
+      "title": "开展事件驱动 MPC 对比研究",
+      "status": "done",
+      "order": 5,
+      "description": "已按孙中奇第五章思想完成轨迹偏差触发及序列复用适配，并由T01-08B统一Linear/Clip重算四组46 s闭环。阈值0.001／0.005，QP尝试240／231次，失败48／39次，Tt5越限21.935／11.301 K；原权重、硬输出约束、20 ms检查及0.24 s到期机制保持。保留偏差／到期／指令／失败重试原因、累计资源占用、触发当拍中位数／P95／峰值、其他物理越限及完整记录。阈值与越限排序相对历史改变，不沿用单调结论。事件当拍仍须在20 ms完成更新，0.24 s不是求解预算；低耗时未触发拍不混入更新统计。未移植原论文的完整鲁棒保证；待C用户审查及A独立核验。",
+      "acceptance": "按代表性研究范围留下可复现配置、代码、机制验证及完整结果，区分触发与成功求解次数，报告含检查／序列准备／失败重试的累计开销、单次峰值、跟踪和约束表现，并分别分析预设稳态／瞬态窗口。明确序列执行、指令变化、时域到期及失败处理，说明主要触发原因和适配局限；不预设大阶跃必然频繁触发，不要求全面阈值／性能寻优。研究任务完成不等于原章鲁棒理论已复现、最终性能基线或审稿意见已验收。 论文修改依据须区分触发间隔与单次计算截止时间，优先评价单次更新是否按期完成，不以累计降幅证明实时性；当前桌面审计不等于完整处理链或目标机验证。",
+      "deps": [
+        "T01-04"
+      ],
+      "deliverables": [
+        {
+          "label": "事件触发实验、适配边界与论文修改依据",
+          "path": "Code/Revision/T01_05_EventTriggered/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "实验说明、结论与论文修改依据",
+          "path": "Code/Revision/T01_05_EventTriggered/README.md"
+        },
+        {
+          "label": "触发、时间、跟踪与约束指标",
+          "path": "Code/Revision/T01_05_EventTriggered/results/comparison.csv"
+        },
+        {
+          "label": "逐次事件记录与原因",
+          "path": "Code/Revision/T01_05_EventTriggered/results/events.csv"
+        },
+        {
+          "label": "触发机制与序列验证",
+          "path": "Code/Revision/T01_05_EventTriggered/results/validation.json"
+        },
+        {
+          "label": "周期基线完整输出复核",
+          "path": "Code/Revision/T01_05_EventTriggered/results/periodic_baseline_check.json"
+        },
+        {
+          "label": "模型副本来源及连接核对",
+          "path": "Code/Revision/T01_05_EventTriggered/results/model_provenance.json"
+        },
+        {
+          "label": "累计 QP 次数",
+          "path": "Code/Revision/T01_05_EventTriggered/results/QP_attempts.png"
+        },
+        {
+          "label": "推力响应",
+          "path": "Code/Revision/T01_05_EventTriggered/results/thrust_response.png"
+        },
+        {
+          "label": "温度响应",
+          "path": "Code/Revision/T01_05_EventTriggered/results/temperature_response.png"
+        },
+        {
+          "label": "时窗与计时环境",
+          "path": "Code/Revision/T01_05_EventTriggered/results/environment.json"
+        }
+      ]
+    },
+    {
+      "id": "T01-06",
+      "topic": 1,
+      "title": "评估稀疏／结构化实现",
+      "status": "done",
+      "order": 6,
+      "description": "在原目录比较AMPC／标准MPC的凝聚、非凝聚full及同一非凝聚问题的sparse存储，采用同一通用内点算法和质量门限；T01-08B已统一Linear/Clip重算四组完整闭环及六配置配对。共同准确成功50/60；凝聚／稀疏失败AMPC118／138、标准72／73次，Tt5零越限但其他输出缺口、时延峰值及超20 ms均保留。数学等价与有限精度闭环差异分别解释；标准非凝聚full／sparse公共总逻辑中位数115.351／27.195 ms，凝聚8.656 ms，本机结果不代表Wang–Boyd专用算法。矩阵字节不是峰值内存，不宣称完整实时性或安全保证。当前表图、README与总报告同步，待C审查和A核验。",
+      "acceptance": "按有限研究范围留下可复现表达、共同求解精度、状态消去与解质量验证、四组闭环结果、在线单次中位数／P95／最大值及成功配对快照的构建／求解／总耗时和矩阵存储。明确表达、存储与通用求解器作用，保留失败／物理越限及超过周期预算的记录，不宣称已复现原文专用算法或满足目标机实时性，不预设收益相乘。研究完成不等于最终论文性能基线或审稿意见已验收。",
+      "deps": [
+        "T01-04"
+      ],
+      "deliverables": [
+        {
+          "label": "结构利用实验及论文修改依据",
+          "path": "Code/Revision/T01_06_SparseStructure/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "研究说明、局限与论文修改依据",
+          "path": "Code/Revision/T01_06_SparseStructure/README.md"
+        },
+        {
+          "label": "在线单周期与闭环结果",
+          "path": "Code/Revision/T01_06_SparseStructure/results/comparison.csv"
+        },
+        {
+          "label": "六配置共同成功快照与矩阵存储",
+          "path": "Code/Revision/T01_06_SparseStructure/results/paired_kernel.csv"
+        },
+        {
+          "label": "等价性与求解质量验证",
+          "path": "Code/Revision/T01_06_SparseStructure/results/validation.json"
+        },
+        {
+          "label": "模型来源及连接核对",
+          "path": "Code/Revision/T01_06_SparseStructure/results/model_provenance.json"
+        },
+        {
+          "label": "环境、精度与测时口径",
+          "path": "Code/Revision/T01_06_SparseStructure/results/environment.json"
+        },
+        {
+          "label": "配对构建与求解耗时",
+          "path": "Code/Revision/T01_06_SparseStructure/results/paired_timing.png"
+        },
+        {
+          "label": "推力响应",
+          "path": "Code/Revision/T01_06_SparseStructure/results/thrust_response.png"
+        },
+        {
+          "label": "温度响应",
+          "path": "Code/Revision/T01_06_SparseStructure/results/temperature_response.png"
+        }
+      ]
+    },
+    {
+      "id": "T01-07",
+      "topic": 1,
+      "title": "测试替代 QP 求解器",
+      "status": "done",
+      "order": 7,
+      "description": "已完成MOSEK 11.2.1原生内点与MathWorks active-set／内点的同凝聚QP比较、不变设置外移及历史回归；T01-08B已统一Linear/Clip，重算四组46 s闭环并从新轨迹重新生成公共快照。六配置共同准确成功100/120，两种网格本批active-set总逻辑中位数最低；具体质量门限、原生状态、拒绝、全部失败、越限和峰值保留。旧设置优化配对及最近邻轨迹有自身历史范围，不混为当前插值结果，不跨批次相减量化插值收益。OSQP接口未就绪，未将MOSEK结果冒充OSQP；求解器与粗预测可结合，排序限于本机具体配置。待C用户审查、A独立核验及正文整合。",
+      "acceptance": "在不变设置提前准备、相同 QP 与精度、合理冷初始化的条件下，留下当前实现、同批次新旧配对、四组完整仿真、单周期与公共快照统计及实际残差证据；记录数值更新、原生接口、审计及完整控制链之间的计时边界。对配置变更后模板失效提供防护，说明尚未优化的内部任务设置，不把设置复用当作跨拍热启动或最佳求解器实现。已按讨论确认当前代表性配置与测时口径，研究任务完成；独立核验、正文、审稿意见与 S03 的完成状态分别处理。",
+      "deps": [],
+      "deliverables": [
+        {
+          "label": "替代求解器研究与论文修改依据",
+          "path": "Code/Revision/T01_07_AlternativeSolver/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "共同 QP 与原生求解映射验证",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/validation.json"
+        },
+        {
+          "label": "完整轨迹与单周期审计",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/comparison.csv"
+        },
+        {
+          "label": "六配置公共快照测时与解质量",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/paired_kernel.csv"
+        },
+        {
+          "label": "测量环境与计时边界",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/environment.json"
+        },
+        {
+          "label": "模型功能与基线核对",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/model_provenance.json"
+        },
+        {
+          "label": "模型／MEX 路径及残差拒绝审计",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/resolved_dependencies.json"
+        },
+        {
+          "label": "可复现运行入口",
+          "path": "Code/Revision/T01_07_AlternativeSolver/run_t0107.m"
+        },
+        {
+          "label": "原生调用与接口准备开销拆分诊断",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/overhead_diagnostic.csv"
+        },
+        {
+          "label": "首轮逐拍准备结果归档",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/initial_per_call/comparison.csv"
+        },
+        {
+          "label": "重复选项构造的性能归因",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/setup_profile.csv"
+        },
+        {
+          "label": "同批次新旧设置复用比较",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/preparation_comparison.csv"
+        },
+        {
+          "label": "四组完整轨迹回归",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/trajectory_regression.csv"
+        }
+      ]
+    },
+    {
+      "id": "T01-07A",
+      "topic": 1,
+      "title": "统一复核 T01-03 至 T01-06 的固定设置开销与计时口径",
+      "status": "done",
+      "order": 7.5,
+      "description": "历史任务范围：固定设置外移与最近邻输入迁移，以下14组／17组结论针对当时配置；当前研究已由T01-08B统一Linear/Clip重算，不能将此历史回归要求套到新旧插值轨迹上。已按用户要求将固定选项／参数准备、当前 QP 内核、控制入口、最近邻输入及汇总落实至 T01-03～06 原目录。原入口重跑 14 组完整轨迹并更新表图；README 当前结果区由各自汇总脚本自动刷新。旧已跟踪材料由 Git 保存，29 份原始 MAT 本地保留供核对。T01-07A 只作为跨任务核验入口；用户明确授权后，已清理 82 份 Git 可恢复归档、归档说明及根层 23 份停用代码／模型／字典副本，保留全部原始 MAT 和核验资料。",
+      "acceptance": "14 组与初轮隔离解释版的输出及命令差均为零；T01-04～06 与修改前输出、命令及非计时日志完全一致，含退出状态、迭代、约束残差、松弛和相位／事件。T01-03 对原编译版最大输出差约 6.035e-7、命令差约 3.375e-13，按接入变化单独报告，不补造旧版未记录的状态。17 组同输入 QP 的系数、解、控制、目标、状态和迭代一致；当时最近邻函数再次通过 2301 拍、15 端口核对。原对象依赖、字典、模型功能和事件判据已核查，原权重／硬约束非默认入口也已检查。耗时重新测量，不要求跨批次相等，失败／越限／峰值保留；正文、独立核验及审稿验收未完成。",
+      "deps": [
+        "T01-03",
+        "T01-04",
+        "T01-05",
+        "T01-06",
+        "T01-07"
+      ],
+      "deliverables": [
+        {
+          "label": "迁移核验报告及当前目录入口",
+          "path": "Code/Revision/T01_07A_SetupAudit/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "14 组迁移前后完整回归",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/migration_regression.csv"
+        },
+        {
+          "label": "17 组同输入 QP 对照",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/migration_qp.csv"
+        },
+        {
+          "label": "当前函数与 15 实际端口核对",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/migration_ports.csv"
+        },
+        {
+          "label": "Git／模型／依赖与数据来源",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/provenance.json"
+        },
+        {
+          "label": "43 份脚本及非默认入口检查",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/migration_code_analyzer.json"
+        },
+        {
+          "label": "已完成的授权清理记录",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/cleanup_candidates.json"
+        },
+        {
+          "label": "T01-03 当前结果",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        },
+        {
+          "label": "T01-04 当前结果",
+          "path": "Code/Revision/T01_04_Multiplexed/README.md"
+        },
+        {
+          "label": "T01-05 当前结果",
+          "path": "Code/Revision/T01_05_EventTriggered/README.md"
+        },
+        {
+          "label": "T01-06 当前结果",
+          "path": "Code/Revision/T01_06_SparseStructure/README.md"
+        }
+      ]
+    },
+    {
+      "id": "T01-08",
+      "topic": 1,
+      "title": "比较冷启动与热启动",
+      "status": "done",
+      "order": 8,
+      "description": "已比较全零增量冷初值与按20 ms移位的原始轨迹初值；T01-08B已统一Linear/Clip，重算四组46 s闭环和每网格3次实际15端口连续序列。标准MPC移一步，AMPC移1/4粗步，末端保持并投影；失败保持、清空计划及冷回退，不缓存活动集／分解／持久任务。同输入配对失败AMPC冷／热各354/6900、标准各216/6900；成功平均迭代略变，但总逻辑中位数AMPC冷／热2.110／2.165 ms、标准3.265／3.306 ms，本批未降。保留全部失败、物理越限和在线峰值，不由独立闭环测时差推断初始化收益。端口及当前冷基线核对通过，旧最近邻结果保留；下一项C用户审查，再A独立核验。",
+      "acceptance": "既定代表性研究完成：初始化公式、缓存边界、四组当前Linear/Clip闭环及三次同输入连续序列配对已归档；逐次QP系数相同、解质量及失败回退核对通过，四组2301拍×15端口核对通过，当前冷轨迹与T01-07同配置基线一致。分别报告在线全样本与配对共同成功统计、原生／初值／总逻辑耗时及一次迭代诊断，不声称最佳热启动、完整实时性或安全保证。待用户及第三方审查；正文、S03和审稿验收未完成。",
+      "deps": [],
+      "deliverables": [
+        {
+          "label": "冷／热启动研究与论文修改依据",
+          "path": "Code/Revision/T01_08_WarmStart/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "研究结论、适配边界与论文修改依据",
+          "path": "Code/Revision/T01_08_WarmStart/README.md"
+        },
+        {
+          "label": "四组完整仿真及单周期统计",
+          "path": "Code/Revision/T01_08_WarmStart/results/comparison.csv"
+        },
+        {
+          "label": "三次实际端口连续序列配对",
+          "path": "Code/Revision/T01_08_WarmStart/results/paired_sequences.csv"
+        },
+        {
+          "label": "同输入系数与解质量",
+          "path": "Code/Revision/T01_08_WarmStart/results/paired_quality.csv"
+        },
+        {
+          "label": "冷／热闭环轨迹差异",
+          "path": "Code/Revision/T01_08_WarmStart/results/trajectory_comparison.csv"
+        },
+        {
+          "label": "15 端口、失败重置及原冷基线核对",
+          "path": "Code/Revision/T01_08_WarmStart/results/record_checks.json"
+        },
+        {
+          "label": "初始化机制及冷内核核对",
+          "path": "Code/Revision/T01_08_WarmStart/results/validation.json"
+        },
+        {
+          "label": "求解器配置、缓存与测时边界",
+          "path": "Code/Revision/T01_08_WarmStart/results/environment.json"
+        },
+        {
+          "label": "来源及原始记录指纹",
+          "path": "Code/Revision/T01_08_WarmStart/results/provenance.json"
+        },
+        {
+          "label": "配对测时和闭环轨迹图",
+          "path": "Code/Revision/T01_08_WarmStart/results/warm_start_summary.png"
+        },
+        {
+          "label": "静态检查记录",
+          "path": "Code/Revision/T01_08_WarmStart/results/code_analyzer.json"
+        },
+        {
+          "label": "零初值与一次迭代原因核查",
+          "path": "Code/Revision/T01_08_WarmStart/results/cold_start_diagnostic.json"
+        }
+      ]
+    },
+    {
+      "id": "T01-08B",
+      "topic": 1,
+      "title": "统一预测 LPV 为线性插值并复核受影响研究",
+      "status": "done",
+      "order": 8.4,
+      "description": "已于2026-10-18按用户授权完成。各原目录活动预测LPV及离线共用重建统一Linear/Clip，22组46 s闭环、既定规模配对及六项原验证完成；实际端口、插值、固定参数、原始记录到CSV回算和来源核对通过。保留37份旧MAT、62项固定依赖指纹及新旧差异；29点瞬时精度并非全面改善，失败／全部输出越限／Clip／原未收敛顶点参与比例如实记录。README、总报告、Topic1与看板已同步。只完成实现者迁移核对，下一项C用户审查，之后A独立核验；正文、S03及审稿验收未完成。\n\n已执行方案与范围边界：\n\n步骤1｜锁定迁移基线与范围。记录确认执行时的 Git 版本、T01-03～08 源码／配置、模型／字典、依赖及原始 MAT 指纹；已跟踪旧源码、表图由 Git 溯源，各原目录需要替换的旧原始记录按清单移至 results/raw/before_linear_interpolation/ 并核对哈希。原始建表未收敛标记、填补数据及越界 Clip 的使用情况单列，不在本次重建模型库。\n\n步骤2｜同步在线与离线插值实现。在 Code/Revision/T01_03_MoveBlocking 至 T01_08_WarmStart 各原任务目录修改入口；优先通过 Simulink.SimulationInput 将活动 LPV 模块设置为 Linear/Clip，保持原 SLX／字典及 Legacy 工程。共用 t0103_arguments.m 按相同规则重建模型、基准点与仿射偏置；必要时增加 t0103_lpv_interpolate.m 作为共用插值函数，不复制各任务控制器，不直接将历史停用线性辅助函数视为已验证实现。配置、MAT 和汇总入口显式记录插值模式，阻止最近邻与线性记录混入同一主表。原权重、硬输出约束、20 ms反馈、0.24 s等时域、分块／复用／事件规则、求解器与冷／热启动口径均沿用各任务当前设置；计时继续区分 LPV 取模与已有控制内核。\n\n步骤3｜先核对插值和接入。以实际活动 Simulink Linear/Clip 模块为参照，检查网格节点、网格内部、边界及越界裁剪；核对矩阵、基准点、偏置与控制器实际15端口，覆盖20／80 ms两种预测网格。利用历史30点记录中参考收敛的29点，分别报告最近邻 LPV 与线性插值 LPV 的瞬时输出／导数误差，避免将非线性查表插值误差冒充 LPV 预测误差；保留未收敛点说明，不据少量静态点宣称全时域精度提高。插值／端口不一致须先解决，再进入完整重算。\n\n步骤4｜按原研究范围依次重算 T01-03～08。依次运行各任务原 run／validate／summarize 入口，重做完整46 s轨迹及原有规模的公共快照或实际端口序列配对；T01-07 重新生成统一插值规则的公共数值点，T01-08 重新采集实际端口序列与冷／热启动诊断。各任务组内对所有被比较方法统一切换，不只改 AMPC。保留失败、残差、物理越限、非线性部件状态、网格裁剪、在线中位数／P95／峰值／超20 ms次数及全部配对样本；不得用旧最近邻性能配新线性测时。新旧插值模型允许产生不同轨迹、状态与结论，不以结果相等作为迁移通过标准，也不以跨批次时间差量化插值开销；需要比较取模成本时用同输入配对单列。\n\n步骤5｜更新来源、结论与核验输入。结果和图表写回各原任务目录，更新 README、对比研究总报告.md、Comments/意见总结与修改方案.md 的 Topic1及看板；在 Code/Revision/support/LPV线性插值迁移核对.md 记录修改清单、端口核对、新旧结果差异与结论变化。调整各任务来源核验脚本，保留原基线指纹，另记本次有意变更和新结果来源，防止通过覆盖旧哈希伪造“依赖未变”。T01-07A 历史设置迁移与 T01-03 原权重／硬约束核对保持其原有范围，不再用旧轨迹当线性插值结果应相同的依据。更新后的代码、原始记录及总报告先交给 T01-08C 用户审查与修改，再进入 T01-08A 独立核验，通过后由 T01-09 整合正文。",
+      "acceptance": "既定迁移范围已完成：① 在线活动LPV与离线矩阵／基准点／偏置重建统一Linear/Clip，节点／内部／边界／Clip解析与完整15端口核对通过；29有效历史点精度如实报告，不要求全面改善。② 六任务22组完整闭环及原规模公共快照／端口配对重算，固定参数、参考／时网格及CSV性能／失败／中位数／峰值回算通过，保留全部失败、物理越限、Clip及来源质量标记。③ 37份旧原始MAT大小和哈希一致，62项固定依赖、58份原源码／模型不变，30份声明的入口／输入／报告变更单列，原SLX／字典与算法数学核心保持。④ 原目录图表、README、总报告、Topic1及新旧迁移报告同步。实现者核对不替代C用户审查、A独立核验或正文验收，既有模型和实时性局限明确保留。",
+      "deps": [
+        "T01-03",
+        "T01-04",
+        "T01-05",
+        "T01-06",
+        "T01-07",
+        "T01-07A",
+        "T01-08"
+      ],
+      "deliverables": [
+        {
+          "label": "当前统一配置的总对比报告",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "迁移范围、验证、新旧变化与限制",
+          "path": "Code/Revision/support/LPV线性插值迁移核对.md"
+        },
+        {
+          "label": "原目录当前入口与结果（共用插值位于T01-03）",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "迁移前来源与37份MAT归档映射",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_state.json"
+        },
+        {
+          "label": "完整端口、解析及29点精度核对",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_full_checks.json"
+        },
+        {
+          "label": "22组参数、CSV回算、全部输出与来源质量",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_records.json"
+        },
+        {
+          "label": "新旧结果变化明细",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_run_changes.csv"
+        },
+        {
+          "label": "当前源码、固定依赖及数据来源",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_provenance.json"
+        },
+        {
+          "label": "MATLAB静态检查",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_code_analysis.json"
+        }
+      ]
+    },
+    {
+      "id": "T01-08C",
+      "topic": 1,
+      "title": "用户审查对比研究并按审查意见迭代修改",
+      "status": "done",
+      "order": 8.45,
+      "description": "2026-10-21用户明确确认本轮T01-08C审查完成。动态统计、时域展示、变量与计时定义、复杂度解释、事件法及QP表达等审查讨论已落实；尚未逐次归因的机制和明确声明的证据限制继续保留，交后续方案讨论与独立核验，不默认视为已证实。下一项为T01-08D，不直接开展独立核验或修改正文。\n\n安排在 T01-08B 线性插值迁移与重算完成之后、T01-08D正文最小证据方案讨论之前。由用户以 Code/Revision/对比研究总报告.md 为主线自行审查，结合各任务 README、代码、配置、图表和原始记录，检查方法解释、比较条件、结果与结论是否合理；用户可直接在文档中批注或在对话中逐项提出问题。助手按审查意见逐条核对、讨论并修改，将处理落实到各原任务目录及总报告，必要时更新 Topic1 修改方案和看板。仅对受影响部分补充验证或重算；涉及模型、算法或统计口径的实质变化，重新核对相应数据来源与结论，保留失败、越限和负面结果，不以文字润色代替必要验证。\n\n文字记录放在总报告的“用户审查与修改记录”部分：逐项记录问题编号、审查位置、问题内容、处理结论、修改位置、验证依据和状态；记录已在总报告建立，首项C-01按讨论、确认、修改及核对进度更新。反复审阅与修改，直到用户确认本轮审查结束；未解决问题及其影响明确保留，并随最终审阅版本交给 T01-08A。用户审查是独立核验前的一轮自查，不替代第三方核验，也不自动完成正文修改或审稿意见验收。\n\n用户确认本轮审查结束后，先进入T01-08D，讨论正文最小证据方案及必要补充；完成并确认后再进入T01-08A。",
+      "acceptance": "T01-08B 完成后开始，用户已审阅当前统一线性插值的总报告及相关研究材料，并确认本轮审查结束。审查问题有逐条记录；已解决项可追溯到具体修改及必要的复核／重算证据，相关代码、配置、原始结果、README、总报告与 Topic1 说明保持一致；未解决或留待第三方判断的事项标注状态、影响及原因，不擅自标为通过。形成供 T01-08A 核验的明确版本及问题记录。本任务完成不代表第三方核验通过、正文已改、S03 或审稿验收完成。 审查结束后先将明确版本及问题记录交给T01-08D，不直接跳过方案确认进入T01-08A。 2026-10-21用户明确确认T01-08C已完成，本轮用户审查结束；原因未明或待第三方判断的限制按总报告记录继续保留。",
+      "deps": [
+        "T01-08B"
+      ],
+      "deliverables": [
+        {
+          "label": "用户审阅主文档与逐项修改记录（审查时补充）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "相关原任务说明与证据入口",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "用户审查与修改记录（C-01已处理，本轮审查经用户确认完成）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "C-01完整时程与已确认区间（22组）",
+          "path": "Code/Revision/support/results/dynamic_review/index.html"
+        }
+      ]
+    },
+    {
+      "id": "T01-08D",
+      "topic": 1,
+      "title": "确定Topic 1正文最小证据方案并补齐必要缺口",
+      "status": "done",
+      "order": 8.475,
+      "description": "2026-10-21用户明确指出正文范围、事件触发纳入和效果导向贡献定位已在前述讨论中确认，现补齐遗漏的D完成状态。方案及IR-01～07处理取舍已写入Code/Revision/对比研究总报告.md，独立核验A也已完成；按现有研究及限定范围推进，不以新增仿真作为本阶段结项前提。下一项T01-09负责正文表图、近期文献对应和限制措辞的实际落实；若后续出现影响主要结论的实质缺口，再针对性讨论补充，不自动扩展研究。D完成不等于论文已改、所有IR事项关闭或审稿验收完成。\n\n安排在T01-08C用户确认本轮审查结束之后、T01-08A独立核验之前。逐条回查Topic 1审稿要求，研究为充分回应这些意见，最少需要从当前研究成果中选取哪些内容写入正文，以及现有证据是否仍有必要缺口。按审稿要求组织讨论稿，不按已做试验逐项搬运全部成果，也不提前展开其他Topic的研究任务。\n\n生成Code/Revision/对比研究总报告.md，逐项列出审稿人及意见编号、必须回应的问题、最小正文方案（文字／表格／曲线及拟放位置）、已有证据与适用限制、必要缺口及其理由、最小补充研究方案与完成判据；没有必要缺口时明确写不需要补充，并说明已有证据如何支撑回应。\n\n先形成讨论稿，与用户逐项讨论并确认正文取舍及补充范围。如需补充仿真，只按用户确认的最小范围执行；将新代码、配置、原始记录和必要验证写入相应研究目录，并同步README、总报告及本清单。补充结果不能预设为正面，若未填补缺口，则如实更新判断并继续讨论。结果出来后再次与用户确认最终方案及遗留限制；若没有必要补充，用户确认方案后即可进入T01-08A。\n\n精简的是论文呈现内容，原始记录、失败及负面结果仍保留供独立核验；影响主要结论的局限不得因压缩篇幅而省略。本步骤确认回应方案与证据充分性，不代替代码、数据及结论正确性的第三方核验；T01-08A发现实质问题时反馈本步骤调整，并按影响补充研究和重新确认。",
+      "acceptance": "T01-08C已由用户确认本轮审查结束。已形成上述Markdown文档，并逐条覆盖Topic 1的审稿要求，说明正文最小呈现、证据来源、配置与适用边界、必要缺口及补充理由。用户已明确确认正文方案和是否需要补充；如需补充，确认范围内的必要研究已完成、相关原始记录及说明已同步，且用户已审阅结果并确认最终方案；如无需补充，明确记录判断依据与用户确认。影响主要回应的必要缺口已处理，尚未核验及保留的限制如实交给T01-08A；不以未知结果或未经确认的缺口视为已解决。为独立核验提供拟用于正文的结论—证据清单及对应版本，不宣称本任务已完成第三方核验、正文修改、Topic 1审稿验收或S03。 2026-10-21经用户澄清，前述方案及处理取舍已经确认，D按方案研究与确认阶段完成结项；当前以现有结果及采用限制推进，正文实施交T01-09，必要的后续实质方案变更另行讨论。",
+      "deps": [
+        "T01-08C"
+      ],
+      "deliverables": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "id": "T01-08A",
+      "topic": 1,
+      "title": "独立核验 Revision 代码、实验记录与研究结论",
+      "status": "done",
+      "order": 8.5,
+      "description": "2026-10-21经核对，独立核验报告、原始证据检查及处理取舍已经交付，T01-08A按核验阶段完成结项。未发现必须整批重跑才能纠正的主表取数错误；主要研究有条件采用，IR-01～07按总报告第12.2节保留各自状态和使用限制。正文修改交T01-09，实质方案缺口反馈T01-08D，必要的条件性核查按是否影响拟用结论决定，T01-11继续回查。完成A不等于所有问题已解决、论文已修改或审稿验收通过；D方案确认状态另已按用户澄清同步完成。\n\n2026-10-21用户指定Code/Revision/T01_08A_IndependentReview/README.md为第三方核验报告，并要求T01-08A标记正在进行。报告已交付，当前正对照审稿意见核对问题是否成立、必要处理及优先级；不自动接受全部建议，也不将报告提交等同问题闭环或任务完成。\n\n安排在T01-08B完成、T01-08C用户确认本轮审查结束，且T01-08D正文最小证据方案及必要补充经用户确认完成之后、T01-09正文整合之前，由独立于主要实现与结论撰写的核验者审查Code/Revision中的代码、配置、原始记录、图表、README和总对比报告。以用户审查后明确版本为当前输入，追溯每条关键结论到原始证据；README与总报告互相一致不能代替核对。\n\n检查实际非线性被控对象、EngineModel／MEX、执行机构、字典、路径和LPV库来源；当前在线／离线Linear/Clip、矩阵／基准点／偏置与15端口、节点未收敛标记、Clip及29点瞬时精度范围。核查各文献适配／完整复现的边界、AMPC与其他方法的组合性、原稿0.24／0.30 s与返修统一0.24 s、权重／硬约束、求解器质量门限、初始化及失败回退。\n\n从原始MAT核对统计时段、共同成功筛选、全部失败／越限／峰值、计时范围与单位，不把桌面时延当目标机保证，不跨任务或批次拼接。T01-03当前150/180、T01-04为90/120、T01-06为50/60、T01-07为100/120共同准确成功；样本变化需以实际受审版本更新，历史最近邻和旧软化数据明确分开。核对T01-07A历史14组轨迹／17组同QP回归、T01-03原权重恢复及T01-07旧冻结点限制的自身范围，不能改写成新旧插值等价证明。\n\n检查新旧源码与固定依赖指纹、37份历史MAT保存、原始记录到CSV／图／结论的链路，以及总报告每项方法解释和论文建议。结合C问题处理记录复核修改，保留未解决项；检查引用、误称复现、模型替代、数据混用／筛选、选择性报告和过度理论／安全主张等学术诚信风险，形成带证据的通过／有疑问／未核验判断与问题闭环。重要问题解决前相关结论不写入正文；T01-11保留为整合后最终核验。\n\n结果合理性与反常现象审查：除复算数值，还须主动检查关键结果是否符合问题结构、算法机制和计时口径，不能仅因脚本执行成功、表格与README一致就判为合理。重点追问独立控制变量减少四倍但原生求解时间收益有限、凝聚与非凝聚构建耗时随预测网格呈不同变化、热启动可能更慢或收益有限，以及硬预测约束与实际越限、不可行及失败回退并存等现象。对照原始记录、实现代码和适用理论，区分实现问题、统计口径问题、合理现象与原因未明的结果；已在用户审查中解释的现象也须独立判断，不能直接照搬解释。\n\n将T01-08D确认的正文内容与补充研究清单纳入受审输入，逐项核验拟用于正文的结论及证据是否正确、充分，必要补充是否真正解决缺口；未选入正文的原始记录、失败、负面结果和重要局限仍在核验范围内，不只检查被选中的正面结果。发现影响回应方案的实质问题时，反馈T01-08D调整，完成必要处理与用户重新确认后，再复核相应结论。\n\n核验意见的后续处理统一记录在Code/Revision/对比研究总报告.md第8节“独立核验意见的处理取舍与正文备忘”，按IR-01～07对应审稿意见、必要性、最小动作、拟落实位置和状态追踪；总报告只同步科学事实与证据边界，原第三方报告作为独立来源保留。",
+      "acceptance": "在 Code/Revision/T01_08A_IndependentReview/README.md 归档独立核验报告，记录核验者、日期、代码／数据版本、范围、检查方法及证据位置；必要时独立重算或复跑代表性结果。对关键实现和结论逐项给出通过／有疑问／未核验的判断及依据，记录问题、影响、修正和复核结果，明确可用于正文的结论及其适用边界。影响结果正确性、结论或学术诚信的问题须修正并复核；无法核验及尚未解决的内容明确保留，相关结论在解决前不写入正文。研究材料后续发生实质变更时补充核验。本任务完成后进入 T01-09，后续 T01-11 继续核验整合后的正文及证据一致性。 独立核验报告须包含总对比报告的逐项核验结果，明确其每项主要结论和数值表的通过／有疑问／未核验判断及原始证据；发现汇总或源说明不一致时，同步记录并修正总报告与相关子目录说明，复核后再确定可用于正文的内容。不能仅以总报告与 README 互相一致代替原始证据核查。 须先完成 T01-08B，检查当前 Linear/Clip 研究结果与保留的最近邻历史记录分清；原基线指纹及明确声明的模型插值／入口变更均可追溯。 T01-08C 已由用户确认本轮审查结束，独立核验同时覆盖用户审查后的修改版本和遗留问题。 独立核验报告增加“现象—证据—解释—判断”记录，注明解释是已验证事实、与机制一致的可能原因，还是尚未解释；必要时记录修正及复核。核验者还须主动发现未列举的可疑结果，不以此示例清单代替判断。不要求每个疑问均追加实验；仅对影响正确性、比较公平性或主要结论的问题进行必要的进一步验证，其他疑问保留证据边界。 开始核验前，T01-08D已完成且用户已确认最终正文方案及必要补充处理；独立核验报告逐项对应清单给出判断，不能以用户确认代替正确性核验。 按总报告第12.2节形成明确处理／交接记录：影响数据、模型、比较公平性或主要结论的实际缺陷须修正并复核；纯正文修改明确交给T01-09，条件性事项注明何时必须进一步核查，不把每条建议自动升级为新增研究，也不以仅写入备忘或报告已交付代替问题闭环。 2026-10-21已完成本轮独立核验与意见处理取舍的交付：报告和证据归档，正文采用及保留限制有明确交接。IR事项不因A阶段结项自动改为已解决；T01-09按清单落实，影响主要结论的新证据触发针对性复核。",
+      "deps": [
+        "T01-01",
+        "T01-02",
+        "T01-03",
+        "T01-04",
+        "T01-05",
+        "T01-06",
+        "T01-07",
+        "T01-07A",
+        "T01-08",
+        "T01-08B",
+        "T01-08C",
+        "T01-08D"
+      ],
+      "deliverables": [
+        {
+          "label": "独立核验报告（核验阶段完成，采用限制与后续待办保留）",
+          "path": "Code/Revision/T01_08A_IndependentReview/README.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "待核验输入：供用户先审的总对比报告",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "交给另一个agent的独立核验提示词",
+          "path": "prompts/T01-08A_独立核验提示词.md"
+        },
+        {
+          "label": "已交付报告：有条件采用、待处理问题与核验证据",
+          "path": "Code/Revision/T01_08A_IndependentReview/README.md"
+        }
+      ]
+    },
+    {
+      "id": "T01-09",
+      "topic": 1,
+      "title": "根据研究结果修改正文",
+      "status": "done",
+      "order": 9,
+      "description": "2026-10-21本轮正文整合完成：六类机制差异表、4.2节I／M／E代表性比较（分组表5及组合图6）、4.5节局限与应用讨论，并联动修改摘要、引言、复杂度、Pareto解释及结论。普通版与高亮版均20页（增加2页），取数与版式检查通过；无新增仿真、调参或计时，原稿及受审记录未改。实际落实位置、IR-01～07采用／保留决定与复核入口见总报告第12.3节。近期实证覆盖的最终回应、IR-03及后续稳定性／模型／约束事项未自动关闭；下一项T01-10，T01-11最终独立核验尚未开始。\n\n依据 T01-08A 独立核验后的方法分析和试验结果，迭代修改引言、方法比较、必要的结果讨论及结论，说明 AMPC 的贡献、局限与组合空间。未形成的结果不预先写成结论；后续补充或实质变更的研究材料经补充核验后再用于正文。\n\n正文待办：在结果部分靠后、结论之前设置简洁的“方法局限与应用讨论”小节，集中说明粗预测、模型失配及细周期执行对约束处理的影响；讨论软约束下可能出现的严重物理越限，以及硬预测约束下的QP不可行、失败回退和实际输出越限。软化诊断中的严重越限须交代配置、来源及历史范围，不能直接写成原稿AMPC必然具有的缺陷，也不把预测硬约束等同于实际对象始终满足物理限制。结合核验后的结果，说明具体计算收益、适用条件和与其他方法的组合空间，不泛化为全面占优。该小节先形成Topic 1证据支持的内容；后续按Topic顺序补入已经确认的稳定性、递归可行性等讨论，不提前展开后续Topic任务，不以此小节代替Topic 2所需的分析与审稿回应。\n\n正文取舍以T01-08D经用户确认、并通过T01-08A核验的最小证据方案为依据；若核验要求调整，采用完成反馈处理后的确认版本。\n\n正式写作前逐项回查Code/Revision/对比研究总报告.md第8节。按备忘落实方法区别与贡献定位、计算量／实测耗时、安全与可行性措辞、适配／复现、模型及计时条件、失败／越限图表；对需后续Topic承接的事项保留明确限制，不提前擅自扩展试验。",
+      "acceptance": "在当前修订稿中形成有依据的文字和必要图表，解释哪些试验或文字足以回应意见；正文采用内容按证据相关性与充分性确定。优先复用工况、合并图表，控制新增篇幅，并记录修改位置及所用结果。 正文在上述位置形成简洁的局限与应用讨论，逐项对应经核验的证据、配置和适用范围；负面结果与应用收益均如实表述，未证实机制不写成确定因果。记录小节位置及证据来源，优先复用已有结果，不因设置讨论小节而自动新增实验；后续Topic内容按届时讨论与证据补充。 正文写作须逐项回查清单第8节，为IR-01～07记录实际修改位置、证据和复核结果；未采用、条件性采用或留待后续主题处理的项目注明理由及结论限制。不能把理论两数量级估计写成实测加速，也不能把成功QP或Tt5零越限写成全部物理约束始终满足。",
+      "deps": [
+        "T01-08A"
+      ],
+      "deliverables": [
+        {
+          "label": "当前修订稿正文",
+          "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+        },
+        {
+          "label": "分组数值表源码（可由脚本重建）",
+          "path": "AMPC_ISA_Latex_Revised/topic1_comparison_table.tex"
+        },
+        {
+          "label": "组合时程与温度界限矢量图",
+          "path": "AMPC_ISA_Latex_Revised/images/fig12_low_complexity_comparison.pdf"
+        },
+        {
+          "label": "普通版PDF（20页，含Highlights）",
+          "path": "AMPC_ISA_Latex_Revised/build/main.pdf"
+        },
+        {
+          "label": "兼容入口PDF（当前为无标记稿；最终统一生成高亮）",
+          "path": "AMPC_ISA_Latex_Revised/build/main_highlighted.pdf"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "只读表图生成脚本",
+          "path": "Code/Revision/support/build_topic1_manuscript.py"
+        },
+        {
+          "label": "T01-09历史取数与PDF核对（2026-10-21；当前两处文字调整见T01-10）",
+          "path": "Code/Revision/support/results/topic1_manuscript_checks.json"
+        }
+      ]
+    },
+    {
+      "id": "T01-10",
+      "topic": 1,
+      "title": "核验 Topic 1 的审稿意见覆盖情况",
+      "status": "done",
+      "order": 10,
+      "description": "2026-10-22后续讨论：用户决定暂不新增试验，先按现有结果、可比性及事件驱动路线的近期发展整理回应。审稿人未指定必须完整复现2022／2024某篇，不能把缺少完整复现自动判为必补试验；具体来源、适配及引用仍须诚实对应。回应理由持续记录于Comments/审稿意见回复草稿.md，R3.3保持待最终核验。\n\n2026-10-22完成内部逐条覆盖核对并交付docs/返修工作记录.md。R4.5正文覆盖较充分，内部标已核验；R3.3及R5.1保持待核验并注明部分回应：近期具体算法未直接测试，理论贡献不冒称新一般性定理。沿用用户已确认的工程贡献方向；是否为R3.3补一项近期基线需另行讨论，未自动新增试验。修正引言理论范围及第3节将数值整定误称理论验证的两处措辞，重编译普通／高亮PDF均20页，原始证据及数值未变。任务完成指核对阶段交付，不等于全部意见通过、Topic 1完成或第三方核验。\n\n以届时的修订稿为基础，逐条核对 Topic 1 的相关审稿意见，包括创新定位及与已有方法的差异。若发现缺口，反馈调整本 Topic 的分析、试验与正文修改。",
+      "acceptance": "每条意见记录具体回应位置、必要证据及核验结论，未解决内容明确保留。仅当相应正文和证据足够时更新该条验收状态；研究任务完成不自动代表审稿意见已回应，也不自动完成 S03。",
+      "deps": [
+        "T01-09"
+      ],
+      "deliverables": [
+        {
+          "label": "覆盖核对与阶段确认历史（已并入工作记录）",
+          "path": "docs/返修工作记录.md"
+        },
+        {
+          "label": "按Topic持续累积的审稿回复草稿（非正式回复）",
+          "path": "Comments/审稿意见回复草稿.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "T01-10当前版本与指纹、引用、统计及PDF核对",
+          "path": "Code/Revision/support/results/topic1_coverage_checks.json"
+        },
+        {
+          "label": "修订稿（两处理论措辞调整）",
+          "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+        },
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "id": "T01-10A",
+      "topic": 1,
+      "title": "用户人工审阅修订稿与回复思路",
+      "status": "done",
+      "order": 10.5,
+      "description": "完成确认（2026-11-02）：用户明确确认T01-10A已完成，本轮人工审阅结束。已逐项讨论并修改中英文修订稿的摘要、引言、复杂度与方法说明、代表性方法对比、结果图表、讨论和结论，并维护术语约定、回复思路及相关写作规则。逐项问题、处理／保留理由、编译与排版复核及用户结项确认见docs/返修工作记录.md的T01-10A入口（H-01至H-69）。\n\n本轮以当前中英文修订稿、Code/Revision/对比研究总报告.md第12节、Comments/审稿意见回复草稿.md及docs/术语与表述约定.md为审阅依据。正式逐点回复、尚待其他Topic处理的问题与理论保证，以及最终修改标记继续按后续任务落实；中间稿保留无rev标记的写作方式，全文修改结束后统一对比原稿。\n\n结项后先开展T01-10B全工作目录清查清理，再进入T01-11第三方独立核验。人工审阅完成不自动通过所有审稿意见、Topic 1或S03，也不代替独立正确性与诚信核验。",
+      "acceptance": "用户明确确认本轮人工审阅结束；批注及问题均有处理结果，保留事项注明证据边界、原因和后续承接位置，涉及主要结论的修改有必要验证。记录当前审阅版本、实际修改、复审情况及用户确认。人工审阅结项不自动通过所有审稿意见、Topic 1或S03，不能代替T01-11的独立正确性与诚信核验。",
+      "deps": [
+        "T01-10"
+      ],
+      "deliverables": [
+        {
+          "label": "人工批注、处理与用户确认记录（T01-10A入口）",
+          "path": "docs/返修工作记录.md"
+        }
+      ],
+      "evidence": [
+        {
+          "label": "当前修订稿（无标记普通稿）",
+          "path": "AMPC_ISA_Latex_Revised/build/main.pdf"
+        },
+        {
+          "label": "科学结论、IR限制与正文采用位置（第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "按Topic回复理由及候选措辞",
+          "path": "Comments/审稿意见回复草稿.md"
+        },
+        {
+          "label": "摘要／正文首次定义及后续简称约定",
+          "path": "docs/术语与表述约定.md"
+        },
+        {
+          "label": "逐项审阅处理、复核与用户结项确认（H-01至H-69）",
+          "path": "docs/返修工作记录.md"
+        },
+        {
+          "label": "人工审阅后的中文对照正文",
+          "path": "AMPC_ISA_Latex_Revised_CN/paper_content.tex"
+        }
+      ]
+    },
+    {
+      "id": "T01-10B",
+      "topic": 1,
+      "title": "彻底清查并清理工作目录",
+      "status": "todo",
+      "order": 10.75,
+      "description": "安排在T01-10A用户明确确认本轮人工审阅结束之后、T01-11最终独立核验之前。清查整个项目工作目录，覆盖Code及历史研究目录、assets及参考案例、中英文LaTeX工程、build、缓存、日志、临时文件、归档副本和各类结果；同时检查Git已跟踪、未跟踪及被忽略的文件，先按目录和文件类型统计实际体积，列出占用最大的文件及重复副本，避免只凭扩展名判断用途。\n\n逐项判定保留、可重新生成、重复／停用或需要进一步确认。对于可再生成结果，记录对应源码、输入数据、模型／工具版本、运行命令及依赖是否仍可获得，并核对正文、图表、README、总报告和核验记录是否仍引用。清理重点是确认可恢复的构建产物、缓存、重复导出、过期计算结果及停用副本；Git忽略或理论上能重跑，不等于可以直接删除。保留不可替代的原始测量、HIL及原生计时记录、支撑当前论文结论的必要证据、独立核验来源，以及运行所需的EngineModel／MEX、模型库、输入数据和参考文献。对旧结果按当前用途、Git已提交版本或经核验的再生成链路决定去留，不将整个MAT或PDF类别一律删除。\n\n形成包含路径、体积、用途、处置理由及恢复方式的具体清单，确认清理范围后分批执行，并记录实际删除／保留项；不以“清理”名义修改研究结论或覆盖历史审查指纹。必要时同步.gitignore和生成／使用说明，减少再次积累。清理后检查当前中英文论文编译、图表及文档链接、关键研究入口和证据追溯；对删除类别开展必要的代表性再生成核验，不为清理自动重跑全部仿真。迁移材料须记录旧新路径对应，使T01-11能从清理后的有效入口审查。",
+      "acceptance": "交付全目录体积盘点及逐项处置清单，说明可再生成性的依据、保留的必要依赖／证据和待确认项；完成已确认范围的实际清理，记录前后体积、释放空间、文件数量及保留原因，不预设必须达到的目录大小。当前论文、主要图表、研究入口和独立核验所需证据仍可使用，必要的代表性再生成及链接／依赖检查通过；无法恢复的原始记录不得因可运行代码而被当作可再生成结果删除。处置和核验记录可追溯，仍需处理的问题明确交接T01-11；任务登记不等于已经开始清理或完成审稿验收。",
+      "deps": [
+        "T01-10A"
+      ],
+      "deliverables": [
+        {
+          "label": "体积盘点、清理清单及恢复／核验记录（实施时补充）",
+          "path": "docs/返修工作记录.md"
+        }
+      ],
+      "evidence": []
+    },
+    {
+      "id": "T01-11",
+      "topic": 1,
+      "title": "开展第三方独立核验与学术诚信风险检查",
+      "status": "todo",
+      "order": 11,
+      "description": "前置更新（2026-10-26）：在T01-10A人工审阅结束后，先完成T01-10B全工作目录清查清理，再开展本任务。核验输入采用清理后仍有效的入口，并回查清理清单、保留证据、再生成核验及迁移对应；清理不能代替独立正确性核验，也不能删除审查所需的原始证据。\n\n前置更新（2026-10-22）：先完成T01-10A用户人工审阅及相关修改，再核验用户确认的当前版本。阅读总报告第12节的IR处理／正文采用记录、看板逐条覆盖状态、回复草稿及工作记录中的人工审阅问题；原两份阶段文档已分流，不再作为活动输入。\n\n在内部意见覆盖核对后，由独立于主要实现与结论撰写的核验者检查 Topic 1 已形成的代码、配置、原始记录、分析结论及届时的修订稿。重点追溯实际加载的被控对象、EngineModel／MEX、参数与初值、LPV 预测模型、路径解析和基线版本，排查误用模型或数据；检查各比较方法是否忠实实现、适配及偏离原文是否披露，采样周期、预测时域、权重、约束、求解精度和计时口径是否与报告一致。复核关键计算、图表与结论的对应关系，以及失败、越限、负面结果和证据局限是否完整保留；检查引用归属、复现表述、数据来源与筛选、选择性报告、夸大实时性或理论保证等可能影响学术诚信的问题。仅添加核验任务，本次不向外部发送材料。\n\n整合后结果合理性回查：依据T01-08A的反常现象与问题记录，复核正文、图表及总报告是否准确保留解释、负面结果和适用条件；检查是否将可能原因改写为已证实机制、将成功快照结果替代完整闭环表现，或在精简篇幅时遗漏失败、越限、时延长尾及配置差异。重点核对结果末尾“方法局限与应用讨论”小节，避免将软化诊断结论套用于原稿、泛化应用优势或夸大稳定性与可行性保证；结合整合后的内容继续主动发现其他看似不合理的结果。\n\n2026-10-22交接：核验输入还包括docs/返修工作记录.md及support/results/topic1_coverage_checks.json。核对R4.5的内部覆盖判断，并保留R3.3近期实证、R5.1理论贡献的未完全闭环部分；未新增基线或一般性定理。T01-09历史指纹未覆盖，当前正文有两处明确声明的T01-10文字调整，须按当前指纹检查，不能把预期的正文变化误判成原始数据改动。本任务尚未开始。\n\n写作流程更新（2026-10-22）：用户决定中间稿移除rev包裹与修改高亮，全文完成后再对比原稿统一加标记。main_highlighted.tex目前只作无标记兼容入口，不能因当前PDF没有蓝字判定正文修改缺失；历史高亮检查记录保留。回复理由记入Comments/审稿意见回复草稿.md，属于候选草稿，不是正式回复或验收结论。",
+      "acceptance": "形成可追溯的独立核验报告，记录核验者、日期、代码／数据版本、检查范围、复核方法和证据位置；对关键结论通过／有疑问／未核验分别给出依据，并对代表性结果进行必要的独立重算或复跑。报告逐项记录发现的问题、影响、修正措施及复核结果，无法复核或尚未解决的内容明确保留，不以笼统的无风险结论代替证据。报告在实施时归档至 Code/Revision/T01_11_IndependentReview/README.md；影响结论或诚信的问题须修正并复核，相关正文与审稿验收同步回查。完成本任务不自动完成 Topic 1 或 S03。 核验报告记录T01-08A反常现象与遗留疑问在正文中的处理位置、证据及最终判断；未解决项保留明确限制，不因文字整合而默认关闭。局限讨论与结果、结论的证据边界一致，相关问题修正后须回查正文及审稿意见覆盖情况。 开始前T01-10A已由用户明确确认本轮结束；人工审阅引入的实际修改与保留问题纳入本轮独立核验，不能仅凭用户认可判定技术正确。 开始前T01-10B清查清理已完成，清理后的代码、论文和必要证据入口有效；结合清理记录核对来源与恢复链路，区分预期的路径／产物变化和原始证据变更。",
+      "deps": [
+        "T01-10B"
+      ],
+      "deliverables": [],
+      "evidence": [
+        {
+          "label": "按Topic持续累积的审稿回复草稿（非正式回复）",
+          "path": "Comments/审稿意见回复草稿.md"
+        },
+        {
+          "label": "无标记整理与正文一致性检查",
+          "path": "Code/Revision/support/results/unmarked_draft_checks.json"
+        }
+      ]
+    }
+  ],
+  "history": [
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "录入 Topic 1 首批任务",
+      "detail": "根据已讨论的方案添加 T01-01 至 T01-10，涵盖方法定位、适用性核对、代表性对比研究、正文整合与逐条核验。T01-01 进行中，其余未开始；各项研究可交替推进，具体配置及正文呈现随结果调整。T01-01、T01-02 的文字结论写回现有意见总结文档。其他 Topic 暂不添加任务，审稿意见验收状态与 S03 完成状态保持不变。",
+      "evidence": [
+        {
+          "label": "讨论方案与任务依据",
+          "path": "Comments/意见总结与修改方案.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "T01-01 完成首轮文献核对与贡献梳理，待确认",
+      "detail": "核对九类方法／实现策略所对应的八份资料，并回查关键 PDF；比较表补充章节依据，细化复用式发动机实现、结构化加速与近似求解的区分、OSQP 缓存条件及热启动收益边界。新增三项贡献及理论与证据边界的讨论，文字记录写回现有意见总结文档。T01-01 转为待确认；T01-02 至 T01-10 未开始，审稿意见尚未验收，S03 保持未完成。",
+      "evidence": [
+        {
+          "label": "本轮交付：Topic 1 比较表、文献依据与贡献讨论",
+          "path": "Comments/意见总结与修改方案.md"
+        },
+        {
+          "label": "核对文献及 PDF 版本入口",
+          "path": "assets/competitor_papers/文献清单.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "T01-02 形成多速率变分 NMPC 适配判断，待确认",
+      "detail": "对照 Lishkova §II–V 与现有代码接口，确认当前直接实现为双转速状态、双输入的局部 LPV-ZOH／插值路线，尚缺完整多速率变分表示、快慢分组依据，以及误差界、管束与终端条件。可探索转角／等效转矩重构，但需专门适配，不能据此宣称数学上不适用。本轮建议以文字比较为主、暂不增加仿真基线，结论写回现有表格，T01-02 转为待确认。本次仅进行文献及代码静态核对，未执行模型初始化、时标数值辨识或仿真，未修改论文或模型。",
+      "evidence": [
+        {
+          "label": "T01-02 核对结论与比较建议（表格对应行）",
+          "path": "Comments/意见总结与修改方案.md"
+        },
+        {
+          "label": "Lishkova 原文转写（§II–V）",
+          "path": "assets/competitor_papers/02_Multirate_Lishkova_2022.md"
+        },
+        {
+          "label": "现有状态导数接口",
+          "path": "Code/AMPC_test2/EngineInterp/StateFcn_interp_codegen.m"
+        },
+        {
+          "label": "现有 LPV-ZOH 离散化接口",
+          "path": "Code/AMPC_test2/Functions/discretize_lpv_model.m"
+        },
+        {
+          "label": "现有线性插值动态接口",
+          "path": "Code/AMPC_test2/EngineInterp/EngineDyn_interp.m"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "确认完成 T01-01 与 T01-02",
+      "detail": "依据前续讨论与用户认可，确认方法差异、贡献定位及多速率变分 NMPC 的比较范围：该文建模条件较多，本文可采用局部线性／LPV 预测接口，本轮以文字比较为主、不新增该基线仿真；不将此判断推广为所有多速率 MPC 的限制或发动机数学上不适用。两项任务由待确认改为已完成，保留核对依据。Topic 1 的后续研究、正文整合与逐条验收仍未完成，S03 未完成。",
+      "evidence": [
+        {
+          "label": "已讨论确认的方法比较与定位",
+          "path": "Comments/意见总结与修改方案.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "T01-03 完成首轮输入分块比较，配置待讨论",
+      "detail": "建立 Code/Revision/T01_03_MoveBlocking 隔离目录，复制模型和字典，只读复用固定发动机依赖。分块 QP 与完整细网格问题代入分块映射后一致；冻结模型精确提升的块边界预测核对通过。完成 AMPC、IB 与标准 MPC 的 46 s 非线性部件仿真，统一反馈周期与物理时域。原硬输出约束存在不可行快照，保留诊断；共同输出软约束下每种方法 180 次离线快照求解成功，但 AMPC Tt5 最大越限约 140 K、IB 约 22 K，不能据此声称满足安全限制。构建耗时中位数约 0.573/0.948/1.474 ms，仅为桌面 MATLAB 配对快照测量。T01-03 暂列待确认，需讨论约束策略及整定范围；未改正文，未新增其他 Topic 任务，S03 未完成。",
+      "evidence": [
+        {
+          "label": "实验说明与实测结论",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        },
+        {
+          "label": "主比较汇总 CSV",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/comparison.csv"
+        },
+        {
+          "label": "代数与求解质量验证",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/validation.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "确认完成 T01-03，收缩性能研究范围并归档论文修改口径",
+      "detail": "经讨论确认，AMPC 与 IB 均减少控制自由度；同自由度下本轮求解耗时接近，AMPC 主要额外计算收益在构建阶段。已完成温度异常单因素核对及原归档轨迹复现，约 140 K 越限主要来自新增输出软化。保留所有正负结果与约束局限，不再以权重扫描、全面性能寻优、Pareto 或带宽试验作为本研究任务验收前提。T01-03 改为已完成，论文修改依据写入实验 README；正文整合留待 T01-09，后续按 Topic 顺序复核 R5.10，未新增其他主题任务，Topic 1 与 S03 未完成。",
+      "evidence": [
+        {
+          "label": "已确认研究结论、范围及论文修改口径",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "完成 T01-04 复用式 MPC 代表性比较",
+      "detail": "在独立目录适配每拍优化单输入、其他输入保持的轮转机制，保留原工程和原整定／硬输出约束。两个相位与完整联合 QP 选择矩阵代入一致，保持检查通过；公共接口重现 T01-03 AMPC 完整输出，误差为零。完成三种方法 46 s 非线性仿真，记录每种 2301 次在线求解，非正退出计数 113/68/92，全部保留。仅在三者均成功的公共快照上比较耗时，构建中位数约 0.478/1.015/1.263 ms、求解约 1.531/1.566/1.683 ms；固定权重控制表现及物理越限如实归档，不推断最佳性能或严格安全。论文修改口径写入 README，T01-04 研究任务完成，正文、Topic 1 与 S03 未完成。",
+      "evidence": [
+        {
+          "label": "研究结果与论文修改依据",
+          "path": "Code/Revision/T01_04_Multiplexed/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "完成 T01-05 事件触发代表性研究",
+      "detail": "适配轨迹偏差触发、计划后续动作执行、到期更新和指令／失败处理，不移植机器人专用鲁棒证明。机制核对及周期基线完整轨迹复核通过。预设阈值 0.001/0.005 下，46 s 的 QP 尝试由 2301 降至 235/230，桌面累计控制逻辑约 1.574/1.530 s，标准 MPC 约 13.545 s。稳态触发率约 8.3%/8.4%，瞬态约 19.5%/18.0%，未退化为每拍求解；多数由 0.24 s 到期推动，偏差触发只有 5/0 次。两组温度最大越限约 11.65/38.34 K，失败 43/38 次，均保留，不能据次数少宣称严格安全或求解更可靠。累计／单次峰值与论文修改依据已归档，T01-05 研究任务完成，正文、Topic 1 与 S03 未完成。",
+      "evidence": [
+        {
+          "label": "研究结论及论文修改依据",
+          "path": "Code/Revision/T01_05_EventTriggered/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "明确事件触发更新仍受单周期截止时间约束",
+      "detail": "经讨论补充 T01-05 论文修改依据：本轮 20 ms 采样—计算—更新时序下，事件当拍的新优化及更新仍须按该周期完成并预留前后处理开销；0.24 s 为最长序列复用／触发间隔，不是一次优化允许时间。累计开销用于平均资源占用，实时性主证据应为完整处理链的单次耗时及目标机截止时间违约情况。当前仿真未注入实测计算延迟，不据累计收益证明实时性。研究任务状态保持完成，正文尚未修改。",
+      "evidence": [
+        {
+          "label": "单次截止时间与论文修改依据",
+          "path": "Code/Revision/T01_05_EventTriggered/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "补全需要更新周期的单次耗时统计",
+      "detail": "从已有原始在线审计提取 T01-04 全更新周期、T01-05 触发更新周期的中位数、P95、最大值和出现时刻，补入原 comparison.csv 并同步汇总脚本。T01-04 的在线大峰值保留，不用离线成功快照峰值替代；T01-05 不混入未触发时刻的低耗时。计时未覆盖完整采样、估计、外部查表、调度与输出处理，也未逐指令计数，不能据此证明完整控制链满足 20 ms 截止时间。仅重汇总已有记录，未重跑仿真，研究任务状态不变。",
+      "evidence": [
+        {
+          "label": "复用式在线更新耗时",
+          "path": "Code/Revision/T01_04_Multiplexed/README.md"
+        },
+        {
+          "label": "事件触发更新周期耗时",
+          "path": "Code/Revision/T01_05_EventTriggered/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "完成 T01-06 稀疏表达与结构利用研究",
+      "detail": "同一内点算法和精度下，凝聚与非凝聚 QP 的消去系数、首动作和解质量核对通过；完成四组完整仿真及六配置共享成功快照测时。同非凝聚标准 MPC 的稀疏处理较稠密明显降低耗时与存储，但当前凝聚总内核更低，不将 sparse 等同于最快。AMPC／标准 MPC 的配对总内核中位数为凝聚约 6.76/11.29 ms、稀疏约 13.27/29.96 ms；在线标准 MPC 稀疏中位数约 30.75 ms，保留 2205 次桌面超过 20 ms 及所有失败／越限。明确当前泛用稀疏内点不是原文专用块消元／近似全方案，不能推断整体线性复杂度或收益相乘。论文修改依据归档，研究任务完成，正文及审稿验收未完成。",
+      "evidence": [
+        {
+          "label": "结构利用研究与论文修改依据",
+          "path": "Code/Revision/T01_06_SparseStructure/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "新增 T01-11 第三方独立核验任务",
+      "detail": "按用户要求，在 T01-10 内部审稿意见覆盖核对之后增加独立核验。检查实际被控对象与模型来源、实现与比较配置、原始结果与结论、引用与复现边界及可能影响学术诚信的问题，形成带证据和问题闭环记录的报告。T01-11 未开始，下一项仍为 T01-07，既有任务和审稿验收状态保持不变；本次未开展第三方核验，未向外部发送材料。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "在正文整合前增加 T01-08A 代码与结论独立核验",
+      "detail": "按用户要求，新增侧重 Code/Revision 代码、实验记录与研究结论的独立核验，覆盖模型来源、方法实现、比较配置、统计与计时、结论依据及学术诚信风险。保留现有任务编号，以 T01-08A 插入 T01-08 与 T01-09 之间，并设为正文修改的前置依赖；T01-11 保留为整合后内容的最终核验。两次核验均未开始，下一项仍为 T01-07，Topic 1 与 S03 的验收状态保持不变。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "完成 T01-07 替代 QP 求解器研究",
+      "detail": "本机 OSQP MATLAB 接口未就绪，采用可用的 MOSEK 11.2.1，完成同凝聚 QP 系数／解质量验证、四组完整仿真、逐次在线审计及六配置公共快照比较。在线 AMPC／标准 MPC 总逻辑中位数为 active-set 约 2.14／2.13 ms、MOSEK 约 1.45／2.84 ms；公共成功快照为 active-set 约 2.06／2.36 ms、MOSEK 约 1.70／2.90 ms。收益依赖具体求解配置，不宣称所有求解器均有显著 AMPC 加速。保留所有失败／越限及 35.54 s 的一次 MOSEK 原生最优但驻点残差超标拒绝；当前完整轨迹逻辑测时未超过 20 ms，不替代完整控制链或目标机保证。T01-07 研究完成，下一项 T01-08；T01-08A／11 独立核验、正文和审稿验收尚未完成。",
+      "evidence": [
+        {
+          "label": "替代求解器研究与论文修改依据",
+          "path": "Code/Revision/T01_07_AlternativeSolver/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "补充 T01-07 接口准备开销拆分，收紧耗时解释",
+      "detail": "针对用户关于换用 MOSEK 后 AMPC 与标准 MPC 耗时变化相反的疑问，复用三个共同成功快照，各网格重复 40 次，预先创建不变设置后分别测量原生调用与准备开销。两网格的 MOSEK 原生调用均慢于 active-set，而逐拍创建 quadprog 选项的开销明显高于 MOSEK 矩阵／参数准备；原总耗时排序混入了这部分可避免开销。保留原始全轨迹和公共快照数据，明确当前实现总耗时不代表内部算法或最佳实现性能；若比较优化后实现应统一移出不变设置后重测。Topic 1、独立核验及正文验收状态保持不变。",
+      "evidence": [
+        {
+          "label": "拆分诊断与修正后的解释",
+          "path": "Code/Revision/T01_07_AlternativeSolver/README.md"
+        },
+        {
+          "label": "逐快照拆分数据",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/overhead_diagnostic.csv"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "按用户要求将 T01-07 改回进行中",
+      "detail": "继续研究如何避免不必要的实现开销，统一提前准备不变设置和接口数据结构，区分每拍必需的 QP 数值更新、原生调用和质量审计；保留已有数据及风险说明。待验证并讨论优化后的比较结果，暂不重新标记为完成。其他任务与审稿验收状态保持不变。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "T01-07 完成第一轮设置复用与回归核对，保持进行中",
+      "detail": "统一提前准备不变选项、参数、冷初值及固定控制参数列表，每拍保留 QP 数值更新和审计。六配置新旧配对解、目标、原生状态一致；四组完整轨迹输出、命令、退出及迭代差异为零。同批次 active-set 求解适配器加审计中位数 AMPC 约 3.00→1.45 ms、标准 MPC 约 3.13→1.62 ms；MOSEK 改善较小。新版完整仿真及公共快照另行记录；跨批次连未改动的构建器也变慢，未确定环境变化来源，不跨批次相减宣称收益。首轮结果和源指纹保留，原生内部任务设置仍有开销。按用户要求 T01-07 保持进行中，后续任务和验收未推进。",
+      "evidence": [
+        {
+          "label": "当前实现、结果与研究边界",
+          "path": "Code/Revision/T01_07_AlternativeSolver/README.md"
+        },
+        {
+          "label": "同批次新旧比较",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/preparation_comparison.csv"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "确认完成 T01-07 替代求解器研究与设置开销优化",
+      "detail": "经用户讨论确认，T01-07 按代表性 MOSEK 对比、同问题质量核对、不变设置外移、同批次新旧测时及完整轨迹回归的既定范围完成，状态由进行中改为已完成。保留首轮归档、失败／越限、原生残差拒绝和跨批次测时差异等局限；进一步原生任务复用或最佳实现寻优不作为当前完成前提。下一项为 T01-08；T01-08A／T01-11 独立核验、正文整合、审稿验收及 S03 尚未完成。",
+      "evidence": [
+        {
+          "label": "当前实现、结果与论文修改依据",
+          "path": "Code/Revision/T01_07_AlternativeSolver/README.md"
+        },
+        {
+          "label": "同批次新旧设置开销比较",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/preparation_comparison.csv"
+        },
+        {
+          "label": "四组完整轨迹回归",
+          "path": "Code/Revision/T01_07_AlternativeSolver/results/trajectory_regression.csv"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-17",
+      "title": "登记 T01-07A 固定设置开销统一复核，待用户决定",
+      "detail": "按用户要求，仅在看板登记 T01-03 至 T01-06 的固定设置与计时口径复核，状态为待确认，暂列 T01-07 后；是否执行、实际顺序及重测范围由用户统一审阅后决定。本次不修改实验代码、不运行仿真、不变更既有完成状态或独立核验依赖。拟优先关注事件触发累计节省及稀疏结构／单周期统计中的实现开销影响。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "完成 T01-07A 固定设置与统一计时复核，核清离线插值差异",
+      "detail": "原实现和原始结果留档；17 项同 QP 新旧配对、14 项完整轨迹与四组真实端口事件配对通过。实际 LPV 为最近邻插值，旧辅助函数为线性插值；新增最近邻重建在标准 MPC 2301 拍中核对全部 15 端口为零差异，离线主表已重测，首轮表及失败诊断保留。设置外移不改变控制行为；事件累计优势仍约 88.7%，标准 MPC 稀疏原型在线中位数仍约 28.322 ms、2204/2300 次超过 20 ms。T01-03 编译接入、桌面计时边界、T01-07 旧离线引用及后续独立核验均明确。下一项 T01-08 尚未开始，Topic 1／S03 及审稿验收未完成。",
+      "evidence": [
+        {
+          "label": "统一复核报告",
+          "path": "Code/Revision/T01_07A_SetupAudit/README.md"
+        },
+        {
+          "label": "来源与数值自检",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/provenance.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "按用户要求将实现与当前结果落实回 T01-03～06 原目录",
+      "detail": "从原入口重跑 14 组完整仿真并更新汇总、图与自动生成的 README 表。与初轮解释版全部输出／命令差为零；T01-04～06 与修改前的非计时日志和轨迹完全一致，T01-03 编译／解释差异单列。17 组同输入 QP 及当前函数的 15 端口核对通过，固定对象／字典与模型功能保持，旧线性离线点作为纠错项不强求新旧一致。已跟踪旧版由 Git 保存，29 份旧 MAT 留在本地忽略目录；历史隔离入口停用，批量清理受自动审批拒绝，清单已列待确认。研究迁移完成，S03、正文及独立核验未完成。",
+      "evidence": [
+        {
+          "label": "迁移回归",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/migration_regression.csv"
+        },
+        {
+          "label": "当前目录与核验报告",
+          "path": "Code/Revision/T01_07A_SetupAudit/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "按用户明确授权清理历史副本",
+      "detail": "已按清单删除 archive/ 中 82 份 Git 可恢复历史文件及归档说明、根层 23 份停用代码／模型／字典副本。T01-03～06 当前实现、全部原始 MAT、核验脚本及证据保留；清理状态已同步。T01-07A 保持已完成，T01-08、S03 和审稿验收状态不变。",
+      "evidence": [
+        {
+          "label": "授权清理记录",
+          "path": "Code/Revision/T01_07A_SetupAudit/results/cleanup_candidates.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "完成 T01-08 冷／轨迹热启动代表性比较",
+      "detail": "复用原模型并临时覆盖控制器，完成四组 46 s 仿真、三次实际端口配对、失败回退、基线及解质量核对。标准 MPC 平均迭代略降，AMPC 不变；本批配对没有总时延收益，保留失败、越限和在线峰值。该结论限定于原始轨迹初值及当前 active-set 实现，不泛化为所有热启动无效。下一项 T01-08A 独立核验，S03 与审稿验收不变。",
+      "evidence": [
+        {
+          "label": "冷／热启动研究",
+          "path": "Code/Revision/T01_08_WarmStart/README.md"
+        },
+        {
+          "label": "同输入连续序列配对",
+          "path": "Code/Revision/T01_08_WarmStart/results/paired_sequences.csv"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "核查 T01-08 冷启动及一次迭代的实际含义",
+      "detail": "两组冷记录的初值全部为零。AMPC 2123/2187、标准 MPC 2086/2208 个成功样本一次迭代；这些样本的无约束最优解已满足全部约束，与记录解吻合到约 1e-17。数值初值走普通 active-set 路径；未使用 QuadprogWarmStart 对象。诊断不改变现有控制器、计时或研究状态。",
+      "evidence": [
+        {
+          "label": "专项核查",
+          "path": "Code/Revision/T01_08_WarmStart/results/cold_start_diagnostic.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "生成总对比报告，纳入 T01-08A 第三方核验",
+      "detail": "在 Code/Revision/对比研究总报告.md 汇总方法定位、T01-03～08 当前比较、T01-07A 迁移依据及论文采用边界；数值表直接取各任务已存 CSV，按配置和计时口径分组。列明软／硬约束差异、失败／越限、单次与累计开销、历史离线输入及样本数旧叙述等审阅点。供用户先审，第三方再追溯原始记录核查；研究任务、独立核验、S03 与审稿验收状态均不变。",
+      "evidence": [
+        {
+          "label": "总对比报告",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "补明 0.24 s 的来源及原稿／返修时域差异",
+      "detail": "对照原稿第 701／703 行与代码配置：原稿 AMPC 为 80 ms×3=0.24 s，标准 MPC 为 20 ms×15=0.30 s；返修为等时域比较将标准 MPC 设为 12 步。总报告补充该区别、定性选取依据及非最优性保证，纳入 T01-08A 核验；未改变代码、原始数据、论文或任务状态。",
+      "evidence": [
+        {
+          "label": "总报告：预测时域来源",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "统一T01-03主结果为原数值权重＋硬输出约束",
+      "detail": "完成三组46 s重算、6点×30次配对与同配置核对，更新默认入口、README、总报告及Topic1说明。90/180共同成功样本保留全部失败记录；在线峰值85.760／76.574／30.212 ms及超20 ms次数1／7／3均报告。13项原T01-03依赖与126项其他任务源码／结果未变，7份旧主原始记录哈希一致；其他任务未重跑，仅同步历史核验范围及T01-08来源元数据。T01-03按有限研究范围完成，S03及独立核验状态不变。",
+      "evidence": [
+        {
+          "label": "主结果与论文修改依据",
+          "path": "Code/Revision/T01_03_MoveBlocking/README.md"
+        },
+        {
+          "label": "总报告",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "来源核验",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/primary_provenance.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "登记 T01-08B：LPV 线性插值迁移计划，待用户确认",
+      "detail": "按用户要求仅制定计划并写入看板，不执行代码或模型修改、不运行实验。拟在 T01-03～08 原目录统一在线／离线 Linear/Clip，先锁定来源并保留旧 MAT，再核对插值、偏置及实际15端口，重算受影响研究并同步总报告；不预设精度改善，不要求不同插值模式的轨迹相等，不混用新旧性能和测时。新增任务待确认并作为 T01-08A 的前置依赖；既有任务、审稿意见及 S03 状态保持。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "在 B 与 A 之间增加 T01-08C 用户审查及迭代修改",
+      "detail": "按用户要求新增本人审查与按问题修改的环节，状态未开始，依赖 T01-08B，并作为 T01-08A 独立核验的前置条件。以总报告及原任务材料为审查对象，问题和处理证据在总报告记录，修改写回原目录并按影响补充验证；用户确认本轮审查结束后进入独立核验。本次仅更新看板，B仍待确认，其余既有完成和审稿验收状态保持。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "完成T01-08B：统一Linear/Clip并重算六任务",
+      "detail": "在原目录统一活动LPV及离线重建，完成22组46 s闭环、六项原验证、既定规模配对、完整15端口和22组参数／CSV回算核对。37份历史MAT保存，62项固定依赖与58份原源码／模型保持，30份声明变更单列。新旧RMSE、失败、全部10输出缺口、Clip和原未收敛顶点参与比例已报告；29点精度并非全面改善，事件阈值与越限排序变化保留。原README、总报告及Topic1同步，历史设置迁移范围未改作新旧插值等价证明。B标为完成，C用户审查和A独立核验均未启动，正文、S03及审稿验收不变。",
+      "evidence": [
+        {
+          "label": "总对比报告",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "迁移与核对报告",
+          "path": "Code/Revision/support/LPV线性插值迁移核对.md"
+        },
+        {
+          "label": "22组记录核对",
+          "path": "Code/Revision/T01_03_MoveBlocking/results/linear_interpolation_records.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "开始T01-08C用户审查：讨论动态过程开销统计",
+      "detail": "按用户要求开始本轮审查，在总报告建立逐项问题记录。C-01关注稳态样本对全过程计算耗时中位数的影响；已核对完整在线、少数公共快照及冷热连续序列的不同口径，等待确认动态区间划分方式。当前未重算或改变结果，T01-08A、正文、S03及审稿验收状态保持。",
+      "evidence": [
+        {
+          "label": "总报告与C-01记录",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-18",
+      "title": "C-01：完成按推力响应划分的候选分段统计，待用户审阅",
+      "detail": "用户确认按推力调节过程划分。以事先说明的2%阶跃幅值／0.2 s持续入带判据试算22组已有完整记录，列出1%／5%边界敏感性及各自／共同区间，另汇总冷热同输入连续序列。原MAT、全过程CSV及图保持，失败与非触发口径分清，候选数值参数和边界仍待用户审阅；C-01、C任务及审稿验收未完成。",
+      "evidence": [
+        {
+          "label": "C-01补充与用户审查记录",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-20",
+      "title": "C-01：用户确认动态范围，完成总报告指标整合",
+      "detail": "用户审阅图形并确认动态标注范围合理，随后授权整合。主报告第3～8节并列全过程与公共动态统计，保留快照及原始记录；冷热同输入配对更新解释，未重跑仿真或计时。C-01已处理，C任务仍doing，A及正文未开始。",
+      "evidence": [
+        {
+          "label": "总报告及C-01记录",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "补充局限讨论与反常结果独立核查要求",
+      "detail": "按用户确认，在T01-08A增加结果合理性及反常现象审查和“现象—证据—解释—判断”记录；在T01-09增加结果末尾、结论之前的方法局限与应用讨论小节待办，区分软化诊断、硬约束可行性、实际越限及证据支持的优势；在T01-11回查整合后的解释、局限及疑问闭环。不新增任务编号或实验，不提前展开后续Topic，不改变任务顺序、依赖及完成状态。T01-08C用户审查继续进行，T01-08A／09／11仍未开始，S03和审稿验收状态保持不变。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "新增T01-08D正文最小证据方案与必要补充确认",
+      "detail": "按用户批准，在T01-08C与T01-08A之间新增T01-08D，交付Comments/Topic1_正文内容与补充研究清单.md。先按Topic 1审稿要求确定最小正文呈现与必要证据缺口，与用户讨论确认；如需补充，只执行确认范围并在结果完成后重新确认，若无需补充则确认后进入独立核验。A依赖D并核验清单及完整证据，实质问题可反馈D调整；T01-09按确认且经核验的方案整合正文。此轮只登记任务与交付位置，未生成讨论稿、运行仿真或开始独立核验；C继续doing，D／A／正文均todo，S03及审稿验收不变。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "用户确认T01-08C审查完成，下一项T01-08D",
+      "detail": "用户明确表示目前已完成T01-08C，并授权在看板标记完成。保留总报告中的解释、证据边界及尚未逐次归因的机制，不把用户审查结束视为独立核验或正文验收。下一项T01-08D确定正文最小证据方案并与用户确认，必要补充完成后再进入T01-08A；D／A／正文任务仍todo，S03及审稿意见验收保持原状态。",
+      "evidence": [
+        {
+          "label": "用户审查与修改记录及本轮完成状态",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "T01-08D形成首轮正文最小证据讨论稿，待确认",
+      "detail": "对照R3.3／R4.5／R5.1、现有方法分析、原稿及T01-03～08研究结果，生成Comments/Topic1_正文内容与补充研究清单.md。建议差异表、IB／MMPC精简数值比较及贡献／局限讨论作为正文主体；近期方法覆盖、理论贡献强度及事件触发取舍单列待讨论。记录现有失败和逐通道物理缺口，不因篇幅精简只选正面结果。当前不预设新增仿真；如确认必要缺口，先确认最小补充范围再执行。D改为waiting，C保持done，A及正文仍todo，未修改论文或实验数据。",
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "T01-08D确认纳入事件触发及效果导向的贡献定位",
+      "detail": "用户指出事件触发已有结果，应纳入正文，并明确解耦本身不是贡献，创新应落实到实现方便、行之有效的实时性改进方法。已修改讨论稿的正文范围、六行方法差异表、贡献说明、缺口判断和决策记录，加入T01-05累计开销、更新当拍时延、失败与Tt5越限证据；保留引用／适配边界及负面结果，不因纳入正文重跑仿真。D继续waiting，不将本次两点确认等同于整体方案完成或独立核验通过。",
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "准备T01-08A独立核验agent提示词",
+      "detail": "用户指示进入T01-08A，并拟由另一个agent实施核验。已在prompts/T01-08A_独立核验提示词.md整理对象与LPV来源、各任务实现、原始记录复算、总报告及正文方案、反常现象、文献适配和学术诚信风险的审查要求，以及独立报告格式和写入边界；看板A增加提示词入口。提示词明确按本轮授权开展核验，并如实记录D讨论稿与交接状态，不能默认未闭合问题已解决。本次仅准备交接材料，未实际执行第三方核验、修改实验或论文，也未擅自完成任何任务或审稿验收。",
+      "evidence": [
+        {
+          "label": "T01-08A独立核验执行提示词",
+          "path": "prompts/T01-08A_独立核验提示词.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "T01-08A标为进行中，开始审阅第三方报告与处理取舍",
+      "detail": "按用户明确授权将A标记doing，并挂接Code/Revision/T01_08A_IndependentReview/README.md。当前核对IR-01～07与原审稿要求及实际证据，区分必须改正、需限定文字及可后置项目；本次状态变更发生在独立核验报告交付后，不覆盖其受审输入指纹，也不把已有报告视为自动通过。其他任务、依赖、审稿验收及S03状态不变。",
+      "evidence": [
+        {
+          "label": "第三方独立核验报告",
+          "path": "Code/Revision/T01_08A_IndependentReview/README.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "建立独立核验处理备忘并关联正文整合",
+      "detail": "按用户同意的安排，在Comments/Topic1_正文内容与补充研究清单.md第8节记录IR-01～07的对应审稿意见、必要性、最小处理、正文位置和当前状态。总报告在对应位置补入当前节点不可行、运行期对象未收敛及模型质量边界的事实和证据，并更新A进行中的交接说明；A和T01-09挂接备忘，正文验收要求逐项回查。只落实记录与科学说明，未更改原独立报告、论文、控制器、参数或实验数据，未新增仿真；未将待处理项目或任何任务自动标为完成。",
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "总报告中的事实与适用范围说明",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "T01-08A独立核验阶段完成，保留后续处理与采用限制",
+      "detail": "在第三方报告、复核证据和第8节处理备忘已归档且经用户讨论后，将A按独立核验阶段标done。主要研究有条件采用，尚未落实的正文、近期覆盖回应及条件性技术核查继续按IR-01～07记录保留，不宣称所有问题已解决。D仍waiting，T01-09仍todo，T01-11待后续整合回查；本次仅同步阶段状态，未修改原独立报告、代码、参数、数据或论文，也未改变Git索引。",
+      "evidence": [
+        {
+          "label": "独立核验报告",
+          "path": "Code/Revision/T01_08A_IndependentReview/README.md"
+        },
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "补齐T01-08D已确认完成状态，下一项T01-09",
+      "detail": "用户指出D方案已在前述讨论确认，不应继续waiting。已将D标done并同步正文清单和总报告的当前交接状态；确认范围包括正文主体、事件触发结果纳入、效果导向贡献定位及独立核验意见的最小处理原则。以现有研究和采用限制推进，正文实施及近期文献对应交T01-09，后续实质缺口另行讨论；A仍done，其他任务、依赖、审稿验收及S03状态不变，未新增仿真或关闭全部IR事项。",
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-21",
+      "title": "完成T01-09正文整合，交T01-10覆盖核对",
+      "detail": "按D确认方案及A处理备忘，加入六类机制表、I／M／E分组数值和温度局部放大图、结果末尾局限讨论；贡献定位为方便实现且有实际收益的方法，联动修正两数量级实测、安全、同N预算及全局优势等主张。只读后处理验证10份原始MAT、16项动态输入与总报告44+44+8行，普通／高亮PDF均20页、文本一致、无未定义引用。原始数据、控制代码、原稿和独立报告不变；未运行新仿真或操作Git暂存提交。T01-09标done，T01-10／11保持todo；R3.3近期实证充分性及IR-03等限制未自动解决。",
+      "evidence": [
+        {
+          "label": "正文采用与IR处理记录（已合并总报告第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "只读表图生成脚本",
+          "path": "Code/Revision/support/build_topic1_manuscript.py"
+        },
+        {
+          "label": "MAT／表格／动态输入与两版PDF核对记录",
+          "path": "Code/Revision/support/results/topic1_manuscript_checks.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-22",
+      "title": "完成T01-10逐条覆盖核对，保留近期实证与理论贡献边界",
+      "detail": "对照来信、当前修订稿、文献年份和受审证据逐条核对三条意见，形成独立Markdown交付。R4.5内部已核验；R3.3与R5.1注明部分回应并保持待核验。修正两处理论措辞，保留用户工程贡献定位，没有新增近期算法、一般性定理或试验。当前两版PDF均20页，旧T01-09检查记录保留，新指纹单列；原始证据和44+44+8统计不变。T01-10按核对阶段done，T01-11仍todo，不宣称所有意见、Topic 1或S03通过。",
+      "evidence": [
+        {
+          "label": "覆盖核对与阶段确认历史（已并入工作记录）",
+          "path": "docs/返修工作记录.md"
+        },
+        {
+          "label": "T01-10当前版本与指纹、引用、统计及PDF核对",
+          "path": "Code/Revision/support/results/topic1_coverage_checks.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-22",
+      "title": "暂移除中间稿修订标记，建立按Topic回复草稿",
+      "detail": "按用户要求移除正文／表格58处rev包裹及高亮宏、开关和局部蓝色条件；表格生成脚本同步。main_highlighted保留为无标记兼容入口。两版20页，提取正文与整理前普通稿逐字一致。新增Comments/审稿意见回复草稿.md，Topic1收录近期事件路线、代表性基线、模型可比性、工程贡献、组合空间和证据边界，其余Topic留位置；候选措辞不作正式回复。用户已选择暂不新增试验，近期比较口径不再以完整复现2022／2024为必需门槛。历史核对记录保留，当前版本另记检查；未操作Git暂存／提交或完成后续审稿验收。",
+      "evidence": [
+        {
+          "label": "按Topic持续累积的审稿回复草稿（非正式回复）",
+          "path": "Comments/审稿意见回复草稿.md"
+        },
+        {
+          "label": "无标记稿与生成脚本一致性检查",
+          "path": "Code/Revision/support/results/unmarked_draft_checks.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-22",
+      "title": "增设T01-10A人工审阅，并合并阶段性文档",
+      "detail": "按用户确认，在T01-11前新增人工审阅，T01-11改依赖T01-10A；仅登记todo，需用户明确确认本轮审阅结束。原方案／覆盖两份文档的独有内容分别并入看板、总报告第12节、回复草稿及工作记录，迁移核对后删除原文件并更新活动引用。原独立报告及历史核验清单保持；文档路径变更与原始证据变化区分，不覆盖旧哈希。未修改论文、试验或审稿验收状态，未操作Git暂存提交。",
+      "evidence": [
+        {
+          "label": "合并后的科学限制与采用记录（第12节）",
+          "path": "Code/Revision/对比研究总报告.md"
+        },
+        {
+          "label": "阶段确认与迁移对应",
+          "path": "docs/返修工作记录.md"
+        },
+        {
+          "label": "回复草稿",
+          "path": "Comments/审稿意见回复草稿.md"
+        },
+        {
+          "label": "文档迁移核对",
+          "path": "Code/Revision/support/results/topic1_document_migration.json"
+        }
+      ]
+    },
+    {
+      "topic": 1,
+      "date": "2026-10-26",
+      "title": "增设T01-10B全工作目录清查清理任务",
+      "detail": "按用户要求，在T01-10A之后、T01-11之前加入全目录清查清理，状态todo；T01-11改依赖T01-10B，T01-10A仍为doing。实施时先盘点体积与文件用途，核实可再生成链路、依赖及证据保留，按具体清单清理并检查论文、研究入口和追溯链路。本次只登记任务及顺序，未执行目录清理、修改gitignore或删除结果，未改变其他任务或审稿验收状态。",
+      "evidence": []
+    },
+    {
+      "topic": 1,
+      "date": "2026-11-02",
+      "title": "T01-10A人工审阅经用户确认完成",
+      "detail": "用户明确确认本轮人工审阅结束，将T01-10A由doing改为done。中英文正文、方法比较与结果说明、讨论和结论的逐项修改及复核见工作记录H-01至H-69；同步工作流与交接说明，下一项为T01-10B全工作目录清查清理，其后为T01-11独立核验。其他任务、审稿意见、Topic 1及S03验收状态不变；本次未开始清理或独立核验，未操作Git暂存或提交。",
+      "evidence": [
+        {
+          "label": "人工审阅问题处理及用户结项确认",
+          "path": "docs/返修工作记录.md"
+        },
+        {
+          "label": "人工审阅后的英文正文",
+          "path": "AMPC_ISA_Latex_Revised/paper_content.tex"
+        },
+        {
+          "label": "人工审阅后的中文正文",
+          "path": "AMPC_ISA_Latex_Revised_CN/paper_content.tex"
+        }
+      ]
+    }
+  ]
+}
+  </script>
+  <script>
+  "use strict";
+  const data = JSON.parse(document.getElementById("board-data").textContent);
+  const escape = value => String(value ?? "").replace(/[&<>"']/g, char => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+  const labels = {todo:"未开始", doing:"进行中", waiting:"待确认", done:"已完成"};
+  const groupMap = new Map(data.groups.map(group => [group.id,group]));
+  const topicMap = new Map(data.topics.map(topic => [topic.id,topic]));
+  const taskMap = new Map(data.tasks.map(task => [task.id,task]));
+  const storagePrefix = "ampc-isa-revision:" + location.pathname + ":";
+  const draftKey = storagePrefix + "draft-v1";
+  const viewKey = storagePrefix + "topics-view-v2";
+  const draft = document.getElementById("scratch-draft");
+  const draftStatus = document.getElementById("draft-save-status");
+  const statusFilter = document.getElementById("status-filter");
+  const search = document.getElementById("task-search");
+  let storedView = null, storageAvailable = true;
+  try { storedView = JSON.parse(localStorage.getItem(viewKey) || "null"); } catch { storageAvailable = false; }
+  const rememberedTopics = {};
+  for (const group of data.groups) {
+    const candidate = Number(storedView?.rememberedTopics?.[group.id]);
+    rememberedTopics[group.id] = group.topics.includes(candidate) ? candidate : group.topics[0];
+  }
+  let selectedTopic = topicMap.has(Number(storedView?.topic)) ? Number(storedView.topic) : data.meta.defaultTopic;
+  let selectedGroup = topicMap.get(selectedTopic).group;
+  rememberedTopics[selectedGroup] = selectedTopic;
+  const topicViews = {};
+  for (const topic of data.topics) {
+    const view = storedView?.topicViews?.[topic.id];
+    topicViews[topic.id] = {status:labels[view?.status] ? view.status : "all", search:typeof view?.search === "string" ? view.search : "", open:Array.isArray(view?.open) ? view.open.filter(id => typeof id === "string") : []};
+  }
+  function validateData() {
+    if (groupMap.size !== data.groups.length || topicMap.size !== data.topics.length || taskMap.size !== data.tasks.length) throw new Error("数据编号重复");
+    for (const group of data.groups) for (const id of group.topics) if (topicMap.get(id)?.group !== group.id) throw new Error("主题分组不匹配");
+    for (const topic of data.topics) {
+      if (!groupMap.get(topic.group)?.topics.includes(topic.id) || !topic.comments.length) throw new Error("缺少主题或意见");
+      for (const comment of topic.comments) if (!comment.text || !comment.checks.length) throw new Error("缺少原文或核验要点");
+    }
+    for (const task of data.tasks) if (!topicMap.has(task.topic) || !labels[task.status] || (task.deps || []).some(id => !taskMap.has(id))) throw new Error("任务关联无效");
+    const visited = new Set(), visiting = new Set();
+    function visit(id) { if (visiting.has(id)) throw new Error("任务存在循环依赖"); if (visited.has(id)) return; visiting.add(id); for (const dep of taskMap.get(id).deps || []) visit(dep); visiting.delete(id); visited.add(id); }
+    for (const task of data.tasks) visit(task.id);
+    for (const record of data.history) if (!topicMap.has(record.topic)) throw new Error("记录关联无效");
+  }
+  function links(items) { return items?.length ? '<div class="review-links">' + items.map(item => '<a href="'+escape(encodeURI(item.path))+'">'+escape(item.label)+'</a>').join("") + '</div>' : ""; }
+  function captureView() {
+    topicViews[selectedTopic].status = statusFilter.value;
+    topicViews[selectedTopic].search = search.value;
+    topicViews[selectedTopic].open = Array.from(document.querySelectorAll('#stage-review details[open], #task-board details[open]'), item => item.id);
+  }
+  function saveView() {
+    try { captureView(); localStorage.setItem(viewKey, JSON.stringify({topic:selectedTopic,rememberedTopics,topicViews,scrollY:window.scrollY})); return true; }
+    catch { return false; }
+  }
+  function renderNavigation() {
+    document.getElementById("group-list").innerHTML = data.groups.map((group,index) => '<article class="phase'+(group.id === selectedGroup ? ' selected' : '')+'"><button type="button" class="phase-select" data-group="'+escape(group.id)+'" aria-pressed="'+(group.id === selectedGroup)+'" aria-controls="topic-list"><span class="phase-top"><span class="phase-num">0'+(index+1)+'</span><span class="badge'+(group.id === selectedGroup ? ' current' : '')+'">'+group.topics.length+' 个主题</span></span><span class="phase-name">'+escape(group.title)+'</span><span class="phase-description">主题 '+group.topics.join('、')+' · '+(group.id === selectedGroup ? '正在查看' : '点击选择')+'</span></button></article>').join("");
+    const group = groupMap.get(selectedGroup);
+    document.getElementById("topic-label").textContent = '意见主题 · '+group.title;
+    document.getElementById("topic-list").innerHTML = group.topics.map(id => { const topic = topicMap.get(id); return '<button type="button" class="topic-choice" data-topic="'+id+'" aria-pressed="'+(id === selectedTopic)+'" aria-controls="stage-review-content"><span class="topic-number">TOPIC '+String(id).padStart(2,'0')+'</span><strong>'+id+'. '+escape(topic.title)+'</strong><span>'+topic.comments.length+' 条'+(id === 12 ? '编辑及提交要求' : '审稿意见')+' · '+(id === selectedTopic ? '正在查看' : '查看内容 →')+'</span></button>'; }).join("");
+  }
+  function renderReview() {
+    const topic = topicMap.get(selectedTopic), group = groupMap.get(selectedGroup), view = topicViews[selectedTopic];
+    const complete = topic.comments.filter(comment => comment.status === "已核验" && comment.evidence?.length).length;
+    document.getElementById("focus-title").textContent = topic.id+'. '+topic.title;
+    document.getElementById("focus-summary").textContent = group.title;
+    document.getElementById("focus-state").textContent = '回应核验 '+complete+' / '+topic.comments.length+' 条';
+    document.getElementById("stage-review-caption").textContent = '主题 '+topic.id+' · '+topic.title;
+    document.getElementById("stage-review-content").innerHTML =
+      '<div class="review-grid"><article class="review-card"><h3>输入：当前稿件与本主题的全部意见</h3><dl class="review-facts"><dt>1. 当前版本论文</dt><dd>以 AMPC_ISA_Latex_Revised 中的当前修订稿为准。'+links(data.sources.manuscript)+'</dd><dt>2. 当前主题的全部意见</dt><dd>'+topic.comments.map(comment => escape(comment.label)).join('；')+'。'+links([{label:'意见总结与修改方案',path:data.sources.summary},{label:'英文原信',path:data.sources.letter}])+'</dd></dl><details class="source-details" id="source-comments-'+topic.id+'"><summary>展开全部原始意见（'+topic.comments.length+' 条）</summary>'+topic.comments.map(comment => '<div class="source-comment"><strong>'+escape(comment.label)+'</strong><blockquote>'+escape(comment.text)+'</blockquote></div>').join('')+'</details></article>'+
+      '<article class="review-card"><h3>最终目标</h3><p>得到一份回应本主题全部意见的修改版论文。</p><p>对每条意见核对当前稿件的修改位置、回应内容及必要的验证证据；未采纳的建议需有明确理由。'+(topic.id === 12 ? '本主题同时核对逐点回复、匿名标注稿与提交要求。' : '')+'</p><p class="note">拟修改方案仍是讨论稿。已有方案不代表已经修改或完成验收。</p></article></div>'+
+      '<div class="review-audit" id="audit"><div class="audit-head"><h3 class="review-subhead">审阅与验收清单</h3><p>逐条核验是否回应 · 已核验 '+complete+' / '+topic.comments.length+' 条</p></div><table class="review-table"><caption class="visually-hidden">主题 '+topic.id+' 的全部意见与回应核验</caption><thead><tr><th scope="col">意见</th><th scope="col">逐条回应核验</th><th scope="col">当前情况与证据</th></tr></thead><tbody>'+topic.comments.map(comment => {
+        const verified = comment.status === "已核验" && comment.evidence?.length;
+        return '<tr data-comment="'+escape(comment.id)+'"><td data-label="意见"><span class="task-id">'+escape(comment.id)+'</span><strong>'+escape(comment.label)+'</strong><details class="original-quote" id="quote-'+topic.id+'-'+escape(comment.id)+'"><summary>查看完整英文原文</summary><blockquote>'+escape(comment.text)+'</blockquote></details></td><td data-label="逐条回应核验"><ul>'+comment.checks.map(check => '<li>'+escape(check)+'</li>').join('')+'</ul></td><td data-label="当前情况与证据"><span class="badge '+(verified ? 'done' : 'waiting')+'">'+(verified ? '已核验' : '待核验')+'</span><p class="review-state">'+escape(comment.response || '尚未记录当前稿件的回应位置与验证证据。')+'</p>'+links(comment.evidence)+(comment.status === "已核验" && !verified ? '<small class="audit-error">缺少证据，暂不计入已核验。</small>' : '')+'</td></tr>';
+      }).join('')+'</tbody></table></div>';
+    for (const details of document.querySelectorAll('#stage-review details')) details.open = view.open.includes(details.id);
+  }
+  function renderTasks() {
+    const tasks = data.tasks.filter(task => task.topic === selectedTopic);
+    const query = search.value.trim().toLocaleLowerCase();
+    const filtered = tasks.filter(task => (statusFilter.value === 'all' || task.status === statusFilter.value) && (!query || [task.id,task.title,task.description,task.acceptance].join(' ').toLocaleLowerCase().includes(query)));
+    document.getElementById('tasks-caption').textContent = '主题 '+selectedTopic+' · '+topicMap.get(selectedTopic).title;
+    document.getElementById('filter-summary').textContent = '显示 '+filtered.length+' / '+tasks.length+' 项';
+    document.getElementById('overall-count').textContent = tasks.length ? '已完成 '+tasks.filter(task => task.status === 'done').length+' 项' : '尚未录入任务';
+    search.disabled = statusFilter.disabled = document.getElementById('reset-filters').disabled = tasks.length === 0;
+    document.getElementById('task-board').innerHTML = Object.entries(labels).map(([status,label]) => {
+      const items = filtered.filter(task => task.status === status);
+      return '<section class="column" data-status="'+status+'" aria-label="'+label+'"><div class="column-head"><h3><span class="dot" aria-hidden="true"></span>'+label+'</h3><span class="count">'+items.length+'</span></div>'+(items.length ? items.map(task => '<details class="task" id="task-'+escape(task.id)+'"><summary><span class="task-id">'+escape(task.id)+'</span><strong class="task-title">'+escape(task.title)+'</strong></summary><div class="task-detail"><p><span class="detail-label">工作内容</span>'+escape(task.description)+'</p><p><span class="detail-label">完成标准</span>'+escape(task.acceptance)+'</p><p><span class="detail-label">依赖</span>'+escape((task.deps || []).join('、') || '无')+'</p>'+(task.deliverables?.length ? '<p><span class="detail-label">交付位置</span></p>'+links(task.deliverables) : '')+links(task.evidence)+'</div></details>').join('') : '<div class="empty">暂无任务</div>')+'</section>';
+    }).join('');
+    for (const details of document.querySelectorAll('#task-board details')) details.open = topicViews[selectedTopic].open.includes(details.id);
+    const upcoming = tasks.filter(task => task.status !== 'done').sort((a,b) => (a.order ?? 999)-(b.order ?? 999) || a.id.localeCompare(b.id));
+    document.getElementById('next-list').innerHTML = upcoming.length ? upcoming.map((task,index) => '<article class="next-card"><div class="next-order">下一步 '+String(index+1).padStart(2,'0')+' · '+escape(task.id)+'</div><h3 class="next-title">'+escape(task.title)+'</h3><button type="button" class="text-btn" data-task-target="'+escape(task.id)+'">查看任务与完成标准 →</button></article>').join('') : '<div class="empty">'+(tasks.length ? '暂无待推进任务。' : '尚未录入任务，暂不生成推进顺序。')+'</div>';
+  }
+  function renderHistory() {
+    const records = data.history.filter(item => item.topic === selectedTopic).sort((a,b) => b.date.localeCompare(a.date));
+    document.getElementById('history-list').innerHTML = records.length ? records.map(record => '<article class="history-row"><div class="history-date">'+escape(record.date)+'</div><div><h3>'+escape(record.title)+'</h3><p>'+escape(record.detail)+'</p>'+links(record.evidence)+'</div></article>').join('') : '<p class="blank-history">暂无工作与决策记录。</p>';
+  }
+  function render() {
+    statusFilter.value = topicViews[selectedTopic].status;
+    search.value = topicViews[selectedTopic].search;
+    renderNavigation(); renderReview(); renderTasks(); renderHistory();
+  }
+  function selectTopic(id, focusTarget) {
+    if (!topicMap.has(id)) return;
+    captureView();
+    selectedTopic = id; selectedGroup = topicMap.get(id).group; rememberedTopics[selectedGroup] = id;
+    render(); saveView();
+    if (focusTarget === 'group') document.querySelector('[data-group="'+selectedGroup+'"]').focus({preventScroll:true});
+    if (focusTarget === 'topic') document.querySelector('[data-topic="'+id+'"]').focus({preventScroll:true});
+  }
+  function saveDraft() {
+    try { localStorage.setItem(draftKey,JSON.stringify({text:draft.value,savedAt:Date.now()})); draftStatus.classList.remove('error'); draftStatus.textContent = draft.value ? '已自动保存到当前浏览器' : '草稿为空 · 已保存'; return true; }
+    catch { draftStatus.classList.add('error'); draftStatus.textContent = '草稿未能保存，请先下载草稿'; return false; }
+  }
+  document.getElementById('group-list').addEventListener('click',event => { const button = event.target.closest('[data-group]'); if (button) selectTopic(rememberedTopics[button.dataset.group],'group'); });
+  document.getElementById('topic-list').addEventListener('click',event => { const button = event.target.closest('[data-topic]'); if (button) selectTopic(Number(button.dataset.topic),'topic'); });
+  document.getElementById('stage-review').addEventListener('toggle',event => { if (event.target.tagName === 'DETAILS') saveView(); },true);
+  document.getElementById('task-board').addEventListener('toggle',event => { if (event.target.tagName === 'DETAILS') saveView(); },true);
+  statusFilter.addEventListener('change',() => { captureView(); renderTasks(); saveView(); });
+  search.addEventListener('input',() => { captureView(); renderTasks(); saveView(); });
+  document.getElementById('reset-filters').addEventListener('click',() => { statusFilter.value='all'; search.value=''; captureView(); renderTasks(); saveView(); });
+  document.getElementById('next-list').addEventListener('click',event => { const button=event.target.closest('[data-task-target]'); if (!button) return; const details=document.getElementById('task-'+button.dataset.taskTarget); if (details) { details.open=true; details.scrollIntoView({behavior:'smooth',block:'center'}); saveView(); } });
+  draft.addEventListener('input',saveDraft);
+  try {
+    const raw = localStorage.getItem(draftKey);
+    if (raw) { let stored; try { stored=JSON.parse(raw); } catch { stored=raw; } draft.value=typeof stored === 'string' ? stored : typeof stored?.text === 'string' ? stored.text : ''; draftStatus.textContent=draft.value ? '已恢复本地草稿' : '草稿为空'; }
+  } catch { storageAvailable=false; draftStatus.classList.add('error'); draftStatus.textContent='浏览器存储不可用，请下载草稿备份'; }
+  document.getElementById('download-draft').addEventListener('click',() => { const url=URL.createObjectURL(new Blob([draft.value],{type:'text/plain;charset=utf-8'})); const a=document.createElement('a'); a.href=url; a.download='ISA返修看板草稿.txt'; document.body.append(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url),1000); });
+  document.getElementById('refresh-now').addEventListener('click',() => { if (!saveDraft() || !saveView()) { document.getElementById('refresh-status').textContent='草稿或浏览状态保存失败，已取消刷新。请先下载草稿备份。'; return; } location.reload(); });
+  window.addEventListener('beforeunload',() => { saveDraft(); saveView(); });
+  window.addEventListener('pagehide',() => { saveDraft(); saveView(); });
+  let printOpen=[];
+  window.addEventListener('beforeprint',() => { printOpen=Array.from(document.querySelectorAll('#stage-review details[open]'),item=>item.id); document.querySelectorAll('#stage-review details').forEach(item=>{item.open=true;}); });
+  window.addEventListener('afterprint',() => { document.querySelectorAll('#stage-review details').forEach(item=>{item.open=printOpen.includes(item.id);}); });
+  try {
+    validateData(); render();
+    document.getElementById('updated-at').textContent='最近更新：'+data.meta.updated+' · 北京时间';
+    if (Number.isFinite(storedView?.scrollY)) requestAnimationFrame(() => window.scrollTo(0,storedView.scrollY));
+    if (!storageAvailable) document.getElementById('refresh-status').textContent='浏览器存储不可用，草稿请下载备份。';
+  } catch (error) { document.getElementById('stage-review-content').innerHTML='<p class="error-panel">看板数据未能加载：'+escape(error.message)+'。请检查 board-data。</p>'; }
+  </script>
+</body>
+</html>
