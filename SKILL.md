@@ -7,7 +7,9 @@ description: Use when working on any long-term, non-one-off project, software or
 
 ## Apply
 
-If uncertain whether a project needs a workboard, ask the user. If declined, briefly record the opt-out in the project's `AGENTS.md`; do not create a board or invoke this skill for that project unless the user reverses the decision.
+Use the project instruction file recognized by the active AI tool (for example, `AGENTS.md` or `CLAUDE.md`), following existing project conventions.
+
+If uncertain whether a project needs a workboard, ask the user. If declined, briefly record the opt-out in that project instruction file; do not create a board or invoke this skill for that project unless the user reverses the decision.
 
 ## Create
 
@@ -17,7 +19,7 @@ Users may replace the bundled [example](assets/example/AMPC_ISA_revision_board.h
 
 Inspect the selected HTML and adapt its layout and interactions to the user's needs. Replace its project data, history, completion states and project-specific links. Create the project's board separately, preserving the example. The closing order below overrides the selected example.
 
-Add a concise English instruction to the project's `AGENTS.md`, using the actual board path:
+Add a concise English instruction to the project instruction file, using the actual board path:
 
 > Before project work, read `<board>.html` and update it after authorized work.
 
