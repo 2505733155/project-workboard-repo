@@ -43,7 +43,8 @@ project-workboard/
 ├── SKILL.md
 └── assets/
     └── example/
-        └── AMPC_ISA_revision_board.html
+        ├── AMPC_ISA_revision_board.html
+        └── chap02_requirements_board.html
 ```
 
 Before updating an existing installation, preserve any HTML examples you have added or replaced. You may also copy the README files and license from the repository root into the installed skill directory.
@@ -65,7 +66,7 @@ $project-workboard Read revision_board.html in the project root,
 continue the current task, and update progress, evidence, and next actions after authorized work.
 ```
 
-Open the generated project HTML in a browser. The bundled example includes topic navigation, status filters, task search, history, and a scratchpad; a new board's interactions depend on the selected example and project needs. The bundled scratchpad saves notes in the current browser and offers a text download. It does not write notes back to the HTML or synchronize them across devices.
+Open the generated project HTML in a browser. The bundled examples include navigation, status filters, task search, history, and a scratchpad; a new board's interactions depend on the selected example and project needs. The bundled scratchpads save notes in the current browser and offer a text download. They do not write notes back to the HTML or synchronize them across devices.
 
 ## Choosing or adding HTML examples
 
@@ -77,7 +78,14 @@ Examples live in this skill's [`assets/example/`](project-workboard/assets/examp
 - **No HTML files:** the AI asks the user to add or provide an example before proceeding.
 - **An existing project board:** the AI prioritizes maintaining it, without requiring a new example selection for every work session.
 
-The bundled [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) is a paper-revision example with a primarily Chinese interface. It contains tasks, history, and material links from its original project; those project materials are not included in this repository. When creating a new board, the AI replaces that project content and its links, saves the result in the target project, and preserves the example for future use.
+Choose between the two bundled examples based on the scope of your work:
+
+| Example | Suitable work | Phase tabs |
+| --- | --- | --- |
+| [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) | Larger projects with multiple phases, such as revising an entire thesis | Yes, to switch between phases |
+| [chap02_requirements_board.html](project-workboard/assets/example/chap02_requirements_board.html) | Smaller, focused projects, such as revising a single thesis chapter | No; tasks are presented together on one page |
+
+Both examples have primarily Chinese interfaces and contain tasks, history, and material links from their original projects; those project materials are not included in this repository. When creating a new board, the AI replaces that project content and its links, saves the result in the target project, and preserves the example for future use.
 
 ## Closing a phase
 
@@ -101,7 +109,8 @@ project-workboard-repo/
     ├── SKILL.md             # Instructions read by the AI
     └── assets/
         └── example/         # Replaceable HTML examples that can coexist
-            └── AMPC_ISA_revision_board.html
+            ├── AMPC_ISA_revision_board.html
+            └── chap02_requirements_board.html
 ```
 
 ## License

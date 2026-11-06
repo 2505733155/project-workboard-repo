@@ -43,7 +43,8 @@ project-workboard/
 ├── SKILL.md
 └── assets/
     └── example/
-        └── AMPC_ISA_revision_board.html
+        ├── AMPC_ISA_revision_board.html
+        └── chap02_requirements_board.html
 ```
 
 如果已有安装，更新前保留自己添加或替换的 HTML 案例。仓库根目录的 README 和许可证也可一并复制到安装后的技能目录中。
@@ -64,7 +65,7 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 继续处理当前任务，并在完成授权工作后更新进展、证据和下一步行动。
 ```
 
-看板生成后，用浏览器打开项目中的 HTML 文件查看。内置案例提供主题导航、状态筛选、任务搜索、历史记录和临时草稿；新看板的具体交互取决于所选案例及项目需求。内置案例的临时草稿保存在当前浏览器中，也可下载为文本，不会自动写回 HTML 或在设备之间同步。
+看板生成后，用浏览器打开项目中的 HTML 文件查看。内置案例提供导航、状态筛选、任务搜索、历史记录和临时草稿；新看板的具体交互取决于所选案例及项目需求。内置案例的临时草稿保存在当前浏览器中，也可下载为文本，不会自动写回 HTML 或在设备之间同步。
 
 ## 选择或添加自己的 HTML 案例
 
@@ -76,7 +77,14 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 - **目录中没有 HTML**：AI 请用户添加或提供案例后再继续。
 - **项目已有看板**：优先继续维护，无需每次工作都重新选择案例。
 
-内置的 [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) 是论文返修看板案例，界面以中文为主，包含原项目的任务、历史及材料链接。相关项目材料不随本仓库提供。创建新看板时，AI 会替换这些项目内容和链接，将结果保存在目标项目中，保留案例文件供后续使用。
+内置两个案例，可按工作规模选择：
+
+| 案例 | 适用工作 | 阶段选项卡 |
+| --- | --- | --- |
+| [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) | 较大型、需要分阶段推进的工作，例如整篇毕业论文的修改 | 有，可切换不同阶段 |
+| [chap02_requirements_board.html](project-workboard/assets/example/chap02_requirements_board.html) | 较小型、范围集中的工作，例如毕业论文中某一章的修改 | 无，在同一页面集中查看任务 |
+
+两个案例均以中文为主，包含原项目的任务、历史及材料链接。相关项目材料不随本仓库提供。创建新看板时，AI 会替换这些项目内容和链接，将结果保存在目标项目中，保留案例文件供后续使用。
 
 ## 阶段如何收尾
 
@@ -100,7 +108,8 @@ project-workboard-repo/
     ├── SKILL.md             # AI 读取的技能规则
     └── assets/
         └── example/         # 可替换、可并存的 HTML 案例
-            └── AMPC_ISA_revision_board.html
+            ├── AMPC_ISA_revision_board.html
+            └── chap02_requirements_board.html
 ```
 
 ## 许可证
