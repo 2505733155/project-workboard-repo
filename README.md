@@ -8,6 +8,11 @@
 
 技能由 Markdown 指令和 HTML 案例组成，可用于能够加载 `SKILL.md`、访问配套资源并读写项目文件的 AI 工具，例如 Codex、Claude Code、WorkBuddy。安装路径、调用入口和项目指令文件随工具及其配置而变化。
 
+## 为什么使用工作面板
+
+- **让进度看得见**：面板是人与 AI 智能体交互的共同窗口，将目标、计划、当前任务、完成证据和待决事项集中展示，便于人随时了解工作进展并调整方向。
+- **减少逐步监督的负担**：在面板中明确目标、制定计划并约定验收标准后，AI 智能体可以在授权范围内连续推进任务。人主要在方案确认、阶段验收和需要决策等关键节点检查工作、进行必要调整，把精力集中在判断与决策上。
+
 ## 它会做什么
 
 - 优先复用项目已有的看板；需要新建或重新设计时，由用户选择 HTML 案例。
@@ -48,6 +53,8 @@ project-workboard/
 ```
 
 如果已有安装，更新前保留自己添加或替换的 HTML 案例。仓库根目录的 README 和许可证也可一并复制到安装后的技能目录中。
+
+希望通过 Git 安装并持续获取更新，可阅读 [Git 与 GitHub 新手指南](docs/git-guide.md)。指南以 VS Code 和 GitHub 网页操作为主，附有命令行步骤，并说明如何将仓库更新同步到已安装的技能目录。
 
 ## 开始使用
 
@@ -96,6 +103,12 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 
 如果不希望某个项目使用看板，可以明确告知当前 AI 助手。技能会在该工具识别的项目指令文件中简短记录退出选择；用户重新启用前，不为该项目创建看板或调用本技能。
 
+## 反馈与参与改进
+
+- 遇到问题或有功能建议，可以在 [Issues](https://github.com/2505733155/project-workboard-repo/issues) 提交反馈。
+- 希望改进说明、技能规则或添加 HTML 案例，可以 Fork 仓库，在自己的分支中修改后提交 Pull Request。
+- 初次使用 Git 或 GitHub，请从 [新手指南](docs/git-guide.md) 开始，了解安装、更新、Issue、Fork、分支、提交和 Pull Request 的完整流程。
+
 ## 仓库结构
 
 ```text
@@ -104,6 +117,9 @@ project-workboard-repo/
 ├── README.en.md             # 英文说明
 ├── LICENSE                  # MIT 许可证
 ├── .gitignore               # 系统及编辑器临时文件忽略规则
+├── docs/                    # Git 新手指南及项目文档
+│   ├── git-guide.md         # 中文指南
+│   └── git-guide.en.md      # 英文指南
 └── project-workboard/       # 可直接安装的技能目录
     ├── SKILL.md             # AI 读取的技能规则
     └── assets/
@@ -111,6 +127,10 @@ project-workboard-repo/
             ├── AMPC_ISA_revision_board.html
             └── chap02_requirements_board.html
 ```
+
+## 致谢
+
+感谢清华大学航空发动机研究院博士生刘晟奕同学，最早提出使用这一方法和思路，为本项目的形成提供了启发。
 
 ## 许可证
 

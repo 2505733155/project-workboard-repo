@@ -8,6 +8,11 @@ Use it for paper revisions, research experiments, software development, and othe
 
 The skill consists of Markdown instructions and HTML examples. It can be used with AI tools that load `SKILL.md`, access supporting resources, and read and edit project files, such as Codex, Claude Code, and WorkBuddy. Installation paths, invocation methods, and project instruction files depend on the tool and its configuration.
 
+## Why use a workboard
+
+- **Make progress visible:** the board gives people and AI agents a shared window into goals, plans, current tasks, completion evidence, and open decisions. It helps people monitor progress and adjust direction.
+- **Reduce step-by-step supervision:** once goals, plans, and acceptance criteria are agreed on, the AI agent can work through tasks within the authorized scope. People can focus their reviews and adjustments on key points such as approving a plan, reviewing a phase, or making a decision.
+
 ## What it does
 
 - Reuses an existing project board; asks the user to choose an HTML example when creating or redesigning a board.
@@ -48,6 +53,8 @@ project-workboard/
 ```
 
 Before updating an existing installation, preserve any HTML examples you have added or replaced. You may also copy the README files and license from the repository root into the installed skill directory.
+
+To install with Git and keep receiving updates, see the [Git and GitHub beginner's guide](docs/git-guide.en.md). It focuses on VS Code and the GitHub website, includes command-line steps, and explains how to copy repository updates into an installed skill directory.
 
 ## Getting started
 
@@ -97,6 +104,12 @@ Each phase ends with three separate tasks in this order, following [SKILL.md](pr
 
 To opt a project out of workboard use, tell your current AI assistant explicitly. The skill records the opt-out briefly in a project instruction file recognized by that tool and will not create a board or run for the project until the user reverses that decision.
 
+## Feedback and contributions
+
+- Report problems or suggest improvements through [Issues](https://github.com/2505733155/project-workboard-repo/issues).
+- To improve the documentation or skill instructions, or add an HTML example, fork the repository, make changes on your own branch, and submit a pull request.
+- If you are new to Git or GitHub, start with the [beginner's guide](docs/git-guide.en.md) for installation, updates, issues, forks, branches, commits, and pull requests.
+
 ## Repository layout
 
 ```text
@@ -105,6 +118,9 @@ project-workboard-repo/
 ├── README.en.md             # English documentation
 ├── LICENSE                  # MIT license
 ├── .gitignore               # OS and editor temporary-file ignore rules
+├── docs/                    # Git beginner's guides and project documentation
+│   ├── git-guide.md         # Chinese guide
+│   └── git-guide.en.md      # English guide
 └── project-workboard/       # Installable skill directory
     ├── SKILL.md             # Instructions read by the AI
     └── assets/
@@ -112,6 +128,10 @@ project-workboard-repo/
             ├── AMPC_ISA_revision_board.html
             └── chap02_requirements_board.html
 ```
+
+## Acknowledgments
+
+We thank 刘晟奕, a doctoral student at the Institute for Aero Engine, Tsinghua University, for first proposing this method and approach, which inspired this project.
 
 ## License
 
