@@ -5,6 +5,8 @@ description: Use when working on any long-term, non-one-off project, software or
 
 # Project Workboard
 
+English (execution source) | [Chinese reading translation](SKILL.cn.md)
+
 ## Apply
 
 Use the project instruction file recognized by the active AI tool (for example, `AGENTS.md` or `CLAUDE.md`), following existing project conventions.

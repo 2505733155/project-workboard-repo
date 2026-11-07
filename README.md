@@ -4,7 +4,7 @@
 
 一个面向长期项目的轻量 AI skill：让 AI 在工作前读取项目看板，在完成授权工作后更新进展，把任务、下一步行动、证据和历史记录留在项目自己的 HTML 文件中。
 
-适合论文返修、科研实验、软件开发等需要多轮推进的项目。技能规则见 [SKILL.md](project-workboard/SKILL.md)。
+适合论文返修、科研实验、软件开发等需要多轮推进的项目。技能执行规则见 [SKILL.md](project-workboard/SKILL.md)；供人阅读的中文译本包括[技能规则](project-workboard/SKILL.cn.md)和[经验复用指引](project-workboard/references/experience-reuse.cn.md)，规则以英文原文为准。
 
 技能由 Markdown 指令、参考文档和 HTML 案例组成，可用于能够加载 `SKILL.md`、访问配套资源并读写项目文件的 AI 工具，例如 Codex、Claude Code、WorkBuddy。安装路径、调用入口和项目指令文件随工具及其配置而变化。
 
@@ -58,8 +58,10 @@ WorkBuddy 可在技能板块选择 **添加技能 → 上传技能**，导入包
 ```text
 project-workboard/
 ├── SKILL.md
+├── SKILL.cn.md
 ├── references/
-│   └── experience-reuse.md
+│   ├── experience-reuse.md
+│   └── experience-reuse.cn.md
 └── assets/
     └── example/
         ├── AMPC_ISA_revision_board.html
@@ -137,8 +139,10 @@ project-workboard-repo/
 │   └── git-guide.en.md      # 英文指南
 └── project-workboard/       # 可直接安装的技能目录
     ├── SKILL.md             # AI 读取的技能规则
+    ├── SKILL.cn.md          # 供人阅读的中文译本
     ├── references/          # 用户同意总结经验后按需读取
-    │   └── experience-reuse.md
+    │   ├── experience-reuse.md
+    │   └── experience-reuse.cn.md
     └── assets/
         └── example/         # 可替换、可并存的 HTML 案例
             ├── AMPC_ISA_revision_board.html

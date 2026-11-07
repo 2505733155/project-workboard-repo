@@ -4,7 +4,7 @@
 
 A lightweight AI skill for long-term projects. It guides the AI to read a project board before working and update it after authorized work, keeping tasks, next actions, evidence, and history in the project's own HTML file.
 
-Use it for paper revisions, research experiments, software development, and other projects spanning multiple work sessions. The skill's instructions are in [SKILL.md](project-workboard/SKILL.md).
+Use it for paper revisions, research experiments, software development, and other projects spanning multiple work sessions. The skill's execution instructions are in [SKILL.md](project-workboard/SKILL.md). Chinese reading translations are available for the [skill instructions](project-workboard/SKILL.cn.md) and [experience reuse guide](project-workboard/references/experience-reuse.cn.md); the English originals remain authoritative.
 
 The skill consists of Markdown instructions, reference documents, and HTML examples. It can be used with AI tools that load `SKILL.md`, access supporting resources, and read and edit project files, such as Codex, Claude Code, and WorkBuddy. Installation paths, invocation methods, and project instruction files depend on the tool and its configuration.
 
@@ -58,8 +58,10 @@ Preserve this directory structure; copying only `SKILL.md` is insufficient:
 ```text
 project-workboard/
 ├── SKILL.md
+├── SKILL.cn.md
 ├── references/
-│   └── experience-reuse.md
+│   ├── experience-reuse.md
+│   └── experience-reuse.cn.md
 └── assets/
     └── example/
         ├── AMPC_ISA_revision_board.html
@@ -138,8 +140,10 @@ project-workboard-repo/
 │   └── git-guide.en.md      # English guide
 └── project-workboard/       # Installable skill directory
     ├── SKILL.md             # Instructions read by the AI
+    ├── SKILL.cn.md          # Chinese reading translation
     ├── references/          # Read on demand after consent to summarize lessons
-    │   └── experience-reuse.md
+    │   ├── experience-reuse.md
+    │   └── experience-reuse.cn.md
     └── assets/
         └── example/         # Replaceable HTML examples that can coexist
             ├── AMPC_ISA_revision_board.html

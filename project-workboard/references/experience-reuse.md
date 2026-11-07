@@ -1,12 +1,20 @@
 # Experience Consolidation and Reuse
 
+English (source) | [Chinese reading translation](experience-reuse.cn.md)
+
 Read this guide after the user agrees to the optional experience-reuse task, between user review and work-directory cleanup.
 
-## Select lessons with the user
+## Filter and select lessons with the user
 
-Review the phase's user instructions and review feedback, and propose useful practices the agent observed. Present concise candidates with their context and where they may help again. Agent observations are suggestions for the user to select, not automatically accepted rules.
+After consent, review the phase's user instructions, review feedback and useful practices observed by the agent. Before presenting candidates, check the relevant existing instructions, board entries, topic documents and skills for overlapping guidance. Follow the project's reading entry points and candidate topics rather than scanning every document or skill.
 
-Separate one-off task choices from lasting lessons. Confirm which selected lessons apply only to this project and which represent user preferences or workflows suitable for other projects. Agreement to summarize does not by itself make every candidate a user-wide rule. If no candidates are worth keeping, record that outcome and continue without creating files.
+Retain candidates with incremental value: a concrete misunderstanding, failure or review correction that changed what should be inferred; an evidence-backed useful practice; or a new lasting user requirement. Routine engineering obligations and already accessible rules normally need no separate lesson. If an existing rule was repeatedly missed, consider improving its wording, applicability or reading entry point in place rather than copying the rule into another file.
+
+Distinguish evidence already recorded from guidance already easy to reuse. A specific lesson buried in a report can warrant a short, situation-based index linked to that report. Reuse or update an existing entry when it already serves that purpose; keep the evidence in its original location instead of copying the report.
+
+For retained candidates, briefly convey what happened, what judgment or practice it changes, the supporting evidence and when it may help again. Keep observations distinct from explanations and preserve applicability limits; a local performance result, one run's parameters or a one-time authorization is not a general rule. Use the amount of detail the lesson needs, without a compulsory template, scorecard or candidate count.
+
+Present only the filtered candidates for the user to select; agent observations remain suggestions, not automatically accepted rules. Confirm which selected lessons apply only to this project and which represent user preferences or workflows suitable for other projects. Agreement to summarize does not by itself make every candidate a user-wide rule. If nothing adds reusable value, record that there are no new reusable lessons and continue without creating files or asking for permission to summarize again.
 
 ## Choose a form that fits
 
