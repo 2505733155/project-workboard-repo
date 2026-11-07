@@ -59,6 +59,7 @@ git status
 源码仓库：任意源码目录/project-workboard-repo/
 需要复制的内容：源码仓库中的 project-workboard/
 安装结果：~/.agents/skills/project-workboard/SKILL.md
+          ~/.agents/skills/project-workboard/references/experience-reuse.md
           ~/.agents/skills/project-workboard/assets/example/...
 ```
 

@@ -59,6 +59,7 @@ Then complete steps 4 and 5 above. **Cloning the repository and installing the s
 Source checkout: any-source-folder/project-workboard-repo/
 Directory to copy: project-workboard/ inside the checkout
 Installed files: ~/.agents/skills/project-workboard/SKILL.md
+                 ~/.agents/skills/project-workboard/references/experience-reuse.md
                  ~/.agents/skills/project-workboard/assets/example/...
 ```
 

@@ -6,7 +6,7 @@
 
 适合论文返修、科研实验、软件开发等需要多轮推进的项目。技能规则见 [SKILL.md](project-workboard/SKILL.md)。
 
-技能由 Markdown 指令和 HTML 案例组成，可用于能够加载 `SKILL.md`、访问配套资源并读写项目文件的 AI 工具，例如 Codex、Claude Code、WorkBuddy。安装路径、调用入口和项目指令文件随工具及其配置而变化。
+技能由 Markdown 指令、参考文档和 HTML 案例组成，可用于能够加载 `SKILL.md`、访问配套资源并读写项目文件的 AI 工具，例如 Codex、Claude Code、WorkBuddy。安装路径、调用入口和项目指令文件随工具及其配置而变化。
 
 ## 为什么使用工作面板
 
@@ -19,7 +19,7 @@
 - 根据项目目标调整案例的布局和交互，替换任务、历史、完成状态及项目链接。
 - 在当前 AI 工具识别的项目指令文件（如 `AGENTS.md`、`CLAUDE.md`）中记录看板路径，指导后续工作先读看板、完成授权工作后再更新。
 - 维护实际进展、下一步行动、任务状态、证据和历史记录。
-- 为每个阶段依次安排独立核验与修正、用户审阅、工作目录检查与清理。
+- 为每个阶段依次安排独立核验与修正、用户审阅、可选的经验总结与复用、工作目录检查与清理。
 
 这是由 AI 执行的文件维护流程。项目看板由 AI 更新 HTML 后，在浏览器中刷新查看；它不自动扫描项目并同步进度。
 
@@ -33,14 +33,14 @@
 
 ```text
 https://github.com/2505733155/project-workboard-repo
-请你将仓库内的 project-workboard/ skill（包含 SKILL.md 和 assets/）安装到当前智能体使用的用户级技能目录，供我的各个项目使用。
+请你将仓库内的 project-workboard/ skill（包含 SKILL.md、references/ 和 assets/）安装到当前智能体使用的用户级技能目录，供我的各个项目使用。
 安装后请确认文件完整，并告诉我实际安装路径和如何启用。如果已有安装，请保留我自定义的案例和修改。
 ```
 
 ### 手动安装
 
 1. 在本仓库的 GitHub 页面选择 **Code → Download ZIP**，下载并解压。
-2. 找到解压后仓库根目录中的 `project-workboard/` 子目录；将这个包含 `SKILL.md` 和 `assets/` 的完整子目录安装到所用工具的技能目录，或按该工具的要求打包后通过技能面板导入。
+2. 找到解压后仓库根目录中的 `project-workboard/` 子目录；将这个包含 `SKILL.md`、`references/` 和 `assets/` 的完整子目录安装到所用工具的技能目录，或按该工具的要求打包后通过技能面板导入。
 3. 在该工具的技能列表或调用入口中选择 `project-workboard`。如果没有识别到新技能，按该工具的要求刷新或重新启动会话。
 
 | 工具或安装配置 | 用户级目录示例（当前用户的所有项目） | 项目级目录示例（仅当前项目） |
@@ -51,13 +51,15 @@ https://github.com/2505733155/project-workboard-repo
 
 `~` 表示用户主目录；Windows 中通常对应 `C:\Users\你的用户名`。例如，使用 `.codex` 目录的 Windows 安装可放在 `C:\Users\你的用户名\.codex\skills\project-workboard\`。路径由工具、版本及安装配置决定，沿用当前能够识别技能的目录即可，无需仅为此 skill 迁移或在多个目录重复安装。目录规则见 [Codex 官方文档](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)和 [Claude Code 官方文档](https://code.claude.com/docs/en/skills#choose-where-skills-load)。
 
-WorkBuddy 可在技能板块选择 **添加技能 → 上传技能**，导入包含 `SKILL.md` 和 `assets/` 的本地技能包；具体包格式与导入要求以所用版本为准，参阅 [WorkBuddy 官方技能文档](https://www.workbuddy.cn/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Skills-Market)。其他 AI 工具也按各自的技能目录或导入方式安装。
+WorkBuddy 可在技能板块选择 **添加技能 → 上传技能**，导入包含 `SKILL.md`、`references/` 和 `assets/` 的本地技能包；具体包格式与导入要求以所用版本为准，参阅 [WorkBuddy 官方技能文档](https://www.workbuddy.cn/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Skills-Market)。其他 AI 工具也按各自的技能目录或导入方式安装。
 
 请保留以下目录关系，不能只复制 `SKILL.md`：
 
 ```text
 project-workboard/
 ├── SKILL.md
+├── references/
+│   └── experience-reuse.md
 └── assets/
     └── example/
         ├── AMPC_ISA_revision_board.html
@@ -107,11 +109,12 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 
 ## 阶段如何收尾
 
-每个阶段按以下顺序安排三个独立任务，以 [SKILL.md](project-workboard/SKILL.md) 的规则为准：
+每个阶段按以下顺序安排四个独立任务，以 [SKILL.md](project-workboard/SKILL.md) 的规则为准：
 
 1. **独立核验与修正**：在项目根目录写出核验要求，给出引用该文件的提示词，请用户另开新对话核验；记录发现、修正和再次核验。当前实施对话及其子代理不能代替独立核验。
 2. **用户审阅**：处理反馈，并取得用户对本轮审阅结束的明确确认。
-3. **工作目录检查与清理**：检查工作目录，移除确认无用的临时或重复产物，保留交付物、必要证据和用户改动。
+3. **经验总结与复用（可选）**：先提醒用户是否总结本阶段的指示、审阅建议和智能体发现的有效做法。不同意则记录本阶段已跳过，直接继续清理；同意后，由用户筛选候选经验、确定项目级或用户级范围，并选择保存方式。优先维护已有文档或技能，项目指令文件保持简短，通过链接按需引用详细经验；结果及保存位置记入看板。具体原则见[经验复用参考](project-workboard/references/experience-reuse.md)。
+4. **工作目录检查与清理**：检查工作目录，移除确认无用的临时或重复产物，保留交付物、必要证据和用户改动。
 
 如果不希望某个项目使用看板，可以明确告知当前 AI 助手。技能会在该工具识别的项目指令文件中简短记录退出选择；用户重新启用前，不为该项目创建看板或调用本技能。
 
@@ -134,6 +137,8 @@ project-workboard-repo/
 │   └── git-guide.en.md      # 英文指南
 └── project-workboard/       # 可直接安装的技能目录
     ├── SKILL.md             # AI 读取的技能规则
+    ├── references/          # 用户同意总结经验后按需读取
+    │   └── experience-reuse.md
     └── assets/
         └── example/         # 可替换、可并存的 HTML 案例
             ├── AMPC_ISA_revision_board.html

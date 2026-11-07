@@ -6,7 +6,7 @@ A lightweight AI skill for long-term projects. It guides the AI to read a projec
 
 Use it for paper revisions, research experiments, software development, and other projects spanning multiple work sessions. The skill's instructions are in [SKILL.md](project-workboard/SKILL.md).
 
-The skill consists of Markdown instructions and HTML examples. It can be used with AI tools that load `SKILL.md`, access supporting resources, and read and edit project files, such as Codex, Claude Code, and WorkBuddy. Installation paths, invocation methods, and project instruction files depend on the tool and its configuration.
+The skill consists of Markdown instructions, reference documents, and HTML examples. It can be used with AI tools that load `SKILL.md`, access supporting resources, and read and edit project files, such as Codex, Claude Code, and WorkBuddy. Installation paths, invocation methods, and project instruction files depend on the tool and its configuration.
 
 ## Why use a workboard
 
@@ -19,7 +19,7 @@ The skill consists of Markdown instructions and HTML examples. It can be used wi
 - Adapts the example's layout and interactions, replacing its tasks, history, completion states, and project links.
 - Records the board path in a project instruction file recognized by the active AI tool, such as `AGENTS.md` or `CLAUDE.md`, so subsequent work starts by reading the board and ends by updating it after authorized work.
 - Maintains actual progress, next actions, task statuses, evidence, and history.
-- Ends each phase with independent verification and corrections, user review, and work-directory inspection and cleanup, in that order.
+- Ends each phase with independent verification and corrections, user review, optional experience consolidation and reuse, and work-directory inspection and cleanup, in that order.
 
 This is a file-maintenance workflow carried out by the AI. Refresh the board in your browser after the AI updates its HTML; the board does not scan the project or synchronize progress automatically.
 
@@ -33,14 +33,14 @@ If your AI agent can access the network and manage local skills, send it this pr
 
 ```text
 https://github.com/2505733155/project-workboard-repo
-Please install the project-workboard/ skill from this repository, including SKILL.md and assets/, in the user-level skill directory recognized by the current AI tool, so I can use it across my projects.
+Please install the project-workboard/ skill from this repository, including SKILL.md, references/, and assets/, in the user-level skill directory recognized by the current AI tool, so I can use it across my projects.
 Verify that the installed files are complete, and tell me the actual installation path and how to enable the skill. If an installation already exists, preserve my custom examples and edits.
 ```
 
 ### Install manually
 
 1. On this repository's GitHub page, select **Code → Download ZIP** and extract the archive.
-2. Find the `project-workboard/` subdirectory in the extracted repository root. Install this complete subdirectory, including `SKILL.md` and `assets/`, in your tool's skill directory, or package it as required by your tool and import it through the skills panel.
+2. Find the `project-workboard/` subdirectory in the extracted repository root. Install this complete subdirectory, including `SKILL.md`, `references/`, and `assets/`, in your tool's skill directory, or package it as required by your tool and import it through the skills panel.
 3. Select `project-workboard` through that tool's skill list or invocation interface. If it does not appear, refresh or restart the session as required by the tool.
 
 | Tool or installation configuration | User-level directory example (all your projects) | Project-level directory example (current project only) |
@@ -51,13 +51,15 @@ Verify that the installed files are complete, and tell me the actual installatio
 
 `~` means your home directory, typically `C:\Users\your-username` on Windows. For example, a Windows installation using `.codex` can place the skill at `C:\Users\your-username\.codex\skills\project-workboard\`. Paths depend on the tool, version, and installation configuration. Use the directory your tool already recognizes; there is no need to migrate or install duplicate copies just for this skill. See the [Codex documentation](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills) and [Claude Code documentation](https://code.claude.com/docs/en/skills#choose-where-skills-load) for directory conventions.
 
-In WorkBuddy, use **Add skill → Upload skill** in the skills panel to import a local skill package containing `SKILL.md` and `assets/`. Follow your version's package-format and import requirements; see the [official WorkBuddy skills documentation](https://www.workbuddy.cn/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Skills-Market). Other AI tools use their own skill directories or import interfaces.
+In WorkBuddy, use **Add skill → Upload skill** in the skills panel to import a local skill package containing `SKILL.md`, `references/`, and `assets/`. Follow your version's package-format and import requirements; see the [official WorkBuddy skills documentation](https://www.workbuddy.cn/docs/workbuddy/From-Beginner-to-Expert-Guide/Function-Description/Skills-Market). Other AI tools use their own skill directories or import interfaces.
 
 Preserve this directory structure; copying only `SKILL.md` is insufficient:
 
 ```text
 project-workboard/
 ├── SKILL.md
+├── references/
+│   └── experience-reuse.md
 └── assets/
     └── example/
         ├── AMPC_ISA_revision_board.html
@@ -108,11 +110,12 @@ Both examples have primarily Chinese interfaces and contain tasks, history, and 
 
 ## Closing a phase
 
-Each phase ends with three separate tasks in this order, following [SKILL.md](project-workboard/SKILL.md):
+Each phase ends with four separate tasks in this order, following [SKILL.md](project-workboard/SKILL.md):
 
 1. **Independent verification and corrections:** write verification requirements in the project root, provide a prompt referencing that file, and ask the user to open a new conversation for verification. Record findings, corrections, and re-verification. The implementing conversation and its subagents cannot fulfill this independent verification task.
 2. **User review:** address feedback and obtain the user's explicit confirmation that the review is complete.
-3. **Work-directory inspection and cleanup:** inspect the working directory and remove confirmed temporary or redundant artifacts, preserving deliverables, necessary evidence, and user changes.
+3. **Experience consolidation and reuse (optional):** first ask whether to summarize the phase's user instructions, review feedback, and useful practices identified by the agent. If declined, record this phase's skip and proceed to cleanup. If accepted, let the user select lessons, confirm project or user-wide scope, and choose a form. Prefer existing documents or skills; keep project instructions short with links to detailed guidance read when relevant. Record the outcome and saved locations in the board. See the [experience reuse reference](project-workboard/references/experience-reuse.md).
+4. **Work-directory inspection and cleanup:** inspect the working directory and remove confirmed temporary or redundant artifacts, preserving deliverables, necessary evidence, and user changes.
 
 To opt a project out of workboard use, tell your current AI assistant explicitly. The skill records the opt-out briefly in a project instruction file recognized by that tool and will not create a board or run for the project until the user reverses that decision.
 
@@ -135,6 +138,8 @@ project-workboard-repo/
 │   └── git-guide.en.md      # English guide
 └── project-workboard/       # Installable skill directory
     ├── SKILL.md             # Instructions read by the AI
+    ├── references/          # Read on demand after consent to summarize lessons
+    │   └── experience-reuse.md
     └── assets/
         └── example/         # Replaceable HTML examples that can coexist
             ├── AMPC_ISA_revision_board.html

@@ -27,10 +27,11 @@ Add a concise English instruction to the project instruction file, using the act
 
 Read the board before work. After authorized work, update progress, next actions, statuses, evidence and history to reflect what actually happened.
 
-End every phase with three separate tasks in this fixed order:
+End every phase with four separate tasks in this fixed order:
 
 1. **Independent verification and corrections.** Write requirements in the project root, identifying the phase/version, materials, checks and acceptance criteria. Give the user a prompt referencing that file and ask them to open a new conversation for verification. The implementing conversation, including its subagents, cannot fulfill this task. Record findings, corrections and re-verification before completion.
 2. **User review.** Address the user's feedback and obtain their explicit confirmation that the review is complete.
-3. **Full work-directory inspection and cleanup.** Inspect the working directory and remove confirmed temporary or redundant artifacts, preserving deliverables, necessary evidence and user changes.
+3. **Experience consolidation and reuse (optional).** Ask once whether to summarize the phase's user instructions, review feedback and useful practices identified by the agent for future reuse. If declined, record that this task was skipped for this phase and proceed to cleanup without asking again. If accepted, follow [experience reuse guidance](references/experience-reuse.md) to let the user select lessons, confirm their scope and choose how to preserve them. Record the outcome and any saved locations in the board.
+4. **Full work-directory inspection and cleanup.** Inspect the working directory and remove confirmed temporary or redundant artifacts, preserving deliverables, necessary evidence and user changes.
 
 Keep this skill minimal; extend it using actual usage feedback.
