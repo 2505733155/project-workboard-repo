@@ -29,6 +29,19 @@ Add a concise English instruction to the project instruction file, using the act
 
 Read the board before work. After authorized work, update progress, next actions, statuses, evidence and history to reflect what actually happened.
 
+Use the following task-state semantics. Existing status names may be retained; make their mapping to these meanings explicit in the board.
+
+| State | When to use |
+| --- | --- |
+| Todo / Not started | Planned but not currently being worked on, including downstream work, deferred tasks and inactive alternatives, even if prerequisites are missing. |
+| In progress | Actively being worked on now, with a next step the agent can carry out autonomously. |
+| Blocked / Needs user input | Scheduled to advance now, but unable to continue without information, a decision or an action from the user. Both conditions must hold. |
+| Done | Work and required verification are complete, with supporting evidence. |
+
+For each blocked item, state exactly what the user needs to do and the condition that will unblock it. Dependencies or technical difficulties alone do not make a task blocked: a failed test that the agent can keep diagnosing is in progress; work not scheduled to advance now remains todo. When work is deferred or no longer actively pursued, promptly move the task out of in progress to the appropriate state.
+
+Preserve failure history, dependency relationships and unfinished work when changing status. These rules guide scheduling and user collaboration; they do not change acceptance criteria.
+
 End every phase with four separate tasks in this fixed order:
 
 1. **Independent verification and corrections.** Write requirements in the project root, identifying the phase/version, materials, checks and acceptance criteria. Give the user a prompt referencing that file and ask them to open a new conversation for verification. The implementing conversation, including its subagents, cannot fulfill this task. Record findings, corrections and re-verification before completion.
