@@ -1,0 +1,983 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Project Workboard · 工作导图</title>
+<style>
+:root{color-scheme:dark;--bg:#11171c;--panel:#19232b;--ink:#e9f0f5;--muted:#9cacb8;--line:#344550;--accent:#97c2ff}
+*{box-sizing:border-box}body{margin:0;height:100dvh;min-height:480px;display:flex;flex-direction:column;background:var(--bg);color:var(--ink);font:14px/1.55 "Segoe UI","Microsoft YaHei",sans-serif}button,input,textarea{font:inherit}button{cursor:pointer;color:inherit;background:#24343f;border:1px solid #485e6d;border-radius:6px;padding:6px 11px}button:hover{background:#314958}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:3px}a{color:#9dc7ff}header{padding:15px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:1px solid var(--line)}.eyebrow{color:#9cb3c3;letter-spacing:2px;font-size:10px}h1{font-size:22px;line-height:1.4;margin:3px 0}header p{color:var(--muted);margin:0;font-size:12px}.sample{border:1px solid #745f37;border-radius:15px;color:#ecd2a1;padding:4px 10px;font-size:11px;white-space:nowrap}.toolbar{padding:10px 18px;display:flex;gap:9px;align-items:center;flex-wrap:wrap;border-bottom:1px solid var(--line)}.toolbar button{font-size:12px}.search-wrap{position:relative;flex:0 1 260px;min-width:170px}.search-wrap input{width:100%;background:#101a21;color:var(--ink);border:1px solid #4c6271;border-radius:6px;padding:7px 10px}.search-results{position:absolute;z-index:30;left:0;top:43px;width:min(360px,85vw);max-height:320px;overflow:auto;background:#1a2a35;box-shadow:0 8px 24px #0008;border:1px solid #688192;border-radius:6px}.search-results button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #415565;border-radius:0;padding:9px 12px}.search-results small{display:block;color:#a0b9cd}.legend{margin-left:auto;display:flex;gap:13px;color:var(--muted);font-size:11px}.legend span{white-space:nowrap}.swatch{display:inline-block;width:11px;height:11px;border-radius:3px;margin-right:5px;vertical-align:-1px}.layout{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 380px;flex:1;min-height:0;overflow:hidden}.canvas-wrap{position:relative;min-width:0;overflow:hidden}.canvas{position:absolute;inset:0;overflow:hidden;touch-action:none;cursor:grab;background:radial-gradient(#3b52634f 1px,transparent 1px) 0 0/24px 24px}.canvas.dragging{cursor:grabbing}.world{position:absolute;left:0;top:0;transform-origin:0 0}.edges{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}.edges path{fill:none;stroke:#678395;stroke-width:1.6}.edges .lineage{stroke:#c1daee;stroke-width:2.4}.node{position:absolute;color:white;border:1px solid #ffffff65;border-radius:10px;background:var(--fill);box-shadow:0 5px 18px #0003}.node.selected{outline:2px solid #edf5ff;outline-offset:4px;box-shadow:0 0 0 7px #86b8f630}.node-main{width:100%;height:100%;text-align:left;border:0;border-radius:10px;background:transparent;padding:11px 15px;display:flex;flex-direction:column;justify-content:center;color:white}.node-main:hover{background:#ffffff12}.node-id{font-size:10px;opacity:.86;display:flex;gap:7px;align-items:center}.node-title{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:13px;line-height:1.45;margin:4px 0;overflow-wrap:anywhere}.node-meta{font-size:10px;opacity:.91}.count{font-size:9px;border:1px solid #ffffff70;padding:0 4px;border-radius:4px}.toggle{position:absolute;right:-13px;top:50%;transform:translateY(-50%);width:25px;height:25px;display:grid;place-items:center;border-radius:50%;padding:0;background:#172730;border-color:#8ca8ba;font-size:16px}.canvas-tools{position:absolute;bottom:14px;right:16px;display:flex;align-items:center;border:1px solid #567082;border-radius:7px;background:#192c39;overflow:hidden}.canvas-tools button{border:0;border-radius:0;border-right:1px solid #4e6575;padding:6px 11px}.canvas-tools output{font-size:11px;min-width:52px;text-align:center;align-self:stretch;display:grid;place-items:center;border-right:1px solid #4e6575}.hint{position:absolute;left:16px;bottom:16px;color:#a0b4c3;font-size:10px;background:#111d26e8;padding:5px 8px;border-radius:4px;pointer-events:none;max-width:calc(100% - 250px)}.detail{border-left:1px solid var(--line);background:var(--panel);padding:21px;overflow:auto;min-width:0;overscroll-behavior:contain}.detail h2{font-size:20px;line-height:1.45;margin:7px 0 13px;overflow-wrap:anywhere}.detail h3{font-size:12px;color:#d2e0ea;margin:0 0 8px}.detail p{margin:0;font-size:12px;color:#bdcdd8;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}.detail section{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}.detail .eyebrow{font-size:10px}.breadcrumb{font-size:10px;color:#9fb5c5;margin:7px 0;overflow-wrap:anywhere}.chips{display:flex;flex-wrap:wrap;gap:6px;margin:13px 0}.chip{font-size:11px;border:1px solid #6b8090;border-radius:5px;padding:3px 8px;color:white}.entry{display:block;width:100%;text-align:left;font-size:11px;margin:5px 0;background:#233743;border-color:#425c6d}.evidence{list-style:none;margin:0;padding:0}.evidence li{padding:8px 0;border-bottom:1px solid #324650}.evidence code{display:block;font-size:10px;color:#a8bfce;overflow-wrap:anywhere;margin-top:4px}.copy-path{font-size:10px;padding:2px 6px;margin-top:4px}.record{margin:10px 0}.record strong{display:block;font-size:12px;margin-bottom:5px}.muted{color:var(--muted);font-size:11px}.diagnostics{position:absolute;inset:18px;overflow:auto;background:#271e1d;border:1px solid #8d6056;border-radius:10px;padding:20px;z-index:3}.diagnostics pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px}.notice{color:#f0ce91;white-space:pre-wrap}.detail .notice{color:#f0ce91}footer{padding:7px 18px;border-top:1px solid var(--line);display:flex;gap:15px;justify-content:space-between;color:#96aab9;font-size:10px;min-height:32px}.right-button{display:none}dialog{background:#1b2a35;color:var(--ink);border:1px solid #607d91;border-radius:10px;width:min(720px,92vw);padding:20px}dialog::backdrop{background:#0009}dialog h2{font-size:18px;margin:0 0 8px}dialog p{font-size:12px;color:#adbfcd}dialog textarea{width:100%;height:280px;resize:vertical;background:#111d26;border:1px solid #5f7788;border-radius:5px;color:var(--ink);padding:12px}.dialog-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:12px}#toast{position:absolute;top:12px;left:50%;transform:translateX(-50%);padding:6px 14px;background:#31566d;border:1px solid #88abc3;border-radius:20px;z-index:8;font-size:11px;pointer-events:none}
+[hidden]{display:none!important}
+@media(max-width:1100px){.layout{grid-template-columns:minmax(0,1fr) 330px}.legend{display:none}.detail{padding:17px}.hint{max-width:220px;bottom:57px}}
+@media(max-width:760px){header{padding:11px 15px}h1{font-size:19px}.sample{display:none}.toolbar{padding:8px 12px;gap:6px}.toolbar button{padding:5px 8px}.search-wrap{flex:1 0 100%;order:5}.layout{display:block}.canvas-wrap{height:100%;width:100%}.detail{display:none;position:absolute;right:0;top:0;bottom:0;width:min(88vw,380px);z-index:10;box-shadow:-10px 0 30px #0006}.layout.details-open .detail{display:block}.right-button{display:inline-block}#close-detail{position:sticky;top:0;float:right;z-index:1;background:#2f4655}.hint{max-width:200px}footer{gap:4px;flex-direction:column;padding:6px 12px}.canvas-tools{right:10px}.toolbar #scratch-toggle{margin-left:auto}}
+.node-id{min-width:0;width:100%}.id-text{min-width:0;flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.count{flex:none}.node-meta{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.node-title{flex-shrink:0}.chip,.entry{max-width:100%;min-width:0;overflow-wrap:anywhere}
+.toggle-icon{display:block;pointer-events:none}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">PROJECT WORKBOARD · 2.0</div><h1 id="project-title">项目任务导图</h1><p id="project-description"></p></div><span id="sample-badge" class="sample">虚构示例 · 创建项目时替换</span></header>
+<nav class="toolbar" aria-label="导图工具">
+<button id="overview">阶段总览</button><button id="focus-current">定位当前任务</button>
+<div class="search-wrap"><input id="search" type="search" aria-label="搜索任务编号或标题" placeholder="搜索编号或标题…" autocomplete="off"><div id="results" class="search-results" hidden></div></div>
+<button id="open-detail" class="right-button">查看详情</button><button id="scratch-toggle">临时草稿</button>
+<div class="legend" aria-label="状态图例"><span><i class="swatch" style="background:#465664"></i>待办</span><span><i class="swatch" style="background:#215bd6"></i>进行中</span><span><i class="swatch" style="background:#8b5b0d"></i>待用户配合</span><span><i class="swatch" style="background:#21684b"></i>已完成</span></div>
+</nav>
+<main id="layout" class="layout">
+<div class="canvas-wrap">
+<div id="canvas" class="canvas" aria-label="项目任务导图"><div id="world" class="world"><svg id="edges" class="edges" aria-hidden="true"></svg><div id="nodes"></div></div></div>
+<div id="diagnostics" class="diagnostics" hidden><div id="diagnostic-list"></div><details><summary>查看原始记录（供修正）</summary><pre id="raw-data"></pre></details></div>
+<div id="toast" role="status" hidden></div><div class="hint">滚轮上下 · Ctrl＋滚轮缩放 · Shift＋滚轮左右 · 左／右键拖动背景平移</div>
+<div class="canvas-tools"><button id="zoom-out" aria-label="缩小">−</button><output id="scale-value">82%</output><button id="zoom-in" aria-label="放大">＋</button><button id="fit">适应</button></div>
+</div>
+<aside id="detail" class="detail" aria-label="所选节点详情"><button id="close-detail" class="right-button">返回画布</button><details id="warnings" class="notice" hidden></details><div id="detail-content"></div></aside>
+</main>
+<footer><span id="view-count"></span><span id="storage-status" role="status"></span></footer>
+<dialog id="scratch" aria-labelledby="scratch-title"><h2 id="scratch-title">临时草稿</h2><p>用于记录想法或准备发给智能体的内容。草稿仅保存在当前浏览器，不会自动发送或写回项目任务；也可下载保留。</p><textarea id="draft" aria-label="草稿内容" spellcheck="false"></textarea><span id="draft-count" class="muted"></span><div class="dialog-actions"><button id="download-draft">下载草稿</button><button id="scratch-close">关闭</button></div></dialog>
+<script id="workboard-data" type="application/json">
+{
+  "meta": {
+    "title": "研究任务示例",
+    "description": "从阶段到任务，逐层找到当前一步。",
+    "version": "2.0.0-dev",
+    "sample": true,
+    "projectRoot": "./",
+    "storageKey": "workboard-demo-v2",
+    "currentTaskId": "collect-2"
+  },
+  "stages": [
+    {
+      "id": "prepare",
+      "name": "整理与验证",
+      "environment": "示范阶段：确认材料范围，检查记录，并保留验证依据。",
+      "state": "尚未签收",
+      "summary": "当前在检查材料记录。任务状态与阶段签收分别记录。",
+      "acceptance": "完成约定工作及独立核验，由用户确认本阶段审阅结束。",
+      "pending": "版本确认仍需用户配合；后续交付阶段尚未开始。"
+    },
+    {
+      "id": "deliver",
+      "name": "整理交付",
+      "environment": "在前一阶段材料确认后开展。",
+      "state": "未开始",
+      "summary": "后续计划，当前不投入执行。",
+      "acceptance": "交付内容、核验与用户审阅均完成。",
+      "pending": "保留对前一阶段的依赖；当前不归为阻塞。"
+    }
+  ],
+  "sources": [
+    {
+      "label": "示例材料入口（演示链接）",
+      "path": "https://example.org/"
+    },
+    {
+      "label": "项目内材料路径示范（请替换）",
+      "path": "docs/materials.md"
+    }
+  ],
+  "history": [
+    {
+      "date": "示范记录",
+      "title": "建立任务结构",
+      "detail": "虚构示例：已确认阶段与任务归属。展开、折叠和搜索仅影响视图。",
+      "stage": "prepare",
+      "task": "collect"
+    },
+    {
+      "date": "示范记录",
+      "title": "保留一次检查失败",
+      "detail": "虚构示例：某记录缺少来源；继续定位，不因技术困难自动标为阻塞。",
+      "stage": "prepare",
+      "task": "collect-2"
+    }
+  ],
+  "decisions": [
+    {
+      "date": "示范决定",
+      "title": "将归属与依赖分开",
+      "detail": "树线仅表示父子归属。跨任务的先后条件放在依赖中，保留历史结果。",
+      "stage": "prepare"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "collect",
+      "stage": "prepare",
+      "parent": null,
+      "title": "整理项目材料",
+      "status": "doing",
+      "priority": "当前",
+      "description": "本父任务含十项真实直属子任务，通过三个明确配置的分类展示。展开父任务先看到分类，再展开分类查看全部成员；更深层独立折叠。",
+      "acceptance": "十项材料按各自标准处理完毕，保留原始来源和遗留事项。",
+      "deps": [],
+      "verification": "演示数据，不代表任何真实项目已完成。",
+      "evidence": []
+    },
+    {
+      "id": "collect-1",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "确认范围",
+      "status": "done",
+      "priority": "当前",
+      "description": "虚构示例：按用户授权范围处理这一项材料；尚未投入的工作保持待办。",
+      "acceptance": "示范：材料范围已记录并得到确认。",
+      "deps": [],
+      "verification": "虚构完成记录：仅用于展示已完成样式，不是实际验证证据。",
+      "evidence": [
+        {
+          "label": "示例记录入口（演示链接）",
+          "path": "https://example.org/"
+        }
+      ],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-2",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "检查记录",
+      "status": "doing",
+      "priority": "当前",
+      "description": "当前正在核对已有记录，智能体可以继续定位和检查。\n\n示范：核对记录来源、时间与对应材料，不把任务的暂停、技术困难或未来依赖直接视为待用户配合。已出现的失败应保留原始记录，继续修正。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n这是可完整读取的示例说明，用来展示长内容在右侧独立滚动的效果。请创建项目时替换为实际工作内容与证据。\n\n",
+      "acceptance": "明确来源、检查结果和待处理事项，不因状态调整改变验收标准。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "虚构失败记录：发现一处记录缺失来源，仍在定位。",
+      "evidence": [],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-3",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "确认材料版本",
+      "status": "waiting",
+      "priority": "当前",
+      "description": "当前需要确认材料版本。请用户在“工作稿”与“已审稿”中确定本轮使用哪一份；用户确认后解除阻塞，继续核对。",
+      "acceptance": "明确来源、检查结果和待处理事项，不因状态调整改变验收标准。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": [],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-4",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "核对材料目录",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：按用户授权范围处理这一项材料；尚未投入的工作保持待办。",
+      "acceptance": "明确来源、检查结果和待处理事项，不因状态调整改变验收标准。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": [],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-5",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "整理术语",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：按用户授权范围处理这一项材料；尚未投入的工作保持待办。",
+      "acceptance": "明确来源、检查结果和待处理事项，不因状态调整改变验收标准。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": [],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-6",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "检查引用",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：按用户授权范围处理这一项材料；尚未投入的工作保持待办。",
+      "acceptance": "明确来源、检查结果和待处理事项，不因状态调整改变验收标准。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": [],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-7",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "汇总遗留事项",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：按用户授权范围处理这一项材料；尚未投入的工作保持待办。",
+      "acceptance": "明确来源、检查结果和待处理事项，不因状态调整改变验收标准。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": [],
+      "updatedAt": "示例"
+    },
+    {
+      "id": "collect-2-1",
+      "stage": "prepare",
+      "parent": "collect-2",
+      "title": "核对原始记录",
+      "status": "todo",
+      "priority": "当前范围内",
+      "description": "已有父子层级的演示。新增一层或改变层级组织须先由用户确认。",
+      "acceptance": "原始记录与材料对应明确。",
+      "deps": [],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "collect-2-1-a",
+      "stage": "prepare",
+      "parent": "collect-2-1",
+      "title": "核对一条来源",
+      "status": "todo",
+      "priority": "后续",
+      "description": "示范更深一层任务。编号不用于自动推断父子关系，归属由 parent 表达。",
+      "acceptance": "该条来源可以追溯。",
+      "deps": [],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "delivery",
+      "stage": "deliver",
+      "parent": null,
+      "title": "整理最终交付内容",
+      "status": "todo",
+      "priority": "后续",
+      "description": "依赖上一阶段，但目前未安排执行，因此归入待办。",
+      "acceptance": "交付内容完整，保留必要材料及证据。",
+      "deps": [
+        "collect"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "prepare-verify",
+      "stage": "prepare",
+      "parent": null,
+      "title": "独立核验与修正",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "准备核验要求，给出引用文件的提示词，请用户另开新对话核验；处理发现并记录再次核验。当前实施对话及其子代理不能代替此项。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "collect"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "prepare-review",
+      "stage": "prepare",
+      "parent": null,
+      "title": "用户审阅",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "处理用户反馈，并取得本轮审阅已经结束的明确确认。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "prepare-verify"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "prepare-reuse",
+      "stage": "prepare",
+      "parent": null,
+      "title": "经验总结与复用（可选）",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "询问一次；用户拒绝则记录本阶段跳过，同意则按经验复用指引筛选、确认范围与保存方式。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "prepare-review"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "prepare-cleanup",
+      "stage": "prepare",
+      "parent": null,
+      "title": "工作目录检查与清理",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "检查工作目录，移除确认无用的临时或重复产物，保留交付物、必要证据和用户改动。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "prepare-reuse"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "deliver-verify",
+      "stage": "deliver",
+      "parent": null,
+      "title": "独立核验与修正",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "准备核验要求，给出引用文件的提示词，请用户另开新对话核验；处理发现并记录再次核验。当前实施对话及其子代理不能代替此项。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "delivery"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "deliver-review",
+      "stage": "deliver",
+      "parent": null,
+      "title": "用户审阅",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "处理用户反馈，并取得本轮审阅已经结束的明确确认。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "deliver-verify"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "deliver-reuse",
+      "stage": "deliver",
+      "parent": null,
+      "title": "经验总结与复用（可选）",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "询问一次；用户拒绝则记录本阶段跳过，同意则按经验复用指引筛选、确认范围与保存方式。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "deliver-review"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "deliver-cleanup",
+      "stage": "deliver",
+      "parent": null,
+      "title": "工作目录检查与清理",
+      "status": "todo",
+      "priority": "阶段收尾",
+      "description": "检查工作目录，移除确认无用的临时或重复产物，保留交付物、必要证据和用户改动。",
+      "acceptance": "按技能规定完成此项，保留对应记录；可选项允许明确跳过。",
+      "deps": [
+        "deliver-reuse"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "collect-8",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "整理材料来源清单",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：在已确认的既定层级内维护此项任务，分类只改变展示路径。",
+      "acceptance": "来源和检查结果可追溯，保留遗留事项。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "collect-9",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "核对证据路径",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：在已确认的既定层级内维护此项任务，分类只改变展示路径。",
+      "acceptance": "来源和检查结果可追溯，保留遗留事项。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    },
+    {
+      "id": "collect-10",
+      "stage": "prepare",
+      "parent": "collect",
+      "title": "整理归档目录",
+      "status": "todo",
+      "priority": "后续",
+      "description": "虚构示例：在已确认的既定层级内维护此项任务，分类只改变展示路径。",
+      "acceptance": "来源和检查结果可追溯，保留遗留事项。",
+      "deps": [
+        "collect-1"
+      ],
+      "verification": "尚未执行。",
+      "evidence": []
+    }
+  ],
+  "taskGroups": [
+    {
+      "id": "materials",
+      "parent": "collect",
+      "stage": "prepare",
+      "title": "材料准备",
+      "description": "明确记录材料准备相关的直属任务；分类仅用于展示。",
+      "taskIds": [
+        "collect-1",
+        "collect-4",
+        "collect-8"
+      ]
+    },
+    {
+      "id": "checks",
+      "parent": "collect",
+      "stage": "prepare",
+      "title": "核对与确认",
+      "description": "按已确认的工作内容分类，成员不随状态自动迁移。",
+      "taskIds": [
+        "collect-2",
+        "collect-3",
+        "collect-6",
+        "collect-9"
+      ]
+    },
+    {
+      "id": "summary",
+      "parent": "collect",
+      "stage": "prepare",
+      "title": "归档与汇总",
+      "description": "术语、遗留事项和归档内容集中展示，任务各自保留状态及验收标准。",
+      "taskIds": [
+        "collect-5",
+        "collect-7",
+        "collect-10"
+      ]
+    }
+  ]
+}
+</script>
+<script id="workboard-engine">
+'use strict';
+globalThis.Workboard=(()=>{
+  const defaults={
+    todo:{label:'待办',kind:'todo',color:'#465664'},
+    doing:{label:'进行中',kind:'doing',color:'#215bd6'},
+    waiting:{label:'待用户配合',kind:'waiting',color:'#8b5b0d'},
+    done:{label:'已完成',kind:'done',color:'#21684b'}
+  };
+  const key=(type,id)=>type+':'+String(id);
+  const validId=id=>(typeof id==='string'&&id.trim()!=='')||(typeof id==='number'&&Number.isFinite(id));
+  const hasParent=t=>t.parent!==null&&t.parent!==undefined&&t.parent!=='';
+  function cycles(nodes,next){
+    const color=new Map(),found=[];
+    for(const start of nodes){
+      if(color.get(start))continue;
+      const stack=[{id:start,kids:next(start),at:0}],trail=[start],at=new Map([[start,0]]);
+      color.set(start,1);
+      while(stack.length){
+        const frame=stack[stack.length-1];
+        if(frame.at>=frame.kids.length){color.set(frame.id,2);at.delete(frame.id);stack.pop();trail.pop();continue;}
+        const id=frame.kids[frame.at++];
+        if(color.get(id)===1){found.push([...trail.slice(at.get(id)),id]);continue;}
+        if(!color.get(id)){color.set(id,1);at.set(id,trail.length);trail.push(id);stack.push({id,kids:next(id),at:0});}
+      }
+    }
+    return found;
+  }
+  function build(data){
+    const errors=[],warnings=[],nodes=new Map(),childMap=new Map(),parentMap=new Map(),taskChildMap=new Map(),taskParentMap=new Map(),statuses=new Map();
+    const result={errors,warnings,nodes,childMap,parentMap,taskChildMap,taskParentMap,statuses};
+    for(const [id,s] of Object.entries(defaults))statuses.set(id,{...s});
+    if(!data||typeof data!=='object'||Array.isArray(data)){errors.push('数据必须为 JSON 对象。');return result;}
+
+    const record=x=>x!==null&&typeof x==='object'&&!Array.isArray(x);
+    const textFields=(r,fields,label)=>{
+      for(const f of fields)if(r[f]!==undefined&&r[f]!==null&&typeof r[f]!=='string')errors.push(label+' 的 '+f+' 必须为文本。');
+    };
+    const evidenceFields=(rows,label)=>{
+      if(rows===undefined)return;
+      if(!Array.isArray(rows)){errors.push(label+' 的 evidence 必须为数组。');return;}
+      for(const e of rows){
+        if(!record(e)){errors.push(label+' 的证据项必须为对象。');continue;}
+        textFields(e,['label','path'],label+' evidence');
+      }
+    };
+    if(data.meta!==undefined&&!record(data.meta))errors.push('meta 必须为对象。');
+    const meta=record(data.meta)?data.meta:{};
+    textFields(meta,['title','description','version','projectRoot','storageKey'],'meta');
+    if(meta.sample!==undefined&&typeof meta.sample!=='boolean')errors.push('meta.sample 必须为布尔值。');
+    if(meta.currentTaskId!==undefined&&meta.currentTaskId!==null&&meta.currentTaskId!==''&&!validId(meta.currentTaskId))errors.push('meta.currentTaskId 必须为任务编号。');
+    if(!Array.isArray(data.stages)||!Array.isArray(data.tasks)){errors.push('stages 和 tasks 必须为数组。');return result;}
+    for(const [i,s] of data.stages.entries()){
+      if(!record(s)){errors.push('阶段记录 '+(i+1)+' 必须为对象。');continue;}
+      textFields(s,['name','environment','state','summary','acceptance','pending'],'阶段记录 '+(i+1));
+      evidenceFields(s.evidence,'阶段记录 '+(i+1));
+    }
+    for(const [i,t] of data.tasks.entries()){
+      const label='任务记录 '+(i+1);
+      if(!record(t)){errors.push(label+' 必须为对象。');continue;}
+      textFields(t,['title','status','priority','description','acceptance','verification','updatedAt'],label);
+      if(!validId(t.stage))errors.push(label+' 的 stage 必须为阶段编号。');
+      if(hasParent(t)&&!validId(t.parent))errors.push(label+' 的 parent 必须为任务编号。');
+      if(t.deps!==undefined&&(!Array.isArray(t.deps)||t.deps.some(id=>!validId(id))))errors.push(label+' 的 deps 必须为有效任务编号数组。');
+      evidenceFields(t.evidence,label);
+    }
+    for(const name of ['sources','history','decisions']){
+      if(data[name]===undefined)continue;
+      if(!Array.isArray(data[name])){errors.push(name+' 必须为数组。');continue;}
+      if(name==='sources'){evidenceFields(data[name],'sources');continue;}
+      for(const [i,r] of data[name].entries()){
+        const label=name+' 记录 '+(i+1);
+        if(!record(r)){errors.push(label+' 必须为对象。');continue;}
+        textFields(r,['date','title','detail','description'],label);
+        for(const f of ['stage','task'])if(r[f]!==undefined&&r[f]!==null&&!validId(r[f]))errors.push(label+' 的 '+f+' 必须为编号。');
+        evidenceFields(r.evidence,label);
+      }
+    }
+    if(data.statuses!==undefined){
+      if(!record(data.statuses))errors.push('statuses 必须为状态映射对象。');
+      else for(const [id,s] of Object.entries(data.statuses)){
+        if(!record(s)||typeof s.kind!=='string'||!Object.hasOwn(defaults,s.kind)||typeof s.label!=='string')errors.push('无效状态映射：'+id);
+      }
+    }
+    if(data.taskGroups!==undefined){
+      if(!Array.isArray(data.taskGroups))errors.push('taskGroups 必须为数组。');
+      else for(const [i,g] of data.taskGroups.entries()){
+        const label='任务分类 '+(i+1);
+        if(!record(g)){errors.push(label+' 必须为对象。');continue;}
+        for(const f of ['id','parent','stage'])if(!validId(g[f]))errors.push(label+' 的 '+f+' 必须为有效编号。');
+        if(typeof g.title!=='string'||!g.title.trim())errors.push(label+' 必须有分类标题。');
+        textFields(g,['description','tone'],label);
+        if(g.tone!==undefined&&g.tone!==null&&(typeof g.tone!=='string'||!Object.hasOwn(defaults,g.tone)))errors.push(label+' 的 tone 无效。');
+        if(!Array.isArray(g.taskIds)||g.taskIds.some(id=>!validId(id)))errors.push(label+' 的 taskIds 必须为有效任务编号数组。');
+      }
+    }
+    if(errors.length)return result;
+    if(data.statuses!==undefined){
+      if(!data.statuses||typeof data.statuses!=='object'||Array.isArray(data.statuses))errors.push('statuses 必须为状态映射对象。');
+      else for(const [id,s] of Object.entries(data.statuses)){
+        if(!s||!Object.hasOwn(defaults,s.kind)||typeof s.label!=='string')errors.push('无效状态映射：'+id);
+        else statuses.set(id,{kind:s.kind,label:s.label,color:defaults[s.kind].color});
+      }
+    }
+    if(!Array.isArray(data.stages)||!Array.isArray(data.tasks)){errors.push('stages 和 tasks 必须为数组。');return result;}
+    for(const name of ['sources','history','decisions'])if(data[name]!==undefined&&!Array.isArray(data[name]))errors.push(name+' 必须为数组。');
+    const add=(id,value)=>{nodes.set(id,value);childMap.set(id,[]);};
+    add('project',{type:'project',id:'project',record:data.meta||{},title:data.meta?.title||'项目任务导图'});
+    const stages=new Map(),tasks=new Map();
+    for(const s of data.stages){
+      if(!s||!validId(s.id)||typeof s.name!=='string'){errors.push('阶段缺少有效 id 或 name。');continue;}
+      const id=String(s.id);
+      if(stages.has(id)){errors.push('重复阶段 ID：'+id);continue;}
+      stages.set(id,s);const k=key('stage',id);
+      add(k,{type:'stage',id:s.id,record:s,title:s.name});
+      parentMap.set(k,'project');childMap.get('project').push(k);
+    }
+    for(const t of data.tasks){
+      if(!t||!validId(t.id)||typeof t.title!=='string'){errors.push('任务缺少有效 id 或 title。');continue;}
+      const id=String(t.id);
+      if(tasks.has(id)){errors.push('重复任务 ID：'+id);continue;}
+      tasks.set(id,t);add(key('task',id),{type:'task',id:t.id,record:t,title:t.title});
+      if(!stages.has(String(t.stage)))errors.push('任务 '+id+' 的阶段不存在：'+String(t.stage));
+      if(!statuses.has(t.status))errors.push('任务 '+id+' 的状态未定义：'+String(t.status));
+      if(t.deps!==undefined&&!Array.isArray(t.deps))errors.push('任务 '+id+' 的 deps 必须为数组。');
+    }
+    for(const [id,t] of tasks){
+      const k=key('task',id),parent=hasParent(t)?key('task',t.parent):key('stage',t.stage);
+      if(hasParent(t)){
+        const p=tasks.get(String(t.parent));
+        if(!p)errors.push('任务 '+id+' 缺失父任务：'+String(t.parent));
+        else if(String(p.stage)!==String(t.stage))errors.push('任务 '+id+' 与父任务 '+String(t.parent)+' 跨阶段。');
+      }
+      if(nodes.has(parent)){parentMap.set(k,parent);childMap.get(parent).push(k);}
+      for(const dep of Array.isArray(t.deps)?t.deps:[])if(!tasks.has(String(dep)))warnings.push('任务 '+id+' 缺失依赖：'+String(dep));
+    }
+    const taskKeys=[...tasks.keys()];
+    for(const c of cycles(taskKeys,id=>{const t=tasks.get(id);return hasParent(t)&&tasks.has(String(t.parent))?[String(t.parent)]:[];}))
+      errors.push('父子关系成环：'+c.join(' → '));
+    for(const c of cycles(taskKeys,id=>(Array.isArray(tasks.get(id).deps)?tasks.get(id).deps:[]).map(String).filter(x=>tasks.has(x))))
+      warnings.push('依赖关系成环（不改变父子关系）：'+c.join(' → '));
+    const current=data.meta?.currentTaskId;
+    if(current!==undefined&&current!==null&&current!==''&&!tasks.has(String(current)))warnings.push('当前任务不存在：'+String(current));
+    // Preserve business relationships before adding optional display-only categories.
+    for(const [id,kids] of childMap)taskChildMap.set(id,[...kids]);
+    for(const [id,parent] of parentMap)taskParentMap.set(id,parent);
+    if(errors.length)return result;
+    const groupIds=new Set(),members=new Set(),byParent=new Map();
+    for(const g of data.taskGroups||[]){
+      const id=String(g.id),parent=String(g.parent),owner=tasks.get(parent);
+      if(groupIds.has(id))errors.push('重复分类 ID：'+id);
+      groupIds.add(id);
+      if(!owner)errors.push('分类 '+id+' 的父任务不存在：'+parent);
+      else if(String(owner.stage)!==String(g.stage))errors.push('分类 '+id+' 与父任务跨阶段。');
+      if(!byParent.has(parent))byParent.set(parent,[]);
+      byParent.get(parent).push(g);
+      for(const value of g.taskIds){
+        const child=String(value),t=tasks.get(child);
+        if(members.has(child))errors.push('任务重复分类：'+child);
+        members.add(child);
+        if(!t||!hasParent(t)||String(t.parent)!==parent)errors.push('分类 '+id+' 的成员不是该父任务的直属任务：'+child);
+      }
+    }
+    for(const parent of byParent.keys()){
+      for(const child of taskChildMap.get(key('task',parent))||[]){
+        const id=String(nodes.get(child).id);
+        if(!members.has(id))errors.push('父任务 '+parent+' 的直属任务尚未分类：'+id);
+      }
+    }
+    if(errors.length)return result;
+    for(const [parent,groups] of byParent){
+      childMap.set(key('task',parent),groups.map(g=>key('group',g.id)));
+      for(const g of groups){
+        const id=key('group',g.id),kids=g.taskIds.map(t=>key('task',t));
+        add(id,{type:'group',id:g.id,record:g,title:g.title,color:g.tone?defaults[g.tone].color:'#344b5d'});
+        childMap.set(id,kids);parentMap.set(id,key('task',parent));
+        for(const child of kids)parentMap.set(child,id);
+      }
+    }
+    return result;
+  }
+  const children=(index,id)=>index.childMap.get(id)||[];
+  const taskChildren=(index,id)=>index.taskChildMap.get(id)||[];
+  function ancestors(index,id){
+    const result=[],seen=new Set();
+    while(index.nodes.has(id)&&!seen.has(id)){seen.add(id);result.unshift(id);id=index.parentMap.get(id);}
+    return result;
+  }
+  function reveal(index,id,expanded){
+    const next=new Set(expanded);
+    for(const k of ancestors(index,id).slice(0,-1))next.add(k);
+    return next;
+  }
+  function visible(index,expanded){
+    if(index.errors.length||!index.nodes.has('project'))return [];
+    const result=[],stack=['project'];
+    while(stack.length){
+      const id=stack.pop();result.push(id);
+      if(expanded.has(id)){const c=children(index,id);for(let n=c.length-1;n>=0;n--)stack.push(c[n]);}
+    }
+    return result;
+  }
+  function layout(index,expanded){
+    const ids=visible(index,expanded),positions=new Map(),depth=new Map([['project',0]]);
+    for(const id of ids){for(const c of children(index,id))depth.set(c,(depth.get(id)||0)+1);}
+    let leaf=0;
+    for(let n=ids.length-1;n>=0;n--){
+      const id=ids[n],kids=expanded.has(id)?children(index,id):[],record=index.nodes.get(id);
+      let center;
+      if(kids.length){center=(positions.get(kids[0]).center+positions.get(kids[kids.length-1]).center)/2;}
+      else{center=leaf*116+70;leaf++;}
+      positions.set(id,{x:24+(depth.get(id)||0)*288,y:center-52,center,w:record.type==='project'?180:record.type==='stage'?220:240,h:104});
+    }
+    // Reverse the vertical direction to retain source order after iterative postorder.
+    const max=Math.max(0,(leaf-1)*116+140);
+    for(const p of positions.values()){p.y=max-p.center-52;p.center=max-p.center;}
+    return positions;
+  }
+  const clamp=n=>Math.max(.000001,Math.min(2,n));
+  function zoom(view,factor,cx,cy){
+    const scale=clamp(view.scale*factor);
+    return {...view,scale,pan:{x:cx-(cx-view.pan.x)*scale/view.scale,y:cy-(cy-view.pan.y)*scale/view.scale}};
+  }
+  function wheel(view,event,rect){
+    const ux=event.deltaMode===1?16:event.deltaMode===2?rect.width:1;
+    const uy=event.deltaMode===1?16:event.deltaMode===2?rect.height:1;
+    const dx=(event.deltaX||0)*ux,dy=(event.deltaY||0)*uy;
+    if(event.ctrlKey)return zoom(view,Math.exp(-dy*.002),(event.clientX??rect.width/2)-(rect.left||0),(event.clientY??rect.height/2)-(rect.top||0));
+    return {...view,pan:{x:view.pan.x-(event.shiftKey?(dx||dy):dx),y:view.pan.y-(event.shiftKey?0:dy)}};
+  }
+  function restoreView(raw,index,base){
+    const fallback=()=>({...base,pan:{...base.pan},expanded:new Set(base.expanded)});
+    if(raw===null||raw===undefined||raw==='')return {view:fallback(),warning:null};
+    try{
+      const x=JSON.parse(raw);
+      if(!x||!Array.isArray(x.expanded)||!x.pan||!Number.isFinite(x.pan.x)||!Number.isFinite(x.pan.y)||!Number.isFinite(x.scale)||x.scale<=0)throw Error();
+      const expanded=new Set(x.expanded.filter(k=>index.nodes.has(k)));
+      const selected=index.nodes.has(x.selected)?x.selected:base.selected;
+      const view={expanded,selected,pan:{x:x.pan.x,y:x.pan.y},scale:clamp(x.scale)};
+      // Restore selection without resurrecting removed nodes.
+      view.expanded=reveal(index,selected,expanded);
+      return {view,warning:x.selected!==selected||expanded.size!==x.expanded.length?'已忽略失效的视图节点。':null};
+    }catch{return {view:fallback(),warning:'保存的视图不可用，已使用默认视图。'};}
+  }
+  function evidenceUrl(path,root,base){
+    if(typeof path!=='string'||!path.trim())return null;
+    try{
+      const encodePath=value=>value.split('/').map(encodeURIComponent).join('/');
+      let p=path.replace(/\\/g,'/');
+      const drive=/^[A-Za-z]:\//.test(p),unc=path.startsWith('\\\\');
+      const absoluteUrl=!drive&&!unc&&/^[A-Za-z][A-Za-z0-9+.-]*:/.test(p);
+      if(!absoluteUrl){
+        p=encodePath(p);
+        if(drive)p='file:///'+p.replace(/^([A-Za-z])%3A\//,'$1:/');
+        else if(unc)p='file:'+p;
+      }
+      let r=String(root||'./').replace(/\\/g,'/');
+      if(!/^[A-Za-z][A-Za-z0-9+.-]*:/.test(r))r=encodePath(r);
+      const url=new URL(p,new URL(r.endsWith('/')?r:r+'/',base));
+      return ['file:','https:','http:'].includes(url.protocol)?url.href:null;
+    }catch{return null;}
+  }
+  return {build,children,taskChildren,ancestors,reveal,visible,layout,wheel,zoom,restoreView,evidenceUrl};
+})();
+</script>
+<script id="workboard-ui">
+'use strict';
+(()=>{
+  const $=id=>document.getElementById(id),W=Workboard;
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const raw=$('workboard-data').textContent;
+  let data,index,parseError='';
+  try{data=JSON.parse(raw);}catch(e){data=null;parseError='JSON 解析失败：'+e.message;}
+  index=W.build(data);
+  if(parseError)index.errors.unshift(parseError);
+  data=data||{meta:{},tasks:[],stages:[],sources:[],history:[],decisions:[]};
+  const meta=data.meta||{};
+  if(index.errors.length){
+    $('project-title').textContent='任务数据需要修正';
+    $('project-description').textContent='请先修正下列数据，再重新打开或刷新页面。';
+    $('sample-badge').hidden=true;
+    $('diagnostics').hidden=false;
+    $('diagnostic-list').innerHTML='<h2>任务数据需要修正</h2><p>未生成导图，未自动补造或调整父子关系。</p><ul>'+index.errors.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';
+    $('raw-data').textContent=raw;
+    $('detail-content').textContent='原始记录保留在左侧诊断面板中。';
+    $('storage-status').textContent='任务数据未通过检查';
+    for(const el of document.querySelectorAll('.toolbar button,.toolbar input,.canvas-tools button'))el.disabled=true;
+    return;
+  }
+
+  $('project-title').textContent=String(meta.title||'项目任务导图');
+  $('project-description').textContent=String(meta.description||'从阶段到任务，逐层找到当前一步。');
+  document.title=String(meta.title||'Project Workboard')+' · 工作导图';
+  $('sample-badge').hidden=!meta.sample;
+  const initial={expanded:new Set(['project']),selected:'project',pan:{x:25,y:25},scale:.82};
+  const current=meta.currentTaskId===undefined||meta.currentTaskId===null||meta.currentTaskId===''?null:'task:'+String(meta.currentTaskId);
+  if(current&&index.nodes.has(current)){
+    initial.selected=current;initial.expanded=W.reveal(index,current,initial.expanded);
+  }
+  let storage=null,storageKey=null,storageMessage='';
+  if(typeof meta.storageKey==='string'&&meta.storageKey.trim()){
+    storageKey='project-workboard:v2:'+meta.storageKey;
+    try{storage=window.localStorage;}catch{storageMessage='本地存储不可用；仍可浏览、编辑和下载草稿。';}
+  }else{storageMessage='未设置项目存储标识；本次草稿与视图不自动保存。';}
+  function readStore(suffix){
+    if(!storage)return null;
+    try{return storage.getItem(storageKey+':'+suffix);}catch{storage=null;storageMessage='无法读取本地存储；仍可浏览和下载草稿。';return null;}
+  }
+  const restored=W.restoreView(readStore('view'),index,initial);
+  if(restored.warning)storageMessage=restored.warning;
+  let view=restored.view,positions=new Map(),drag=null,saveTimer=null,toastTimer=null;
+  function storageStatus(){$('storage-status').textContent=storageMessage||'草稿与视图仅保存在当前浏览器';}
+  function writeStore(suffix,value){
+    if(!storage)return;
+    try{storage.setItem(storageKey+':'+suffix,value);}catch{storageMessage='本地保存失败，请下载草稿以保留内容。';storageStatus();}
+  }
+  function saveView(){
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(()=>writeStore('view',JSON.stringify({...view,expanded:[...view.expanded]})),120);
+  }
+  window.addEventListener('pagehide',()=>{clearTimeout(saveTimer);writeStore('view',JSON.stringify({...view,expanded:[...view.expanded]}));});
+  const state=s=>index.statuses.get(s)||{label:String(s||'未定义'),color:'#465664'};
+  const list=(id)=>W.children(index,id);
+  function applyTransform(){
+    $('world').style.transform='translate('+view.pan.x+'px,'+view.pan.y+'px) scale('+view.scale+')';
+    $('scale-value').textContent=Math.round(view.scale*100)+'%';
+  }
+  function notify(text){
+    $('toast').textContent=text;$('toast').hidden=false;clearTimeout(toastTimer);
+    toastTimer=setTimeout(()=>$('toast').hidden=true,2200);
+  }
+  function center(){
+    const pos=positions.get(view.selected);if(!pos)return;
+    const box=$('canvas').getBoundingClientRect();
+    view.pan={x:box.width*.57-view.scale*(pos.x+pos.w/2),y:box.height*.48-view.scale*(pos.y+pos.h/2)};
+    applyTransform();
+  }
+  function fit(){
+    if(!positions.size)return;
+    let minX=Infinity,minY=Infinity,maxX=-Infinity,maxY=-Infinity;
+    for(const p of positions.values()){minX=Math.min(minX,p.x);minY=Math.min(minY,p.y);maxX=Math.max(maxX,p.x+p.w);maxY=Math.max(maxY,p.y+p.h);}
+    const box=$('canvas').getBoundingClientRect();
+    view.scale=Math.max(.000001,Math.min(1,(box.width-85)/(maxX-minX),(box.height-80)/(maxY-minY)));
+    view.pan={x:(box.width-(maxX-minX)*view.scale)/2-minX*view.scale,y:(box.height-(maxY-minY)*view.scale)/2-minY*view.scale};
+    applyTransform();
+  }
+  function renderMap(){
+    const active=document.activeElement;
+    const focus=active?.dataset?.toggle?{attribute:'data-toggle',id:active.dataset.toggle}:active?.dataset?.select?{attribute:'data-select',id:active.dataset.select}:null;
+    positions=W.layout(index,view.expanded);
+    const lineage=new Set(W.ancestors(index,view.selected));
+    let edges='';
+    for(const [id,p] of positions){
+      const parent=index.parentMap.get(id),a=positions.get(parent);
+      if(a)edges+='<path class="'+(lineage.has(id)?'lineage':'')+'" d="M '+(a.x+a.w)+' '+(a.y+a.h/2)+' C '+(a.x+a.w+30)+' '+(a.y+a.h/2)+','+(p.x-30)+' '+(p.y+p.h/2)+','+p.x+' '+(p.y+p.h/2)+'"/>';
+    }
+    $('edges').innerHTML=edges;
+    $('nodes').innerHTML=W.visible(index,view.expanded).map(id=>{
+      const n=index.nodes.get(id),p=positions.get(id),kids=list(id),s=state(n.record.status),open=view.expanded.has(id);
+      const grouped=n.type==='task'&&kids.some(k=>index.nodes.get(k).type==='group');
+      const title=n.type==='project'?'项目总览':n.title;
+      const idline=n.type==='project'?'PROJECT':n.type==='group'?'任务分类':String(n.id);
+      const label=n.type==='task'?s.label+' · '+String(n.record.priority||'未设优先级')+(grouped?' · '+kids.length+' 类 / '+W.taskChildren(index,id).length+' 项直属任务':''):n.type==='group'?kids.length+' 项直属任务 · 展示分类':n.type==='stage'?String(n.record.state||'未记录签收状态'):'阶段 · 任务 · 子任务';
+      return '<div class="node '+(id===view.selected?'selected':'')+'" data-node="'+esc(id)+'" style="left:'+p.x+'px;top:'+p.y+'px;width:'+p.w+'px;height:'+p.h+'px;--fill:'+(n.type==='task'?s.color:n.type==='group'?n.color:n.type==='stage'?'#344b5d':'#264969')+'">'+
+        '<button class="node-main" data-select="'+esc(id)+'" aria-label="'+esc(idline+' '+title)+'" '+(id===view.selected?'aria-current="true"':'')+'><span class="node-id"><span class="id-text">'+esc(idline)+'</span>'+(kids.length?'<span class="count" title="'+(grouped?'直属分类数':'直属子项数')+'">'+kids.length+'</span>':'')+'</span><span class="node-title">'+esc(title)+'</span><span class="node-meta" title="'+esc(label)+'">'+esc(label)+'</span></button>'+
+        (kids.length?'<button class="toggle" data-toggle="'+esc(id)+'" aria-expanded="'+open+'" aria-label="'+esc((open?'收起':'展开')+title)+'">'+'<svg class="toggle-icon" viewBox="0 0 16 16" width="12" height="12" aria-hidden="true" focusable="false"><path d="M3 8h10'+(open?'':' M8 3v10')+'" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>'+'</button>':'')+'</div>';
+    }).join('');
+    if(focus)for(const b of $('nodes').querySelectorAll('['+focus.attribute+']'))if(b.getAttribute(focus.attribute)===focus.id)b.focus({preventScroll:true});
+    $('view-count').textContent='显示 '+positions.size+' 个节点 · '+data.tasks.length+' 项任务';
+    applyTransform();
+  }
+  const para=text=>'<p>'+esc(text||'尚无记录。')+'</p>';
+  const section=(title,content)=>'<section><h3>'+esc(title)+'</h3>'+content+'</section>';
+  function goButton(key,title){
+    return '<button class="entry" data-go="'+esc(key)+'"'+(index.nodes.has(key)?'':' disabled')+'>'+esc(title)+(index.nodes.has(key)?'':'（记录不存在）')+'</button>';
+  }
+  function evidence(items){
+    if(!Array.isArray(items)||!items.length)return para('尚无证据入口。');
+    return '<ul class="evidence">'+items.map(e=>{
+      const path=typeof e?.path==='string'?e.path:'',url=W.evidenceUrl(path,meta.projectRoot||'./',location.href);
+      return '<li>'+(url?'<a data-evidence href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">'+esc(e.label||path)+'</a>':'<span>'+esc(e?.label||'未设置路径')+'</span>')+
+        '<code>'+esc(path)+'</code>'+(path?'<button class="copy-path" data-copy="'+esc(path)+'">复制路径</button>':'')+'</li>';
+    }).join('')+'</ul>';
+  }
+  function records(items,key){
+    const node=index.nodes.get(key);
+    const rows=(Array.isArray(items)?items:[]).filter(r=>r&&typeof r==='object'&&(node.type==='project'||node.type==='stage'&&String(r.stage)===String(node.id)||node.type==='task'&&String(r.task)===String(node.id)));
+    return rows.length?rows.map(r=>'<div class="record"><strong>'+esc(r.title||r.date||'记录')+'</strong><span class="muted">'+esc(r.date||'')+'</span>'+para(r.detail||r.description)+evidence(r.evidence||[])+'</div>').join(''):para('暂无关联记录；项目总览可查看全部历史与决策。');
+  }
+  function detail(){
+    const n=index.nodes.get(view.selected);if(!n)return;
+    const r=n.record,kids=list(view.selected),realKids=n.type==='task'?W.taskChildren(index,view.selected):[],groupKids=n.type==='task'?kids.filter(k=>index.nodes.get(k).type==='group'):[];
+    const chain=W.ancestors(index,view.selected).map(k=>index.nodes.get(k).type==='project'?'项目':index.nodes.get(k).type==='group'?index.nodes.get(k).title:String(index.nodes.get(k).id)).join(' / ');
+    let content='<div class="eyebrow">'+(n.type==='task'?'TASK':n.type==='group'?'任务分类':n.type==='stage'?'PHASE':'PROJECT')+'</div><div class="breadcrumb">'+esc(chain)+'</div><h2>'+esc(n.title)+'</h2>';
+    if(n.type==='task'){
+      const s=state(r.status);
+      content+='<div class="chips"><span class="chip" style="background:'+s.color+'">'+esc(s.label)+'</span><span class="chip">'+esc(r.priority||'未设优先级')+'</span><span class="chip">'+esc(r.id)+'</span></div>'+
+        section('工作内容',para(r.description))+section('完成标准',para(r.acceptance))+
+        (groupKids.length?section('任务分类 · '+groupKids.length,groupKids.map(k=>goButton(k,index.nodes.get(k).title+' · '+list(k).length+' 项')).join('')):'')+
+        section('直属子任务 · '+realKids.length,realKids.length?realKids.map(k=>goButton(k,String(index.nodes.get(k).id)+' · '+index.nodes.get(k).title)).join(''):para('没有已登记子任务。新增层级须先由用户确认。'))+
+        section('依赖任务',(Array.isArray(r.deps)&&r.deps.length)?r.deps.map(id=>goButton('task:'+String(id),String(id)+' · '+(index.nodes.get('task:'+String(id))?.title||'未知任务'))).join(''):para('没有登记依赖。'))+
+        section('结果与验证',para(r.verification))+section('证据入口',evidence(r.evidence));
+      if(r.updatedAt)content+='<p class="muted">更新：'+esc(r.updatedAt)+'</p>';
+    }else if(n.type==='group'){
+      content+=para(r.description||'分类按明确记录的成员组织展示，不随任务状态自动调整。')+
+        section('分类内直属任务 · '+kids.length,kids.length?kids.map(k=>goButton(k,String(index.nodes.get(k).id)+' · '+index.nodes.get(k).title)).join(''):para('此分类暂无成员。'))+
+        section('所属任务',goButton('task:'+String(r.parent),String(r.parent)+' · '+index.nodes.get('task:'+String(r.parent)).title))+
+        section('分类说明',para('分类仅用于组织展示，不计入任务总数，不代表任务或阶段通过验收。真实父子关系、任务状态、依赖和证据仍以任务记录为准。'));
+    }else if(n.type==='stage'){
+      content+='<div class="chips"><span class="chip">'+esc(r.state||'未记录签收状态')+'</span></div>'+
+        section('阶段要求',para(r.environment))+section('阶段概况',para(r.summary))+
+        section('阶段完成条件',para(r.acceptance))+section('遗留事项',para(r.pending))+
+        section('直属任务 · '+kids.length,kids.length?kids.map(k=>goButton(k,String(index.nodes.get(k).id)+' · '+index.nodes.get(k).title)).join(''):para('本阶段暂无任务。'))+
+        section('阶段证据',evidence(r.evidence));
+    }else{
+      content+=para(meta.description)+section('阶段入口',kids.length?kids.map(k=>goButton(k,index.nodes.get(k).title)).join(''):para('暂无阶段或任务。请由智能体按已确认的计划维护。'))+
+        section('如何阅读',para('点击节点查看详情，圆形按钮展开下一层。分类仅组织显示，真实父子关系和依赖以任务记录为准。阶段签收以阶段记录为准。'))+
+        section('项目材料',evidence(data.sources));
+    }
+    if(n.type!=='group')content+=section('历史记录',records(data.history,view.selected))+section('历史决策',records(data.decisions,view.selected));
+    $('detail-content').innerHTML=content;$('detail').dataset.selected=view.selected;$('detail').scrollTop=0;
+  }
+  function choose(id,centerView=true){
+    if(!index.nodes.has(id))return;
+    view.selected=id;view.expanded=W.reveal(index,id,view.expanded);
+    if(centerView&&view.scale<.5)view.scale=.82;
+    renderMap();detail();$('layout').classList.add('details-open');
+    if(centerView)center();saveView();
+  }
+  $('nodes').addEventListener('click',event=>{
+    const b=event.target.closest('[data-toggle]');
+    if(b){
+      const id=b.dataset.toggle;
+      if(view.expanded.has(id)){
+        view.expanded.delete(id);
+        if(W.ancestors(index,view.selected).slice(0,-1).includes(id)){view.selected=id;detail();}
+      }else view.expanded.add(id);
+      renderMap();saveView();return;
+    }
+    const s=event.target.closest('[data-select]');if(s)choose(s.dataset.select,false);
+  });
+  $('detail').addEventListener('click',async event=>{
+    const go=event.target.closest('[data-go]');if(go){choose(go.dataset.go);return;}
+    const copy=event.target.closest('[data-copy]');
+    if(copy){
+      try{await navigator.clipboard.writeText(copy.dataset.copy);notify('已复制路径');}
+      catch{const code=copy.parentElement.querySelector('code');const range=document.createRange();range.selectNodeContents(code);const sel=getSelection();sel.removeAllRanges();sel.addRange(range);notify('请复制已选中的路径');}
+    }
+  });
+  const canvas=$('canvas');
+  let rightContext=false;
+  canvas.addEventListener('pointerdown',event=>{
+    rightContext=false;
+    if(![0,2].includes(event.button)||event.target.closest('.node'))return;
+    rightContext=event.button===2;
+    if(rightContext)event.preventDefault();
+    drag={x:event.clientX,y:event.clientY,pan:{...view.pan},id:event.pointerId,button:event.button};canvas.setPointerCapture(event.pointerId);canvas.classList.add('dragging');
+  });
+  canvas.addEventListener('contextmenu',event=>{
+    if(rightContext||!event.target.closest('.node'))event.preventDefault();
+  });
+  canvas.addEventListener('pointermove',event=>{if(!drag||drag.id!==event.pointerId)return;view.pan={x:drag.pan.x+event.clientX-drag.x,y:drag.pan.y+event.clientY-drag.y};applyTransform();});
+  const end=()=>{const right=drag?.button===2;if(drag)saveView();drag=null;canvas.classList.remove('dragging');if(right)setTimeout(()=>{rightContext=false;},0);};
+  for(const name of ['pointerup','pointercancel','lostpointercapture'])canvas.addEventListener(name,end);
+  canvas.addEventListener('wheel',event=>{event.preventDefault();view=W.wheel(view,event,canvas.getBoundingClientRect());applyTransform();saveView();},{passive:false});
+  for(const [id,factor] of [['zoom-in',1.15],['zoom-out',1/1.15]])$(id).onclick=()=>{const r=canvas.getBoundingClientRect();view=W.zoom(view,factor,r.width/2,r.height/2);applyTransform();saveView();};
+  $('fit').onclick=()=>{fit();saveView();};
+  $('overview').onclick=()=>{view.selected='project';view.expanded=new Set(['project']);renderMap();detail();fit();$('layout').classList.add('details-open');saveView();};
+  $('focus-current').disabled=!index.nodes.has(current);
+  $('focus-current').onclick=()=>choose(current);
+  $('open-detail').onclick=()=>$('layout').classList.add('details-open');
+  $('close-detail').onclick=()=>{$('layout').classList.remove('details-open');$('open-detail').focus();};
+  const search=$('search'),results=$('results');
+  search.addEventListener('input',()=>{
+    const term=search.value.trim().toLowerCase();
+    if(!term){results.hidden=true;return;}
+    const found=[...index.nodes].filter(([,n])=>n.type!=='project'&&(String(n.id)+' '+n.title).toLowerCase().includes(term));
+    found.sort((a,b)=>(String(b[1].id).toLowerCase()===term)-(String(a[1].id).toLowerCase()===term));
+    results.innerHTML=found.length?found.slice(0,20).map(([key,n])=>'<button data-search="'+esc(key)+'"><small>'+esc(String(n.id)+(n.type==='task'?' · '+state(n.record.status).label:n.type==='group'?' · 任务分类':' · 阶段'))+'</small>'+esc(n.title)+'</button>').join('')+(found.length>20?'<p class="muted">仅显示前 20 项，请增加关键词缩小范围。</p>':''):'<p class="muted">没有找到匹配项。</p>';
+    results.hidden=false;
+  });
+  results.addEventListener('click',event=>{const b=event.target.closest('[data-search]');if(b){choose(b.dataset.search);results.hidden=true;search.value='';search.focus();}});
+  search.addEventListener('keydown',event=>{
+    if(event.key==='Escape')results.hidden=true;
+    if(event.key==='Enter'&&!results.hidden){const first=results.querySelector('button');if(first){event.preventDefault();first.click();}}
+    if(event.key==='ArrowDown'&&!results.hidden){event.preventDefault();results.querySelector('button')?.focus();}
+  });
+  results.addEventListener('keydown',event=>{if(event.key==='Escape'){results.hidden=true;search.focus();}});
+  const draft=$('draft');draft.value=readStore('draft')||'';
+  $('scratch-toggle').onclick=()=>{$('scratch').showModal();draft.focus();};
+  $('scratch-close').onclick=()=>$('scratch').close();
+  draft.addEventListener('input',()=>{writeStore('draft',draft.value);$('draft-count').textContent=draft.value.length+' 字符';});
+  $('download-draft').onclick=()=>{
+    const blob=new Blob([draft.value],{type:'text/plain;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+    a.href=url;a.download='workboard-draft.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  };
+  $('draft-count').textContent=draft.value.length+' 字符';
+  storageStatus();
+  if(index.warnings.length){$('warnings').hidden=false;$('warnings').innerHTML='<summary>数据提示 · '+index.warnings.length+'</summary><ul>'+index.warnings.map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>';}
+  renderMap();detail();
+  if(readStore('view')===null||restored.warning)center();
+  window.addEventListener('resize',()=>{if(!drag)center();});
+})();
+
+</script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Project Workboard · 项目任务看板
+# Project Workboard · 项目任务导图
 
 简体中文 | [English](README.en.md)
 
@@ -61,11 +61,12 @@ project-workboard/
 ├── SKILL.cn.md
 ├── references/
 │   ├── experience-reuse.md
-│   └── experience-reuse.cn.md
+│   ├── experience-reuse.cn.md
+│   ├── workboard-format.md
+│   └── workboard-format.cn.md
 └── assets/
     └── example/
-        ├── AMPC_ISA_revision_board.html
-        └── chap02_requirements_board.html
+        └── workboard-map.html
 ```
 
 如果已有安装，更新前保留自己添加或替换的 HTML 案例。仓库根目录的 README 和许可证也可一并复制到安装后的技能目录中。
@@ -88,7 +89,9 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 继续处理当前任务，并在完成授权工作后更新进展、证据和下一步行动。
 ```
 
-看板生成后，用浏览器打开项目中的 HTML 文件查看。内置案例提供导航、状态筛选、任务搜索、历史记录和临时草稿；新看板的具体交互取决于所选案例及项目需求。内置案例的临时草稿保存在当前浏览器中，也可下载为文本，不会自动写回 HTML 或在设备之间同步。
+看板生成后，用浏览器直接打开项目中的 HTML 文件。新版采用导图＋右侧详情，支持逐层展开、搜索编号或标题、定位当前任务、平移和缩放。展开节点即展示全部直属子任务；归属与依赖分别记录，阶段签收不由子项状态自动推断。
+
+普通滚轮上下移动，Ctrl＋滚轮以指针位置缩放，Shift＋滚轮左右移动，左键或右键拖动背景平移；画布背景不弹出浏览器右键菜单。右侧详情独立滚动，窄屏可打开或收起右侧详情。临时草稿可在当前浏览器中保存或下载，不会自动发给智能体或写回 HTML；草稿和视图按项目区分，重要草稿在移动文件前应下载保留。
 
 ## 选择或添加自己的 HTML 案例
 
@@ -100,14 +103,19 @@ $project-workboard 先读取项目根目录的 revision_board.html，
 - **目录中没有 HTML**：AI 请用户添加或提供案例后再继续。
 - **项目已有看板**：优先继续维护，无需每次工作都重新选择案例。
 
-内置两个案例，可按工作规模选择：
+新版仅内置一个[通用导图案例](project-workboard/assets/example/workboard-map.html)，使用虚构的阶段、任务及多层子任务展示功能。整篇论文或某一章的修改均使用同一结构，按需要设置阶段与已有层级。
 
-| 案例 | 适用工作 | 阶段选项卡 |
-| --- | --- | --- |
-| [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) | 较大型、需要分阶段推进的工作，例如整篇毕业论文的修改 | 有，可切换不同阶段 |
-| [chap02_requirements_board.html](project-workboard/assets/example/chap02_requirements_board.html) | 较小型、范围集中的工作，例如毕业论文中某一章的修改 | 无，在同一页面集中查看任务 |
+新增一层或改变既定层级组织，须由用户决定；智能体可提出建议。展开折叠不改变任务关系，无需逐次确认。任务状态、验收、证据及历史由智能体根据实际工作维护，浏览器操作只改变视图。数据结构与路径设置见[格式参考](project-workboard/references/workboard-format.cn.md)。
 
-两个案例均以中文为主，包含原项目的任务、历史及材料链接。相关项目材料不随本仓库提供。创建新看板时，AI 会替换这些项目内容和链接，将结果保存在目标项目中，保留案例文件供后续使用。
+案例还用 10 项直属任务、3 个显式分类演示大量子任务的组织方式。某任务的直属子任务超过 8 个时，智能体会在规划或开始推进时建议分类，并先请用户确认；分类及成员明确记录，不随状态自动重排，也不改变真实父子关系和任务总数。
+
+示例中的完成记录和证据链接均为演示，不代表真实验证。新建项目时替换项目名称、任务、历史、当前任务编号、材料路径和存储标识，另存到目标项目。
+
+## 2.0 与已有项目
+
+新版案例库默认只提供导图，不提供旧卡片／列布局切换。旧案例仍可从 [v1.1.0 稳定版](https://github.com/2505733155/project-workboard-repo/releases/tag/v1.1.0)或 Git 历史中获取。
+
+更新技能后，已有看板继续按原格式维护，不会自动迁移或重置数据。若希望将旧看板迁为导图，应单独授权并保留编号、父子关系、依赖、状态语义、验收边界、结果、证据和历史。原文件及浏览器草稿／视图存储须在核验前保护；仅复制 HTML 不等于迁移了浏览器草稿。
 
 ## 阶段如何收尾
 
@@ -140,14 +148,17 @@ project-workboard-repo/
 └── project-workboard/       # 可直接安装的技能目录
     ├── SKILL.md             # AI 读取的技能规则
     ├── SKILL.cn.md          # 供人阅读的中文译本
-    ├── references/          # 用户同意总结经验后按需读取
+    ├── references/          # 按操作需要读取格式或经验指引
     │   ├── experience-reuse.md
-    │   └── experience-reuse.cn.md
+    │   ├── experience-reuse.cn.md
+    │   ├── workboard-format.md
+    │   └── workboard-format.cn.md
     └── assets/
         └── example/         # 可替换、可并存的 HTML 案例
-            ├── AMPC_ISA_revision_board.html
-            └── chap02_requirements_board.html
+            └── workboard-map.html
 ```
+
+仓库开发检查见 [tests/README.md](tests/README.md)。
 
 ## 致谢
 

@@ -13,3 +13,6 @@ Desktop.ini
 
 # Local development prompts
 /prompts/
+
+# Local issue handoffs and scratch files
+/temp/

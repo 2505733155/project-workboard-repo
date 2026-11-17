@@ -61,11 +61,12 @@ project-workboard/
 ├── SKILL.cn.md
 ├── references/
 │   ├── experience-reuse.md
-│   └── experience-reuse.cn.md
+│   ├── experience-reuse.cn.md
+│   ├── workboard-format.md
+│   └── workboard-format.cn.md
 └── assets/
     └── example/
-        ├── AMPC_ISA_revision_board.html
-        └── chap02_requirements_board.html
+        └── workboard-map.html
 ```
 
 Before updating an existing installation, preserve any HTML examples you have added or replaced. You may also copy the README files and license from the repository root into the installed skill directory.
@@ -89,11 +90,13 @@ $project-workboard Read revision_board.html in the project root,
 continue the current task, and update progress, evidence, and next actions after authorized work.
 ```
 
-Open the generated project HTML in a browser. The bundled examples include navigation, status filters, task search, history, and a scratchpad; a new board's interactions depend on the selected example and project needs. The bundled scratchpads save notes in the current browser and offer a text download. They do not write notes back to the HTML or synchronize them across devices.
+Open the generated HTML directly in a browser. The map and right-side details support level-by-level expansion, ID/title search, current-task focus, pan and zoom. Expanding a node exposes every direct child. Ownership and dependencies stay separate; child states never determine phase sign-off.
+
+Use the wheel to pan vertically, Ctrl + wheel to zoom around the pointer, Shift + wheel to pan horizontally, and left- or right-button background drag to pan. The canvas background suppresses the browser context menu; nodes and right-side details retain it. Right-side details scroll independently and open as a right overlay on narrow screens. The scratchpad saves or downloads browser-local notes; notes are not sent to an agent or written back to HTML. Drafts and views use project-specific storage; download important notes before moving the file.
 
 ## Choosing or adding HTML examples
 
-Examples live in this skill's [`assets/example/`](project-workboard/assets/example/) directory, at `project-workboard/assets/example/` in this repository. Replace the bundled example or add your own HTML files alongside it. You do not need to keep the bundled filename.
+Examples live in this skill's [`assets/example/`](project-workboard/assets/example/) directory, at `project-workboard/assets/example/` in this repository. Replace the bundled example or add your own map HTML files alongside it. You do not need to keep the bundled filename.
 
 - **Multiple HTML files:** the AI lists the available files and asks the user to choose.
 - **One HTML file:** the AI still asks the user to confirm it.
@@ -101,14 +104,19 @@ Examples live in this skill's [`assets/example/`](project-workboard/assets/examp
 - **No HTML files:** the AI asks the user to add or provide an example before proceeding.
 - **An existing project board:** the AI prioritizes maintaining it, without requiring a new example selection for every work session.
 
-Choose between the two bundled examples based on the scope of your work:
+The new version bundles one [general-purpose map example](project-workboard/assets/example/workboard-map.html), with fictional phases, tasks and nested subtasks. Use the same structure for an entire thesis or one chapter, adapting phases and established levels to the project.
 
-| Example | Suitable work | Phase tabs |
-| --- | --- | --- |
-| [AMPC_ISA_revision_board.html](project-workboard/assets/example/AMPC_ISA_revision_board.html) | Larger projects with multiple phases, such as revising an entire thesis | Yes, to switch between phases |
-| [chap02_requirements_board.html](project-workboard/assets/example/chap02_requirements_board.html) | Smaller, focused projects, such as revising a single thesis chapter | No; tasks are presented together on one page |
+The user decides whether to add a business level or change the hierarchy; the agent may propose it. Expanding/collapsing only changes the view and requires no repeated approval. The agent maintains task states, acceptance, evidence and history from actual work. See the [format reference](project-workboard/references/workboard-format.md) for the schema and path configuration.
 
-Both examples have primarily Chinese interfaces and contain tasks, history, and material links from their original projects; those project materials are not included in this repository. When creating a new board, the AI replaces that project content and its links, saves the result in the target project, and preserves the example for future use.
+The example also organizes 10 direct subtasks into 3 explicit display categories. When a task has or is planned to have more than 8 direct children, the agent proposes categories at a suitable planning/work-start point and asks for approval. Categories and members are explicitly recorded; they do not move automatically with state changes or alter real parents and task totals.
+
+Completion records and evidence links in the example are demonstrations. Replace the project name, tasks, history, current ID, material paths and storage key, and save a separate board in the target project.
+
+## Version 2.0 and existing projects
+
+New examples use maps only, with no switch to the old card/column layout. Previous examples remain available in [stable v1.1.0](https://github.com/2505733155/project-workboard-repo/releases/tag/v1.1.0) or Git history.
+
+A skill update continues maintaining existing boards in their original format. It does not authorize migration or data resets. Separately authorize migration and preserve IDs, parents, dependencies, state meanings, acceptance boundaries, results, evidence and history. Protect original files and browser drafts/views until verified; copying HTML alone does not transfer browser notes.
 
 ## Closing a phase
 
@@ -141,14 +149,17 @@ project-workboard-repo/
 └── project-workboard/       # Installable skill directory
     ├── SKILL.md             # Instructions read by the AI
     ├── SKILL.cn.md          # Chinese reading translation
-    ├── references/          # Read on demand after consent to summarize lessons
+    ├── references/          # Read the format or reuse guidance when relevant
     │   ├── experience-reuse.md
-    │   └── experience-reuse.cn.md
+    │   ├── experience-reuse.cn.md
+    │   ├── workboard-format.md
+    │   └── workboard-format.cn.md
     └── assets/
         └── example/         # Replaceable HTML examples that can coexist
-            ├── AMPC_ISA_revision_board.html
-            └── chap02_requirements_board.html
+            └── workboard-map.html
 ```
+
+Repository development checks: [tests/README.md](tests/README.md).
 
 ## Acknowledgments
 

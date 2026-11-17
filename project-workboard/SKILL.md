@@ -15,11 +15,15 @@ If uncertain whether a project needs a workboard, ask the user. If declined, bri
 
 ## Create
 
-Reuse an existing project board. When starting a project that needs a new board, or redesigning a board, list the HTML files in this skill's `assets/example/` directory and ask the user to choose an example before proceeding. Even if there is only one HTML file, ask the user to confirm it; if the user has already explicitly selected a file, use that selection without asking again. If no HTML files are available, ask the user to add one or provide an example before proceeding.
+Reuse an existing project board in its current format. Updating this skill does not authorize migrating an existing board or its browser storage. When starting a project that needs a new board, or redesigning a board, list the HTML files in this skill's `assets/example/` directory and ask the user to choose an example before proceeding. Even if there is only one HTML file, ask the user to confirm it; if the user has already explicitly selected a file, use that selection without asking again. If no HTML files are available, ask the user to add one or provide an example before proceeding.
 
-Users may replace the bundled [example](assets/example/AMPC_ISA_revision_board.html) with their own HTML, or add other HTML files alongside it in `assets/example/`. Discover the available files each time an example is needed; do not require this particular filename.
+Users may replace the bundled [map example](assets/example/workboard-map.html) or add their own map HTML files alongside it in `assets/example/`. Discover the available map examples each time one is needed; do not require this particular filename.
 
 Inspect the selected HTML and adapt its layout and interactions to the user's needs. Replace its project data, history, completion states and project-specific links. Create the project's board separately, preserving the example. The closing order below overrides the selected example.
+
+When creating or redesigning a map, or changing its data structure or interactions, follow the [workboard format reference](references/workboard-format.md). New boards use a task map with right-side details. Keep one authoritative task source; replace the fictional content, current-task ID, project-root path and project-specific storage key.
+
+Use explicit parent fields for hierarchy and separate dependency fields. Adding a business level or changing the established hierarchy requires user confirmation. Adding tasks within authorized scope and existing levels follows that authorization; expanding, collapsing and locating existing nodes are view operations.
 
 Add a concise English instruction to the project instruction file, using the actual board path:
 
@@ -28,6 +32,8 @@ Add a concise English instruction to the project instruction file, using the act
 ## Maintain
 
 Read the board before work. After authorized work, update progress, next actions, statuses, evidence and history to reflect what actually happened.
+
+For a task with, or planned to have, more than eight direct subtasks, propose display categories when planning the split or starting work on that parent, and obtain user approval before adding the category layer or changing its scheme. Maintain explicit groups and member lists under the approved scheme; do not automatically regroup by status. Record a declined proposal in the board and avoid repeating it without a meaningful change.
 
 Use the following task-state semantics. Existing status names may be retained; make their mapping to these meanings explicit in the board.
 
